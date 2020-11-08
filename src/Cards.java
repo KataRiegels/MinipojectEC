@@ -61,15 +61,12 @@ public class Cards {
    public Card worstCard(){
       Card minC = getCard(0);
       int min = 31;
-
       for (int i = 0; i < size(); i++){
          if (getPoint(i) < min && getPoint(i) != 0) {
             min = getPoint(i);
             minC = getCard(i);
          }
       }
-
-
       return minC;
    }
 
@@ -229,14 +226,6 @@ public class Cards {
       }
    }
 
-   public void printCardsSym(){
-      for (int i = 0; i < size(); i++){
-         System.out.println(getCard(i).show());
-      }
-   }
-
-
-
    public void printCards(int lower, int upper){
       int i = lower;
       for (; i < upper; i++) {
@@ -250,10 +239,6 @@ public class Cards {
          swapCards(i, r.nextInt(size()));
       }
    }
-
-
-
-
 
    public int size(){
       return cards.size();

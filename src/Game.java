@@ -7,8 +7,8 @@ public class Game {
    Pile stock;
    Pile discard;
    Scanner in;
-   Timer timer;
-   TimerTask task;
+   BotChoices bot;
+
    boolean endGame;
    boolean knocked;
    boolean userKnocked;
@@ -17,6 +17,7 @@ public class Game {
    public Game() {
       Deck deck = new Deck("Deck");
       deck.shuffle();
+
 
       stock = new Pile("stock");
       stock.createStock(deck);
@@ -31,7 +32,9 @@ public class Game {
       Eliza.hand.starter(stock);
 
       in = new Scanner(System.in);
-      timer = new Timer();
+
+      bot = new BotChoices();
+
       endGame = false;
       knocked = false;
       userKnocked = false;
@@ -62,7 +65,7 @@ public class Game {
       drawn = p.draw(pile);
       if (p == user){
          System.out.print("You drew: ");
-         drawn.printCardsSym();
+         drawn.printCards();
          System.out.print("Your hand:   ");
          p.printHand();
       }
