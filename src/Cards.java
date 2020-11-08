@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Cards {
    //private Card[] cards = null;
-   int clubs = 0, diamond = 1, hearts = 2, spades = 3;
+   private int clubs = 0, diamond = 1, hearts = 2, spades = 3;
 
    String label;
    private ArrayList<Card> cards; // = new ArrayList<Card>(); //new ArrayList<Card>();
@@ -152,6 +152,7 @@ public class Cards {
    public int getIndex(Card card){
       return cards.indexOf(card);
    }
+
 
    // takes "amount" card from this.cards and adds to cs cards
    public Cards deal(Cards receiver, int amount, int cardIndex){ //cardIndex is where form the cards. you take. it is 0 if top of a pile

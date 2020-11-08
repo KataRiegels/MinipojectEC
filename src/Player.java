@@ -1,31 +1,52 @@
+import java.util.Scanner;
 
-
-public class Player {
-   private String name;
+public class Player{
+   String name;
    Hand hand;
-
-
-   //BotChoices bot = new BotChoices();
-   //BotChoices bot;
 
    public Player(String name){
       this.name = name;
       this.hand = new Hand(name);
-      //pileCard = discard.getCard(discard.lastCard());
-      //HD.appendCards(hand, pileCard);
-      //bot = new BotChoices();
    }
 
    public Cards draw(Pile pile){
       return hand.draw(pile);
    }
 
-   public void play(Pile pile, int cardNr){
-      hand.play(pile, cardNr);
+   public void play(Pile discard, int cardNr){
+      hand.play(discard, cardNr);
+   }
+
+   public void drawTurn(Pile drawn, Pile stock){
+         System.out.println();
+         System.out.println("Your turn!");
+         whichPile(drawn);
+   }
+
+   public void playTurn(Pile discard){
+         whichCard(discard);
+         discard.printTop();
    }
 
    public void printHand(){
       hand.printHand();
+   }
+
+   public void whichCard(Pile discard){
+      System.out.println("Which card number from left do you want to play?"); //playing card 0 means write 1!!
+      Scanner in = new Scanner(System.in);
+      int drawAnswer = in.nextInt();
+      play(discard,drawAnswer);
+   }
+
+   public void whichPile(Pile drawn){
+      System.out.println();
+      System.out.println("Do you want to draw from stock pile or discard pile?");
+
+      //Contains stuff must be changes when keyword stuff is done!!
+
+
+      if (drawn!= null) draw(drawn);
    }
 
    public void botsHand(){
@@ -38,48 +59,6 @@ public class Player {
          }
       }
       System.out.println();
-   }
-
-   public Pile choosePile(Pile discard, Pile stock){
-      Card pileCard = discard.topCard();
-      Pile choice = stock; Cards HD = new Cards(); HD.appendCards(hand, pileCard);
-      boolean justBetter           = HD.maxPoints()    > (hand.maxPoints());
-      boolean notBadCard           = pileCard.points() > 5;    //hand.worstCardAndSuit().points();
-      boolean bestSuit_OKCards     = HD.bestGroup().anyOver(9);
-      boolean improveHand          = HD.maxPoints()    < hand.minPoints();
-      boolean discCard_GT_minPoint = pileCard.points() > hand.minPoints();
-      boolean pileCard_GT_8        = pileCard.points() > 8;
-      boolean pileCard_GT_10       = pileCard.points() >= 10;
-      boolean badCardGoodSuit      = hand.bestGroup().worstCard().points() < 4;
-
-      if (justBetter && notBadCard
-              && (( bestSuit_OKCards || improveHand)
-              || (discCard_GT_minPoint && pileCard_GT_8)
-              || (pileCard_GT_10 && badCardGoodSuit)
-
-      )
-      ){ choice = discard;
-      }
-      return choice;
-   }
-
-   public void announcePlay(){
-      System.out.println();
-      System.out.println("Eliza plays card nr. " + (indexCard()) + ": " + ChooseCard().show() );
-   }
-
-   public void announceDraw(Pile discard,Pile stock){
-      System.out.println();
-      System.out.println("Eliza draws from the " + choosePile(discard, stock).label + " pile.");
-   }
-
-   public Card ChooseCard(){
-      //Card choice = new Card();
-      return hand.worstCardAndSuit();
-   }
-
-   public int indexCard(){
-      return hand.getIndex(ChooseCard())+1;
    }
 
    public boolean blitz(){
@@ -98,7 +77,10 @@ public class Player {
       System.out.println();
    }
 
-   // ========= Eliza smartness ==========
+   public void ifKnocked(){
+      System.out.println("hi");
+   }
+
 
 
 

@@ -7,8 +7,8 @@ public class Game {
    Pile stock;
    Pile discard;
    Scanner in;
-   BotChoices bot;
-
+   Bot bot;
+   Player player;
    boolean endGame;
    boolean knocked;
    boolean userKnocked;
@@ -17,7 +17,6 @@ public class Game {
    public Game() {
       Deck deck = new Deck("Deck");
       deck.shuffle();
-
 
       stock = new Pile("stock");
       stock.createStock(deck);
@@ -31,9 +30,10 @@ public class Game {
       Eliza = new Player("Eliza");
       Eliza.hand.starter(stock);
 
+      player = user;
       in = new Scanner(System.in);
 
-      bot = new BotChoices();
+      bot = new Bot("Liza");
 
       endGame = false;
       knocked = false;
@@ -45,11 +45,12 @@ public class Game {
 
 
 
-
       do{ turns();
       } while (!endGame);
-
    }
+
+
+
 
    public void printState(){
       System.out.println();
@@ -71,76 +72,27 @@ public class Game {
       }
    }
 
+   /*
    public void play(Player p, int cardNr){
       p.play(discard,cardNr);
    }
-
    public void turn(){
 
    }
+*/
 
-   public void userTurn(){
-      if (endGame()) typeOfEnd();
-      //waiting(2);
-      System.out.println();
-      System.out.println("Your turn!");
-      //waiting(1);
-      printState();
-      //waiting(2);
-      whichPile();
-      if (!knocked) {whichCard();
-      discard.printTop();
-      printState();}
-   }
-
-   public void ElizaTurn(){
-      if (endGame()) typeOfEnd();
-      //waiting(2);
-      System.out.println("Eliza's turn!");
-      //waiting(2);
-
-      discard.printTop();
-      //waiting(1);
-      Eliza.printHand();
-       //waiting(3);
-      Eliza.announceDraw(discard, stock);
-      Eliza.draw(Eliza.choosePile(discard,stock));
-      //waiting(1);
-      Eliza.printHand();
-      //Eliza.botsHand();
-
-      //waiting(4);
-      Eliza.announcePlay();
-      Eliza.play(discard, Eliza.indexCard());
-      //waiting(1);
-      discard.printTop();
-
-      //printState();
-   }
-
-   public void whichPile(){
-      System.out.println();
-      System.out.println("Do you want to draw from stock pile or discard pile?");
-      Scanner in = new Scanner(System.in);
-      String drawAnswer = in.nextLine();
-      Pile drawn = new Pile("");
-      //Contains stuff must be changes when keyword stuff is done!!
-      drawn = null;
-      if (drawAnswer.contains("stock")) drawn = stock;
-      else if (drawAnswer.contains("discard")) drawn = discard;
-      else if (drawAnswer.contains("knock")) {
-         knocked = user.knock();
-         userKnocked = true;
+   public void takeTurns(Player player){
+      if (knocked){
+         if (player.name.equals("Eliza")){
+            player.drawTurn(discard, stock);
+            player.ifKnocked();
+         }
+      } else {
+         player.drawTurn(drawWhat(),stock);
+         player.playTurn(discard);
       }
-
-      if (drawn!= null) draw(user, drawn);
    }
 
-   public void whichCard(){
-      System.out.println("Which card number from left do you want to play?"); //playing card 0 means write 1!!
-      int drawAnswer = in.nextInt();
-      play(user,drawAnswer);
-   }
 
    public void reshuffle(){
       discard.shuffle();
@@ -157,12 +109,26 @@ public class Game {
       }
    }
 
+   public Player nextPlayer(Player current) {
+      if (current == bot) {
+         return user;
+      } else {
+         return bot;
+      }
+   }
+
    public void turns(){
       while (!endGame()){
          if (stock.isEmpty()) reshuffle();
+         takeTurns(player);
+         player = nextPlayer(player);
+
+         /*
          userTurn();
          if (stock.isEmpty()) reshuffle();
          ElizaTurn();
+
+          */
       }
 
 
@@ -185,13 +151,24 @@ public class Game {
       endGame = true;
    }
 
+   public Pile drawWhat(){
+      Scanner in = new Scanner(System.in);
+      String drawAnswer = in.nextLine();
+      Pile drawn;
+      drawn = null;
+      if (drawAnswer.contains("stock")) drawn = stock;
+      else if (drawAnswer.contains("discard")) drawn = discard;
+      else if (drawAnswer.contains("knock")) {
+         knocked = true;
+      }
+      return drawn;
+   }
+
+
    public boolean endGame(){
       return (knocked || Eliza.blitz() || user.blitz());
    }
 
-   public void knocked(){
-      //System.out.println("\n SOMEONE  knocked \n");
-   }
 
    public void typeOfEnd(){
       if (Eliza.blitz()) ElizaWon();
