@@ -27,8 +27,8 @@ public class Game {
       user = new Player("User");
       user.hand.starter(stock);
 
-      Eliza = new Player("Eliza");
-      Eliza.hand.starter(stock);
+      bot = new Bot("Liza");
+      bot.hand.starter(stock);
 
       player = user;
       in = new Scanner(System.in);
@@ -88,7 +88,7 @@ public class Game {
             player.ifKnocked();
          }
       } else {
-         player.drawTurn(drawWhat(),stock);
+         player.drawTurn(discard,stock);
          player.playTurn(discard);
       }
    }
@@ -153,6 +153,9 @@ public class Game {
 
    public Pile drawWhat(){
       Scanner in = new Scanner(System.in);
+      System.out.println();
+      System.out.println("Do you want to draw from stock pile or discard pile?");
+
       String drawAnswer = in.nextLine();
       Pile drawn;
       drawn = null;
@@ -164,6 +167,9 @@ public class Game {
       return drawn;
    }
 
+   public boolean checkBot(Player player){
+      return player.name.equals("Liza");
+   }
 
    public boolean endGame(){
       return (knocked || Eliza.blitz() || user.blitz());

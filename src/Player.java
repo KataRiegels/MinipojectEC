@@ -17,10 +17,12 @@ public class Player{
       hand.play(discard, cardNr);
    }
 
-   public void drawTurn(Pile drawn, Pile stock){
+   public void drawTurn(Pile discard, Pile stock){
          System.out.println();
          System.out.println("Your turn!");
-         whichPile(drawn);
+
+
+         whichPile(discard, stock);
    }
 
    public void playTurn(Pile discard){
@@ -39,10 +41,19 @@ public class Player{
       play(discard,drawAnswer);
    }
 
-   public void whichPile(Pile drawn){
+   public void whichPile(Pile discard, Pile stock){
+      Scanner in = new Scanner(System.in);
       System.out.println();
       System.out.println("Do you want to draw from stock pile or discard pile?");
 
+      String drawAnswer = in.nextLine();
+      Pile drawn;
+      drawn = null;
+      if (drawAnswer.contains("stock")) drawn = stock;
+      else if (drawAnswer.contains("discard")) drawn = discard;
+      //else if (drawAnswer.contains("knock")) {
+        // knocked = true;
+      //}
       //Contains stuff must be changes when keyword stuff is done!!
 
 
