@@ -18,7 +18,7 @@ public class Bot extends Player {
       justBetter           = HD.maxPoints()    > (hand.maxPoints());
       notBadCard           = pileCard.points() > 5;    //hand.worstCardAndSuit().points();
       bestSuit_OKCards     = HD.bestGroup().anyOver(9);
-      improveHand          = HD.maxPoints()    < hand.minPoints();
+      improveHand          = (HD.maxPoints()/2)    < hand.minPoints(); // complicated. Image having D6, S7 and C8 with S5 on the table.
       discCard_GT_minPoint = pileCard.points() > hand.minPoints();
       pileCard_GT_8        = pileCard.points() > 8;
       pileCard_GTE_10      = pileCard.points() >= 10;
@@ -29,12 +29,13 @@ public class Bot extends Player {
 
       c1 = justBetter && notBadCard;
       c2 = bestSuit_OKCards;
-      if (c2) p += "";
+
       c3 = improveHand;
+      if (c3) p += "it ";
       c4 = discCard_GT_minPoint && pileCard_GT_8;
       c5 = pileCard_GTE_10 && badCardGoodSuit;
 
-      if (knocked && justBetter && notBadCard) choice = discard;
+      if (knocked && justBetter && improveHand) choice = discard;
       else if (justBetter && notBadCard && bestSuit_OKCards
               && (      (improveHand)
                      || (discCard_GT_minPoint && pileCard_GT_8)
