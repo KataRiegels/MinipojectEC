@@ -33,7 +33,6 @@ public class Cards {
    public Cards bestGroup(){
       return findGroup(bestSuit());
    }
-
    public Cards worstGroup(){
       return findGroup(worstSuit());
    }
@@ -69,7 +68,6 @@ public class Cards {
       }
       return minC;
    }
-
    public Card worstCardAndSuit(){
       return worstGroup().worstCard();
    }
@@ -140,7 +138,6 @@ public class Cards {
       }
       return false;
    }
-
    public boolean anyUnder(int max){
       for (int i = 0; i < size(); i++){
          if (getCard(i).points() < max) return true;
@@ -148,7 +145,7 @@ public class Cards {
       return false;
    }
 
-
+   // return index of Card in list
    public int getIndex(Card card){
       return cards.indexOf(card);
    }
@@ -165,15 +162,6 @@ public class Cards {
       return cs;
    }
 
-
-   public Cards pick(int amount, int cardIndex) {
-      Cards cs = new Cards();
-      for (int i = 0; i < amount; i++){
-         Card card = takeCard(cardIndex);
-         cs.addCard(card);
-      }
-      return cs;
-   }
 
    // set card *i* to be *card*>
    public void setCard(int i, Card card){
@@ -208,13 +196,7 @@ public class Cards {
       setCard(card1, c2);
    }
 
-
-   public Card randomCard(){
-      Random r = new Random();
-      return getCard(r.nextInt(size()));
-   }
-
-
+   // is Cards empty?
    public boolean isEmpty(){
       if (size() == 0) return true;
       else return false;
@@ -227,6 +209,7 @@ public class Cards {
       }
    }
 
+   // prints form lower to upper
    public void printCards(int lower, int upper){
       int i = lower;
       for (; i < upper; i++) {
@@ -234,6 +217,7 @@ public class Cards {
       }
    }
 
+   // shuffles cards
    public void shuffle(){
       Random r = new Random();
       for (int i = 0; i <size(); i++){
@@ -241,18 +225,18 @@ public class Cards {
       }
    }
 
+   // number of cards in Cards
    public int size(){
       return cards.size();
    }
 
+   // prints
    public void print(String string){
       System.out.print(string);
    }
-
    public void println(String string){
       System.out.println(string);
    }
-
    public void println(){
       System.out.println();
    }

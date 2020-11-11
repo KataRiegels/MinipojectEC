@@ -2,10 +2,11 @@
 
 public class Case {
    String input;
+   int[] inputs;
    int keyMap;
 
-   public Case(String input, int keyMap){
-      this.input = input;
+   public Case(int[] inputs, int keyMap){
+      this.inputs = inputs;
       this.keyMap = keyMap;
    }
 

@@ -6,19 +6,27 @@ public class Hand extends Cards{
       super(label);
    }
 
+   // simply draw
    public Cards draw(Pile pile){
-      Cards drawn = pile.deal(this, 1, pile.lastCard());
-      return drawn;
+      return pile.deal(this, 1, pile.lastCard());
    }
 
-   public void starter(Pile pile){
-      pile.deal(this, 3, 0);
+   //simple plays
+   public void play(Pile pile, int index){
+      deal(pile, 1, index-1);
+   }
+
+
+   // deal starting hand
+   public void starter(Pile pile, int amount){
+      pile.deal(this, amount, 0);
    }
 
    public void printWorstCard(){
       System.out.print(worstCard().show() );
    }
 
+   // prints hand
    public void printHand(){
       for (int i = 0; i < size(); i++){
          print(getCard(i).show() );
@@ -27,10 +35,6 @@ public class Hand extends Cards{
          }
       }
       println();
-   }
-
-   public void play(Pile pile, int index){
-      this.deal(pile, 1, index-1);
    }
 
 

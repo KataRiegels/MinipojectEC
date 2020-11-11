@@ -1,16 +1,13 @@
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class Game {
-   Player user;
-
+public class Game extends Conversation{
    Pile stock, discard;
    Scanner in;
-   Player winner, player;
+   Player winner, player, user;
    Bot bot;
    int turnNr;
-   boolean endGame;
-   boolean knocked;
+   boolean endGame, knocked;
 
    public Game() {
       Deck deck = new Deck("Deck");
@@ -26,11 +23,11 @@ public class Game {
       discard.turnCard(stock);
 
       bot = new Bot("Liza");
-      bot.hand.starter(stock);
+      bot.hand.starter(stock, 3);
 
 
       user = new Player("User");
-      user.hand.starter(stock);
+      user.hand.starter(stock, 3);
 
       player = bot;
       turnNr = 0;
@@ -52,12 +49,11 @@ public class Game {
    }
 
 
-
+   //prints hand and top discard card
    public void printState(){
       //System.out.println();
       waiting(1);
       discard.printTop();
-
       if (player == user){
          //waiting(1);
          System.out.print("Your hand:   ");
@@ -65,6 +61,7 @@ public class Game {
       }
    }
 
+   // taking turns
    public void turns(){
       while (!endGame()){
          if (stock.isEmpty()) reshuffle();
@@ -77,14 +74,6 @@ public class Game {
          if (player.hasKnocked()) return;
          turnNr ++;
       }
-   }
-
-   public void takeTurns(Player player){
-
-
-
-
-
    }
 
    // Drawing part of the turn
