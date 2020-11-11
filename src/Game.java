@@ -4,8 +4,8 @@ import java.util.concurrent.TimeUnit;
 public class Game extends Conversation{
    Pile stock, discard;
    Scanner in;
-   Player winner, player, user;
-   Bot bot;
+   Player winner, player, user, p1, p2;
+   Bot bot, bot2;
    int turnNr;
    boolean endGame, knocked;
 
@@ -22,14 +22,17 @@ public class Game extends Conversation{
       discard = new Pile("discard");
       discard.turnCard(stock);
 
-      bot = new Bot("Liza");
-      bot.hand.starter(stock, 3);
+      //bot = new Bot("Liza");
+      //bot.hand.starter(stock, 3);
 
 
       user = new Player("User");
       user.hand.starter(stock, 3);
 
-      player = bot;
+
+
+
+
       turnNr = 0;
       in = new Scanner(System.in);
 
@@ -39,13 +42,21 @@ public class Game extends Conversation{
 
    public void playGame(){
 
+      boolean trainingGame;
+      trainingGame = true;
+      p1 = new Bot("Liza", trainingGame);
+      p1.hand.starter(stock, 3);
+
+      p2 = new Bot("bot2", true);
+      p2.hand.starter(stock, 3);
 
 
+      player = p1;
 
       turns();
       if (knocked) comparePoints();
-      if (user.blitz()) userWon();
-      if (bot.blitz()) botWon();
+      if (p2.blitz()) player2Won();
+      if (p1.blitz()) player1Won();
    }
 
 
@@ -72,6 +83,8 @@ public class Game extends Conversation{
          //takeTurns(player);
          player = nextPlayer(player);
          if (player.hasKnocked()) return;
+         if (endGame()) return;
+         System.out.println("Turn number: " + turnNr);
          turnNr ++;
       }
    }
@@ -108,67 +121,69 @@ public class Game extends Conversation{
    public void reshuffle(){
       discard.shuffle();
       stock.createStock(discard);
+      discard.turnCard(stock);
    }
 
    // Returns non-current player
    public Player nextPlayer(Player current) {
-      if (current == bot) {
-         return user;
+      if (current == p1) {
+         return p2 ;
       } else {
-         return bot;
+         return p1;
       }
    }
 
    // what to print if who wins.
-   public void userWon(){
+   public void player2Won(){
       System.out.println();
       System.out.println("Congratulations! You got a blitz and won the game!");
-      user.printHand();
+      p2.printHand();
       endGame = true;
    }
-   public void botWon(){
+   public void player1Won(){
       System.out.println();
       System.out.println("Bugger! Eliza got a blitz. You lost. ");
-      bot.printHand();
+      p1.printHand();
       endGame = true;
    }
 
 
    // Checks if there has been a blitz
    public boolean endGame(){
-      return (bot.blitz() || user.blitz());
+      return (p1.blitz() || p2.blitz());
    }
 
    // Compares points after someone knocked.
    public void comparePoints(){
-      print("Your hand: ");
-      user.printHand();
-      println("You had " + user.hand.maxPoints() + " points \n");
-      print("Liza's hand: ");
-      bot.printOpen();
-      println("Liza had " + bot.hand.maxPoints() + " points \n");
+      print(p2.getName() + "'s hand: ");
+      p2.printHand();
+      println("You had " + p2.hand.maxPoints() + " points \n");
+      print(p1.getName() + "'s hand: ");
+      p1.printOpen();
+      println("Liza had " + p1.hand.maxPoints() + " points \n");
 
-      if (user.hand.maxPoints() > bot.hand.maxPoints()) winner = user;
-      else if (user.hand.maxPoints() == bot.hand.maxPoints()) {
+      if (p2.hand.maxPoints() > p1.hand.maxPoints()) winner = p2;
+      else if (p2.hand.maxPoints() == p1.hand.maxPoints()) {
          winner = null;
          println("It was a tie!");
          return;
       }
-      else winner = bot;
+      else winner = p1;
       println(winner.getName() + " had most points. " + winner.getName() + " won!");
 
 
    }
 
    // Makes a bit of waiting time between answers
-   public void waiting(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+   public void waiting(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+      /*
       try {
          Thread.sleep(seconds*1000);
       }
       catch(InterruptedException ex) {
          Thread.currentThread().interrupt();
       }
+      */
    }
 
 

@@ -8,7 +8,9 @@ public class Player{
    Case knocked   = new Case("knock", 2);
    boolean knock;
 
-
+   public void printOpen(){
+      hand.printHand();
+   }
    public Player(String name){
       this.name = name;
       this.hand = new Hand(name);

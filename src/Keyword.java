@@ -1,15 +1,14 @@
-
-
-
 public class Keyword {
-   private String key;
-   private String[] keys = {};
+   // instance variables
+   private String keyword;
 
-
-   public Keyword(String key){
-      this.key = key;
+   // constructor
+   public Keyword(String s) {
+      this.keyword = s;
    }
 
-
-
+   public String getString() {
+      return this.keyword;
+   }
 }
+

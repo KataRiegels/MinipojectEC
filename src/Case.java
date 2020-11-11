@@ -5,8 +5,8 @@ public class Case {
    int[] inputs;
    int keyMap;
 
-   public Case(int[] inputs, int keyMap){
-      this.inputs = inputs;
+   public Case(String input, int keyMap){
+      this.input = input;
       this.keyMap = keyMap;
    }
 

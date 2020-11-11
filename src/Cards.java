@@ -106,7 +106,7 @@ public class Cards {
    }
    public int worstSuit(){
       int suit = 0;
-      int minP = 31;
+      int minP = 100;
       for (int i = 0; i < 4; i++){
          if (groupPoint(i) < minP && groupPoint(i)!= 0){
             minP = groupPoint(i);
