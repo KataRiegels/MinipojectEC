@@ -3,12 +3,16 @@ import java.util.concurrent.TimeUnit;
 
 public class Game {
    Player user;
-   Player Eliza;
+   //Player Eliza;
    Pile stock;
    Pile discard;
    Scanner in;
-   Bot bot;
+   Player winner;
    Player player;
+   Bot bot;
+   int turnNr;
+   Case discPile;
+   Case stockPile;
    boolean endGame;
    boolean knocked;
    boolean userKnocked;
@@ -18,22 +22,26 @@ public class Game {
       Deck deck = new Deck("Deck");
       deck.shuffle();
 
+      discPile = new Case("discard", 1);
+      stockPile = new Case("stock", 0);
+
       stock = new Pile("stock");
       stock.createStock(deck);
 
       discard = new Pile("discard");
       discard.turnCard(stock);
 
-      user = new Player("User");
-      user.hand.starter(stock);
-
       bot = new Bot("Liza");
       bot.hand.starter(stock);
 
-      player = user;
-      in = new Scanner(System.in);
 
-      bot = new Bot("Liza");
+      user = new Player("User");
+      user.hand.starter(stock);
+
+
+      player = user;
+      turnNr = 0;
+      in = new Scanner(System.in);
 
       endGame = false;
       knocked = false;
@@ -43,10 +51,8 @@ public class Game {
 
    public void playGame(){
 
-
-
-      do{ turns();
-      } while (!endGame);
+      turns();
+      if (knocked) comparePoints();
    }
 
 
@@ -55,10 +61,10 @@ public class Game {
    public void printState(){
       System.out.println();
       discard.printTop();
+      if (player == user){
       System.out.print("Your hand:   ");
       user.printHand();
-      //System.out.print("Eliza's hand: ");
-      //Eliza.botsHand();
+      }
    }
 
    public void draw(Player p, Pile pile){
@@ -81,33 +87,52 @@ public class Game {
    }
 */
 
-   public void takeTurns(Player player){
-      if (knocked){
-         if (player.name.equals("Eliza")){
-            player.drawTurn(discard, stock);
-            player.ifKnocked();
-         }
-      } else {
-         player.drawTurn(discard,stock);
-         player.playTurn(discard);
+   public void turns(){
+      while (!endGame()){
+         if (stock.isEmpty()) reshuffle();
+         takeTurns(player);
+         player = nextPlayer(player);
+         if (player.getKnock()) return;
+         turnNr ++;
       }
+
+//      if (Eliza.blitz()) ElizaWon();
+//      if (user.blitz()) userWon();
+//      if (knocked) user.knocked();
    }
 
+   public void takeTurns(Player player){
+      Player previous = nextPlayer(player);
+      if (previous.getKnock()) knocked = true;
+      drawTurn();
+      playTurn();
+
+   }
+
+   public void drawTurn(){
+      System.out.println(player.getName() + "'s turn");
+      //if (player == user)
+      printState();
+      player.drawTurn(discard,stock, knocked, turnNr);
+      if (player == user && !player.getKnock()) printState();
+   }
+
+   public void playTurn(){
+      boolean checkKnock = player.getKnock();
+      if (player.getKnock()) System.out.println(player.getName() + " knocked");
+      if (!checkKnock){
+         player.playTurn(discard, knocked);
+         discard.printTop();
+      }
+
+   }
 
    public void reshuffle(){
       discard.shuffle();
       stock.createStock(discard);
    }
 
-   public void waiting(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*1000);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-   }
+
 
    public Player nextPlayer(Player current) {
       if (current == bot) {
@@ -117,24 +142,16 @@ public class Game {
       }
    }
 
-   public void turns(){
-      while (!endGame()){
-         if (stock.isEmpty()) reshuffle();
-         takeTurns(player);
-         player = nextPlayer(player);
 
-         /*
-         userTurn();
-         if (stock.isEmpty()) reshuffle();
-         ElizaTurn();
 
-          */
+   public void waiting(long seconds){
+      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+      try {
+         Thread.sleep(seconds*1000);
       }
-
-
-//      if (Eliza.blitz()) ElizaWon();
-//      if (user.blitz()) userWon();
-//      if (knocked) user.knocked();
+      catch(InterruptedException ex) {
+         Thread.currentThread().interrupt();
+      }
    }
 
    public void userWon(){
@@ -147,39 +164,55 @@ public class Game {
    public void ElizaWon(){
       System.out.println();
       System.out.println("Bugger! Eliza got a blitz. You lost. ");
-      Eliza.printHand();
+      bot.printHand();
       endGame = true;
    }
 
-   public Pile drawWhat(){
-      Scanner in = new Scanner(System.in);
-      System.out.println();
-      System.out.println("Do you want to draw from stock pile or discard pile?");
-
-      String drawAnswer = in.nextLine();
-      Pile drawn;
-      drawn = null;
-      if (drawAnswer.contains("stock")) drawn = stock;
-      else if (drawAnswer.contains("discard")) drawn = discard;
-      else if (drawAnswer.contains("knock")) {
-         knocked = true;
-      }
-      return drawn;
-   }
 
    public boolean checkBot(Player player){
       return player.name.equals("Liza");
    }
 
    public boolean endGame(){
-      return (knocked || Eliza.blitz() || user.blitz());
+      return (bot.blitz() || user.blitz());
    }
 
 
    public void typeOfEnd(){
-      if (Eliza.blitz()) ElizaWon();
+      if (bot.blitz()) ElizaWon();
       if (user.blitz()) userWon();
       if (userKnocked) user.knocked();
-      if (ElizaKnocked) Eliza.knocked();
+      if (ElizaKnocked) bot.knocked();
    }
+
+   public void comparePoints(){
+      print("Your hand: ");
+      user.printHand();
+      println("You had " + user.hand.maxPoints() + " points \n");
+      print("Liza's hand: ");
+      bot.printOpen();
+      println("Liza had " + bot.hand.maxPoints() + " points \n");
+
+      if (user.hand.maxPoints() > bot.hand.maxPoints()) winner = user;
+      else if (user.hand.maxPoints() == bot.hand.maxPoints()) {
+         winner = null;
+         println("It was a tie!");
+         return;
+      }
+      else winner = bot;
+      println(winner.getName() + " had most points. " + winner.getName() + " won!");
+
+
+   }
+
+
+
+   public void print(String string){
+      System.out.print(string);
+   }
+
+   public void println(String string){
+      System.out.println(string);
+   }
+
 }

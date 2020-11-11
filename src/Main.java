@@ -11,6 +11,9 @@ public class Main {
 
         game.playGame();
 
+        //Card card = new Card(4,3);
+        //System.out.println(card.show());
+
         /*
 
         Deck deck    = new Deck("deck");
