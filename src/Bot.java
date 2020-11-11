@@ -80,9 +80,9 @@ public class Bot extends Player {
       boolean earlyGame, midGame, lateGame, neverKnock;
       int lowerTurn, midTurn, lateTurn;
       lowerTurn = 3; midTurn = 8; lateTurn = 12;
-      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > areaOfSurprise(21);
-      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(24);
-      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(27);
+      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > areaOfSurprise(25);
+      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(26);
+      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(28);
       neverKnock = gameTurn > lateTurn;
       if ( earlyGame && gameTurn > 1 || midGame || lateGame  || hand.maxPoints() >= 30){
 
