@@ -7,28 +7,27 @@ public class Pile extends Cards{
       super(label);
    }
 
+
+   // Creates the stock from the given deck
    public void createStock(Cards deck){
       deck.deal(this, deck.size(), 0);
-      //return pile;
    }
 
+   // Turns top card of this and puts it on pile
    public void turnCard(Pile pile){
       pile.deal(this, 1, 0);
    }
 
+   // Prints top cards of this
    public void printTop(){
-      System.out.print("Discard Pile: ");
-      if (isEmpty()) System.out.println("|x|");
-      else System.out.println(topCard().show());
+      print("Discard Pile: ");
+      if (isEmpty()) println("|x|");
+      else println(topCard().show());
    }
 
+   // returns topCard of this
    public Card topCard(){
       return getCard(lastCard());
-   }
-
-   public void printAll(){
-      System.out.print("Top card on discard pile: ");
-      this.topCard();
    }
 
 }

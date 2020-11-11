@@ -3,27 +3,21 @@ import java.util.concurrent.TimeUnit;
 
 public class Game {
    Player user;
-   //Player Eliza;
-   Pile stock;
-   Pile discard;
+
+   Pile stock, discard;
    Scanner in;
-   Player winner;
-   Player player;
+   Player winner, player;
    Bot bot;
    int turnNr;
-   Case discPile;
-   Case stockPile;
    boolean endGame;
    boolean knocked;
-   boolean userKnocked;
-   boolean ElizaKnocked;
 
    public Game() {
       Deck deck = new Deck("Deck");
       deck.shuffle();
 
-      discPile = new Case("discard", 1);
-      stockPile = new Case("stock", 0);
+      //discPile = new Case("discard", 1);
+      //stockPile = new Case("stock", 0);
 
       stock = new Pile("stock");
       stock.createStock(deck);
@@ -38,102 +32,96 @@ public class Game {
       user = new Player("User");
       user.hand.starter(stock);
 
-
-      player = user;
+      player = bot;
       turnNr = 0;
       in = new Scanner(System.in);
 
       endGame = false;
       knocked = false;
-      userKnocked = false;
-      ElizaKnocked = false;
    }
 
    public void playGame(){
 
+
+
+
       turns();
       if (knocked) comparePoints();
+      if (user.blitz()) userWon();
+      if (bot.blitz()) botWon();
    }
-
 
 
 
    public void printState(){
-      System.out.println();
+      //System.out.println();
+      waiting(1);
       discard.printTop();
+
       if (player == user){
-      System.out.print("Your hand:   ");
-      user.printHand();
-      }
-   }
-
-   public void draw(Player p, Pile pile){
-      Cards drawn = new Cards();
-      drawn = p.draw(pile);
-      if (p == user){
-         System.out.print("You drew: ");
-         drawn.printCards();
+         //waiting(1);
          System.out.print("Your hand:   ");
-         p.printHand();
+         user.printHand();
       }
    }
-
-   /*
-   public void play(Player p, int cardNr){
-      p.play(discard,cardNr);
-   }
-   public void turn(){
-
-   }
-*/
 
    public void turns(){
       while (!endGame()){
          if (stock.isEmpty()) reshuffle();
-         takeTurns(player);
+         Player previous = nextPlayer(player);
+         if (previous.hasKnocked()) knocked = true;
+         drawTurn();
+         playTurn();
+         //takeTurns(player);
          player = nextPlayer(player);
-         if (player.getKnock()) return;
+         if (player.hasKnocked()) return;
          turnNr ++;
       }
-
-//      if (Eliza.blitz()) ElizaWon();
-//      if (user.blitz()) userWon();
-//      if (knocked) user.knocked();
    }
 
    public void takeTurns(Player player){
-      Player previous = nextPlayer(player);
-      if (previous.getKnock()) knocked = true;
-      drawTurn();
-      playTurn();
+
+
+
+
 
    }
 
+   // Drawing part of the turn
    public void drawTurn(){
-      System.out.println(player.getName() + "'s turn");
-      //if (player == user)
+      waiting(2);
+      println("\n================================================ ");
+
+      System.out.println("\n               " + player.getName() + "'s turn\n");
+
+      println("================================================ \n");
+
+      waiting(2);
+      if (player.isUser()) waiting(1);
       printState();
-      player.drawTurn(discard,stock, knocked, turnNr);
-      if (player == user && !player.getKnock()) printState();
+      player.drawTurn(discard, stock, knocked, turnNr);
+      if (player.isUser() && !player.hasKnocked()) printState();
    }
 
+   // The playing part of a turn
    public void playTurn(){
-      boolean checkKnock = player.getKnock();
-      if (player.getKnock()) System.out.println(player.getName() + " knocked");
+      boolean checkKnock = player.hasKnocked();
+      if (player.hasKnocked()) println(player.getName() + " knocked");
       if (!checkKnock){
          player.playTurn(discard, knocked);
-         discard.printTop();
+         printState();
+         //discard.printTop();
       }
 
    }
 
+   // Reshuffles the deck
    public void reshuffle(){
       discard.shuffle();
       stock.createStock(discard);
    }
 
-
-
+   // Returns non-current player
    public Player nextPlayer(Player current) {
       if (current == bot) {
          return user;
@@ -142,26 +130,14 @@ public class Game {
       }
    }
 
-
-
-   public void waiting(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*1000);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-   }
-
+   // what to print if who wins.
    public void userWon(){
       System.out.println();
       System.out.println("Congratulations! You got a blitz and won the game!");
       user.printHand();
       endGame = true;
    }
-
-   public void ElizaWon(){
+   public void botWon(){
       System.out.println();
       System.out.println("Bugger! Eliza got a blitz. You lost. ");
       bot.printHand();
@@ -169,22 +145,12 @@ public class Game {
    }
 
 
-   public boolean checkBot(Player player){
-      return player.name.equals("Liza");
-   }
-
+   // Checks if there has been a blitz
    public boolean endGame(){
       return (bot.blitz() || user.blitz());
    }
 
-
-   public void typeOfEnd(){
-      if (bot.blitz()) ElizaWon();
-      if (user.blitz()) userWon();
-      if (userKnocked) user.knocked();
-      if (ElizaKnocked) bot.knocked();
-   }
-
+   // Compares points after someone knocked.
    public void comparePoints(){
       print("Your hand: ");
       user.printHand();
@@ -205,6 +171,16 @@ public class Game {
 
    }
 
+   // Makes a bit of waiting time between answers
+   public void waiting(long seconds){
+      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+      try {
+         Thread.sleep(seconds*1000);
+      }
+      catch(InterruptedException ex) {
+         Thread.currentThread().interrupt();
+      }
+   }
 
 
    public void print(String string){
@@ -214,5 +190,6 @@ public class Game {
    public void println(String string){
       System.out.println(string);
    }
+
 
 }

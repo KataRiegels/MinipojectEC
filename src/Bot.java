@@ -7,6 +7,7 @@ public class Bot extends Player {
    }
 
 
+   // returns what pile bot chooses to draw from
    public Pile choosePile(Pile discard, Pile stock, boolean knocked){
       Card pileCard = discard.topCard();
       Pile choice = stock; Cards HD = new Cards(); HD.appendCards(hand, pileCard);
@@ -29,34 +30,28 @@ public class Bot extends Player {
       return choice;
    }
 
-   public void announcePlay(){
-      System.out.println();
-      System.out.println(name + " plays card nr. " + (indexCard()) + ": " + chooseCard().show() );
-   }
-
+   // prints chosen draw
    public void announceDraw(Pile pile){
-      System.out.println();
+      //System.out.println();
       System.out.println("Liza draws from the " + pile.label + " pile.");
+      waiting(1);
    }
 
-   @Override
-   public void ifKnocked(){
-      System.out.println();
+   // prints chosen card to play
+   public void announcePlay(Card chosen){
+      System.out.println(name + " plays card nr. " + hand.getIndex(chosen) + ": " + chosen.show() );
    }
 
-   public int indexCard(){
-      return hand.getIndex(chooseCard())+1;
-   }
-
+   // Returns the worst card in hand
    public Card chooseCard(){
-      //Card choice = new Card();
       return hand.worstCardAndSuit();
    }
 
+   // prints bot's hand. Override: will print hidden cards.
    @Override
    public void printHand(){
       int handSize = hand.size();
-      System.out.print(this.name + "'s hand: ");
+      System.out.print(name + "'s hand: ");
       for (int i = 0; i < handSize; i++){
          System.out.print("|x|");
          if (i<handSize-1){
@@ -67,11 +62,7 @@ public class Bot extends Player {
       System.out.println();
    }
 
-   public int areaOfSurprise(int points){
-      return (int)Math.random() * ((points-2) - (points + 2) + 1) + points-2;
-   }
-
-
+   // bot decides whether to knock or not.
    public boolean shouldKnock(int gameTurn){
       boolean earlyGame, midGame, lateGame, neverKnock;
       int lowerTurn, midTurn, lateTurn;
@@ -80,32 +71,65 @@ public class Bot extends Player {
       midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(23);
       lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(27);
       neverKnock = gameTurn > lateTurn;
-      if ( earlyGame || midGame || lateGame) return true;
+      if ( earlyGame && gameTurn > 1 || midGame || lateGame ){
+
+         waiting(2);
+         return true;
+      }
       return false;
    }
 
 
+   // creates random number in interval of 5 around points.
+   // to make bot not just always knock when at _ points.
+   public int areaOfSurprise(int points){
+      return (int)Math.random() * ((points-2) - (points + 2) + 1) + points-2;
+   }
+
+   // prints bot's hand like normally
    public void printOpen(){
       hand.printHand();
    }
 
+   // How bot takes their turn
    @Override
    public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
       printHand();
       if (shouldKnock(gameTurn)){
          knock = true;
       } else {
-      Pile pileChoice = choosePile(discard, stock, knocked);
-      announceDraw(pileChoice);
-      draw(pileChoice);
-      printHand();
+         waiting(3);
+         Pile pileChoice = choosePile(discard, stock, knocked);
+         waiting(1);
+         announceDraw(pileChoice);
+         hand.draw(pileChoice);
+         printHand();
       }
    }
 
+   // how bot plays their turn
    @Override
    public void playTurn(Pile discard, boolean knocked){
-      announcePlay();
-      play(discard, indexCard());
+      waiting(3);
+      Card chosenCard = chooseCard();
+      announcePlay(chosenCard);
+      hand.play(discard, hand.getIndex(chosenCard)+1);
+   }
+
+   // waiting method
+   public void waiting(long seconds){
+      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+      try {
+         Thread.sleep(seconds*1000);
+      }
+      catch(InterruptedException ex) {
+         Thread.currentThread().interrupt();
+      }
+   }
+
+   // returns that player is not user.
+   public boolean isUser(){
+      return false;
    }
 
 }

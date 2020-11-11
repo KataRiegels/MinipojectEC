@@ -220,10 +220,10 @@ public class Cards {
       else return false;
    }
 
-   // prints *cards.* cards
+   // prints cards
    public void printCards(){
       for (int i = 0; i < size(); i++){
-         System.out.println(getCard(i).show());
+         println(getCard(i).show());
       }
    }
 
@@ -245,12 +245,15 @@ public class Cards {
       return cards.size();
    }
 
-/*
-   public void printDeck() {
-      for (int j = 0; j < this.size; j++) {
-         System.out.println(this.deck()[j].name());
-      }
+   public void print(String string){
+      System.out.print(string);
    }
-*/
 
+   public void println(String string){
+      System.out.println(string);
+   }
+
+   public void println(){
+      System.out.println();
+   }
 }
