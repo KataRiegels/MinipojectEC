@@ -4,9 +4,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Game game = new Game();
-        game.playGame();
+        int ave = 0;
+        int iter = 50;
+        for (int i = 0; i < iter; i++) {
+            Game game = new Game();
+            game.playGame();
+            //game.getTurnNr();
+            ave += game.getTurnNr();
+        }
 
+        ave = ave/iter;
+
+        System.out.println("average winning: " + ave);
 
 
 

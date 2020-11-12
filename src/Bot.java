@@ -14,37 +14,40 @@ public class Bot extends Player {
    // returns what pile bot chooses to draw from
    public Pile choosePile(Pile discard, Pile stock, boolean knocked) {
       Card pileCard = discard.topCard();
-      Pile choice = stock;
+      Pile choice = stock; int dCPoint = pileCard.points(); //discard pile point
       Cards HD = new Cards();
       HD.appendCards(hand, pileCard);
       String p;
-      boolean justBetter, notBadCard, bestSuit_OKCards, improveHandEnough, discCard_GT_minPoint, pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit;
-      justBetter = HD.maxPoints() > (hand.maxPoints());
-      notBadCard = pileCard.points() > 5;    //hand.worstCardAndSuit().points();
-      bestSuit_OKCards = HD.bestGroup().anyOver(9);
-      improveHandEnough = (HD.maxPoints() * 0.7) < hand.minPoints(); // complicated. Image having D6, S7 and C8 with S5 on the table.
-      discCard_GT_minPoint = pileCard.points() > hand.minPoints();
-      pileCard_GT_8 = pileCard.points() > 8;
-      pileCard_GTE_10 = pileCard.points() >= 10;
-      badCardGoodSuit = hand.bestGroup().worstCard().points() > 4;
-
-      p = "I picked " + pileCard.show() + " because ";
-      boolean c1, c2, c3, c4, c5, c6, c7, c8;
-
-      c1 = justBetter && notBadCard;
-      c2 = bestSuit_OKCards;
-
-      c3 = improveHandEnough;
-      if (c3) p += "it ";
-      c4 = discCard_GT_minPoint && pileCard_GT_8;
-      c5 = pileCard_GTE_10 && badCardGoodSuit;
+      boolean justBetter, notBadCard, bestSuit_OKCards,
+              improveHandEnough, discCard_GT_minPoint,
+              pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit
+              , betterCard, changeLowestCard;
+      justBetter           = HD.maxPoints() > (hand.maxPoints());
+      notBadCard           = dCPoint > 5;    //hand.worstCardAndSuit().points();
+      bestSuit_OKCards     = HD.bestGroup().anyOver(9);
+      //improveHandEnough    = (HD.maxPoints() * 0.7) < hand.minPoints(); // complicated. Image having D6, S7 and C8 with S5 on the table.
+      discCard_GT_minPoint = dCPoint > hand.minPoints();
+      pileCard_GT_8        = dCPoint > 8;
+      pileCard_GTE_10      = dCPoint >= 10;
+      badCardGoodSuit      = hand.bestGroup().worstCard().points() > 4;
+      betterCard           = true;
+      changeLowestCard     = hand.worstCard().points() > 6;
 
       if (knocked && justBetter) choice = discard;
-      else if (justBetter && notBadCard && bestSuit_OKCards
-              && ((improveHandEnough)
-              || (discCard_GT_minPoint && pileCard_GT_8)
-              || (pileCard_GTE_10 && badCardGoodSuit)
-      )) {
+      /*
+      else if (justBetter && notBadCard
+              &&  (discCard_GT_minPoint && pileCard_GT_8)
+                  || (pileCard_GTE_10 && badCardGoodSuit) )     {
+
+       */
+          else if (notBadCard
+                  &&           (justBetter))
+
+
+
+
+
+            {
          choice = discard;
       }
       return choice;
@@ -53,13 +56,15 @@ public class Bot extends Player {
    // prints chosen draw
    public void announceDraw(Pile pile){
       //System.out.println();
-      System.out.println(name + " draws from the " + pile.label + " pile.");
+      //System.out.println(name + " draws from the " + pile.label + " pile.");
+      System.out.println("I draw from the " + pile.label + " pile.");
       waiting(1);
    }
 
    // prints chosen card to play
    public void announcePlay(Card chosen){
-      System.out.println(name + " plays card nr. " + hand.getIndex(chosen) + ": " + chosen.show() );
+      //System.out.println(name + " plays card nr. " + hand.getIndex(chosen) + ": " + chosen.show() );
+      System.out.println("I choose to play card nr. " + hand.getIndex(chosen) + ": " + chosen.show() );
    }
 
    // Returns the worst card in hand
@@ -71,7 +76,7 @@ public class Bot extends Player {
    @Override
    public void printHand(){
       int handSize = hand.size();
-      System.out.print(name + "'s hand: ");
+      System.out.print((char) 0x2B9A + name + "'s hand: ");
       for (int i = 0; i < handSize; i++){
          System.out.print("|x|");
          if (i<handSize-1){
@@ -155,5 +160,8 @@ public class Bot extends Player {
    public boolean isUser(){
       return false;
    }
+
+
+
 
 }

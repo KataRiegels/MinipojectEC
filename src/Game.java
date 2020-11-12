@@ -59,6 +59,9 @@ public class Game extends Conversation{
       if (p1.blitz()) player1Won();
    }
 
+   public int getTurnNr(){
+      return turnNr;
+   }
 
    //prints hand and top discard card
    public void printState(){
@@ -67,7 +70,7 @@ public class Game extends Conversation{
       discard.printTop();
       if (player == user){
          //waiting(1);
-         System.out.print("Your hand:   ");
+         System.out.print((char) 0x2B9A + "Your hand:   ");
          user.printHand();
       }
    }
@@ -84,7 +87,7 @@ public class Game extends Conversation{
          player = nextPlayer(player);
          if (player.hasKnocked()) return;
          if (endGame()) return;
-         System.out.println("Turn number: " + turnNr);
+         System.out.println((char) 0x2B9A + "Turn number: " + turnNr);
          turnNr ++;
       }
    }
@@ -108,7 +111,7 @@ public class Game extends Conversation{
    // The playing part of a turn
    public void playTurn(){
       boolean checkKnock = player.hasKnocked();
-      if (player.hasKnocked()) println(player.getName() + " knocked");
+      if (player.hasKnocked()) println((char) 0x2B9A +  player.getName() + " knocked");
       if (!checkKnock){
          player.playTurn(discard, knocked);
          printState();
@@ -136,13 +139,13 @@ public class Game extends Conversation{
    // what to print if who wins.
    public void player2Won(){
       System.out.println();
-      System.out.println("Congratulations! You got a blitz and won the game!");
+      System.out.println((char) 0x2B9A + "Congratulations! You got a blitz and won the game!");
       p2.printHand();
       endGame = true;
    }
    public void player1Won(){
       System.out.println();
-      System.out.println("Bugger! Eliza got a blitz. You lost. ");
+      System.out.println((char) 0x2B9A + "Bugger! Eliza got a blitz. You lost. ");
       p1.printHand();
       endGame = true;
    }
@@ -155,21 +158,21 @@ public class Game extends Conversation{
 
    // Compares points after someone knocked.
    public void comparePoints(){
-      print(p2.getName() + "'s hand: ");
+      print( (char) 0x2B9A +  p2.getName() + "'s hand: ");
       p2.printHand();
-      println("You had " + p2.hand.maxPoints() + " points \n");
-      print(p1.getName() + "'s hand: ");
+      println((char) 0x2B9A +  "You had " + p2.hand.maxPoints() + " points \n");
+      print((char) 0x2B9A + p1.getName() + "'s hand: ");
       p1.printOpen();
-      println("Liza had " + p1.hand.maxPoints() + " points \n");
+      println((char) 0x2B9A +  "Liza had " + p1.hand.maxPoints() + " points \n");
 
       if (p2.hand.maxPoints() > p1.hand.maxPoints()) winner = p2;
       else if (p2.hand.maxPoints() == p1.hand.maxPoints()) {
          winner = null;
-         println("It was a tie!");
+         println((char) 0x2B9A + "It was a tie!");
          return;
       }
       else winner = p1;
-      println(winner.getName() + " had most points. " + winner.getName() + " won!");
+      println((char) 0x2B9A + winner.getName() + " had most points. " + winner.getName() + " won!");
 
 
    }

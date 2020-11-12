@@ -72,7 +72,7 @@ public class Player{
    public boolean whichPile(Pile discard, Pile stock){
       //Scanner in = new Scanner(System.in);
       System.out.println();
-      System.out.println("Do you want to draw from stock pile or discard pile?");
+      System.out.println("*Do you want to draw from stock pile or discard pile?");
 
       Pile drawn;
       drawn = null;
