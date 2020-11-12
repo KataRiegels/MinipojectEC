@@ -10,6 +10,7 @@ public class Case {
       this.keyMap = keyMap;
    }
 
+
    public int getKeyMap(){
       return keyMap;
    }
@@ -19,3 +20,5 @@ public class Case {
    }
 
 }
+
+

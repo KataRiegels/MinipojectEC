@@ -10,37 +10,41 @@ public class Bot extends Player {
 
 
    // returns what pile bot chooses to draw from
-   public Pile choosePile(Pile discard, Pile stock, boolean knocked){
+   public Pile choosePile(Pile discard, Pile stock, boolean knocked) {
       Card pileCard = discard.topCard();
-      Pile choice = stock; Cards HD = new Cards(); HD.appendCards(hand, pileCard);
+      Pile choice = stock;
+      Cards HD = new Cards();
+      HD.appendCards(hand, pileCard);
       String p;
-      boolean justBetter, notBadCard, bestSuit_OKCards, improveHand,discCard_GT_minPoint, pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit;
-      justBetter           = HD.maxPoints()    > (hand.maxPoints());
-      notBadCard           = pileCard.points() > 5;    //hand.worstCardAndSuit().points();
-      bestSuit_OKCards     = HD.bestGroup().anyOver(9);
-      improveHand          = (HD.maxPoints()/2)    < hand.minPoints(); // complicated. Image having D6, S7 and C8 with S5 on the table.
+      boolean justBetter, notBadCard, bestSuit_OKCards, improveHandEnough, discCard_GT_minPoint, pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit;
+      justBetter = HD.maxPoints() > (hand.maxPoints());
+      notBadCard = pileCard.points() > 5;    //hand.worstCardAndSuit().points();
+      bestSuit_OKCards = HD.bestGroup().anyOver(9);
+      improveHandEnough = (HD.maxPoints() * 0.7) < hand.minPoints(); // complicated. Image having D6, S7 and C8 with S5 on the table.
       discCard_GT_minPoint = pileCard.points() > hand.minPoints();
-      pileCard_GT_8        = pileCard.points() > 8;
-      pileCard_GTE_10      = pileCard.points() >= 10;
-      badCardGoodSuit      = hand.bestGroup().worstCard().points() > 4;
+      pileCard_GT_8 = pileCard.points() > 8;
+      pileCard_GTE_10 = pileCard.points() >= 10;
+      badCardGoodSuit = hand.bestGroup().worstCard().points() > 4;
 
       p = "I picked " + pileCard.show() + " because ";
-      boolean c1, c2, c3, c4, c5,c6,c7,c8;
+      boolean c1, c2, c3, c4, c5, c6, c7, c8;
 
       c1 = justBetter && notBadCard;
       c2 = bestSuit_OKCards;
 
-      c3 = improveHand;
+      c3 = improveHandEnough;
       if (c3) p += "it ";
       c4 = discCard_GT_minPoint && pileCard_GT_8;
       c5 = pileCard_GTE_10 && badCardGoodSuit;
 
-      if (knocked && justBetter && improveHand) choice = discard;
+      if (knocked && justBetter) choice = discard;
       else if (justBetter && notBadCard && bestSuit_OKCards
-              && (      (improveHand)
-                     || (discCard_GT_minPoint && pileCard_GT_8)
-                     || (pileCard_GTE_10      && badCardGoodSuit)
-      )){ choice = discard; }
+              && ((improveHandEnough)
+              || (discCard_GT_minPoint && pileCard_GT_8)
+              || (pileCard_GTE_10 && badCardGoodSuit)
+      )) {
+         choice = discard;
+      }
       return choice;
    }
 
