@@ -11,8 +11,6 @@ public class GameReactions extends Reaction{
 
    }
 
-   public
-
 
 
 }
