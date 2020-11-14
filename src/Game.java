@@ -2,19 +2,18 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Game extends Conversation{
+   String comReply = (char) 0x2B9A + " ";  //0x2B9A
    Pile stock, discard;
    Scanner in;
    Player winner, player, user, p1, p2;
    Bot bot, bot2;
-   int turnNr;
+   int turnNr, gameNr;
    boolean endGame, knocked;
 
    public Game() {
       Deck deck = new Deck("Deck");
       deck.shuffle();
 
-      //discPile = new Case("discard", 1);
-      //stockPile = new Case("stock", 0);
 
       stock = new Pile("stock");
       stock.createStock(deck);
@@ -26,14 +25,10 @@ public class Game extends Conversation{
       //bot.hand.starter(stock, 3);
 
 
-      user = new Player("User");
-      user.hand.starter(stock, 3);
+      //user = new Player("User");
+      //user.hand.starter(stock, 3);
 
-
-
-
-
-      turnNr = 0;
+      turnNr = 0; gameNr = 0;
       in = new Scanner(System.in);
 
       endGame = false;
@@ -44,19 +39,52 @@ public class Game extends Conversation{
 
       boolean trainingGame;
       trainingGame = true;
-      p1 = new Bot("Liza", trainingGame);
-      p1.hand.starter(stock, 3);
 
-      p2 = new Bot("bot2", true);
-      p2.hand.starter(stock, 3);
+      do {
+
+         Deck deck = new Deck("Deck");
+         deck.shuffle();
+
+         stock = new Pile("stock");
+         stock.createStock(deck);
+
+         discard = new Pile("discard");
+         discard.turnCard(stock);
+
+         turnNr = 0;
+         in = new Scanner(System.in);
+
+         endGame = false;
+         knocked = false;
 
 
-      player = p1;
+         p1 = new Bot("Liza", trainingGame);
+         p2 = new Bot("bot2", true);
 
-      turns();
-      if (knocked) comparePoints();
-      if (p2.blitz()) player2Won();
-      if (p1.blitz()) player1Won();
+         p1.hand.starter(stock, 3);
+
+
+         p2.hand.starter(stock, 3);
+
+         println("Let's get ready to play! We will decide who starts by rolling a die. \n");
+         waiting(1);
+
+         player = whoStarts(p1, p2);
+
+         printLine();
+         println("\n              The game begins!");
+         printLine();
+
+         turns();
+         if (knocked) comparePoints();
+         if (p2.blitz()) player2Won();
+         if (p1.blitz()) player1Won();
+         gameNr++;
+         System.out.println("Game nr " + gameNr);
+      } while (playAgain());
+
+
+
    }
 
    public int getTurnNr(){
@@ -70,7 +98,7 @@ public class Game extends Conversation{
       discard.printTop();
       if (player == user){
          //waiting(1);
-         System.out.print((char) 0x2B9A + "Your hand:   ");
+         System.out.print(comReply + "Your hand:   ");
          user.printHand();
       }
    }
@@ -87,8 +115,9 @@ public class Game extends Conversation{
          player = nextPlayer(player);
          if (player.hasKnocked()) return;
          if (endGame()) return;
-         System.out.println((char) 0x2B9A + "Turn number: " + turnNr);
+         System.out.println(comReply + "Turn number: " + turnNr);
          turnNr ++;
+         discard.printCards();
       }
    }
 
@@ -111,7 +140,7 @@ public class Game extends Conversation{
    // The playing part of a turn
    public void playTurn(){
       boolean checkKnock = player.hasKnocked();
-      if (player.hasKnocked()) println((char) 0x2B9A +  player.getName() + " knocked");
+      if (player.hasKnocked()) println(comReply +  player.getName() + " knocked");
       if (!checkKnock){
          player.playTurn(discard, knocked);
          printState();
@@ -139,13 +168,13 @@ public class Game extends Conversation{
    // what to print if who wins.
    public void player2Won(){
       System.out.println();
-      System.out.println((char) 0x2B9A + "Congratulations! You got a blitz and won the game!");
+      System.out.println(comReply + "Congratulations! You got a blitz and won the game!");
       p2.printHand();
       endGame = true;
    }
    public void player1Won(){
       System.out.println();
-      System.out.println((char) 0x2B9A + "Bugger! Eliza got a blitz. You lost. ");
+      System.out.println(comReply + "Bugger! Eliza got a blitz. You lost. ");
       p1.printHand();
       endGame = true;
    }
@@ -158,23 +187,29 @@ public class Game extends Conversation{
 
    // Compares points after someone knocked.
    public void comparePoints(){
-      print( (char) 0x2B9A +  p2.getName() + "'s hand: ");
-      p2.printHand();
-      println((char) 0x2B9A +  "You had " + p2.hand.maxPoints() + " points \n");
-      print((char) 0x2B9A + p1.getName() + "'s hand: ");
-      p1.printOpen();
-      println((char) 0x2B9A +  "Liza had " + p1.hand.maxPoints() + " points \n");
+      Player[] ps = {p1,p2};
+      println("\n\n=================================================\n");
 
-      if (p2.hand.maxPoints() > p1.hand.maxPoints()) winner = p2;
-      else if (p2.hand.maxPoints() == p1.hand.maxPoints()) {
-         winner = null;
-         println((char) 0x2B9A + "It was a tie!");
-         return;
+      println("Are you ready to see who won?");
+      String reply = in.nextLine();
+        // IF THEY SAY SOMETHING ELSE THAN YES?!?!??!
+      if (reply.contains("yes")) {
+
+         for (Player p : ps) {
+            print(comReply + p.getName() + "'s hand: ");
+            p.printOpen();
+            println(comReply + p.getName() + " had " + p.hand.maxPoints() + " points \n");
+
+         }
+
+         if (p2.hand.maxPoints() > p1.hand.maxPoints()) winner = p2;
+         else if (p2.hand.maxPoints() == p1.hand.maxPoints()) {
+            winner = null;
+            println(comReply + "It was a tie!");
+            return;
+         } else winner = p1;
+         println(comReply + winner.getName() + " had most points. " + winner.getName() + " won!");
       }
-      else winner = p1;
-      println((char) 0x2B9A + winner.getName() + " had most points. " + winner.getName() + " won!");
-
-
    }
 
    // Makes a bit of waiting time between answers
@@ -189,6 +224,50 @@ public class Game extends Conversation{
       */
    }
 
+   // rolls a die to check who starts
+   public Player whoStarts(Player p1, Player p2){
+      String p = "";
+      int die = 0;
+      int die2 = 0;
+      while (die == die2) {
+         die = p1.dieRoll();
+
+         println(comReply + p1.getName() + " rolled |" + diePrint(die) + "|");
+         println("\nAlright, my turn.\n");
+
+         die2 = p2.dieRoll();
+
+         println(comReply + p2.getName() + " rolled |" + diePrint(die2) + "|\n");
+         //System.out.println("first die " + die); System.out.println("second die " + die2);
+
+         if (die == die2) println("Whoops, we rolled the same. Let's try again.\n");
+      }
+
+
+      if (die2 > die) {
+         println(comReply + p2.getName() + " rolled highest. " + p2.getName() + " starts");
+         return p2;
+      }
+      println(comReply + p1.getName() + " rolled highest. " + p1.getName() + " starts");
+      return p1;
+   }
+
+   // prints the die all nicely :)
+   public String diePrint(int die){
+      String p;
+      if (die == 1) p = (char) 0x2802 + "";
+      else if (die == 2) p = (char) 0x2801 + " " + (char) 0x2804;
+      else if (die == 3) p = (char) 0x2801 + "" + (char) 0x2802 + "" + (char) 0x2804;
+      else if (die == 4) p = (char) 0x2805 + " " + (char) 0x2805;
+      else if (die == 5) p = (char) 0x2805 + "" + (char) 0x2802 + "" + (char) 0x2805;
+      else p = (char) 0x2807 + " " + (char) 0x2807;
+
+      return p;
+   }
+
+   public void printLine(){
+      println("\n\n======================================\n");
+   }
 
    public void print(String string){
       System.out.print(string);
@@ -196,6 +275,34 @@ public class Game extends Conversation{
 
    public void println(String string){
       System.out.println(string);
+   }
+
+   public boolean playAgain(){
+
+      printLine();
+      if (gameNr == 1) println("That was fun! Shall we play again?");
+      if (gameNr == 2) println("Great! Shall we play again?");
+      if (gameNr == 3) println("Alright. Do you want to play again?");
+      if (gameNr == 4) {println("Nice! Are we done playing?");
+         String reply = in.nextLine();
+         if (reply.contains("no")) return true;
+         else if (reply.contains("yes")) return false;
+      }
+      if (gameNr == 5) {
+         println("Soo.. Shall we call it a night for the games?");
+         String reply = in.nextLine();
+         if (reply.contains("no")){
+            println("Okay, but this will be our last.. ");
+            return true;
+         }
+         else if (reply.contains("yes")) return false;
+      }
+      if (gameNr >= 5) return false;
+
+      String reply = in.nextLine();
+      if (reply.contains("yes")) return true;
+      else if (reply.contains("no")) return false;
+      return false;
    }
 
 

@@ -20,7 +20,7 @@ public class Pile extends Cards{
 
    // Prints top cards of this
    public void printTop(){
-      print((char) 0x2B9A + "Discard pile: ");
+      print((char) 0x2B9A + " Discard pile: ");
       if (isEmpty()) println("|x|");
       else println(topCard().show());
    }

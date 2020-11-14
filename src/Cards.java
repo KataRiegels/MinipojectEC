@@ -150,18 +150,31 @@ public class Cards {
       return cards.indexOf(card);
    }
 
+   public Cards removeCard(Card card){
+      cards.remove(getIndex(card));
+      return this;
+   }
+
+
 
    // takes "amount" card from this.cards and adds to cs cards
    public Cards deal(Cards receiver, int amount, int cardIndex){ //cardIndex is where form the cards. you take. it is 0 if top of a pile
       Cards cs = new Cards();
       for (int i = 0; i < amount; i++){
          Card card = takeCard(cardIndex);
+         if (cardIndex == size()) cardIndex -= 1;
          cs.addCard(card);
          receiver.addCard(card);
       }
       return cs;
    }
 
+   public void removeAll(){
+      for (int i = 0; i < size(); i++){
+         cards.remove(0);
+      }
+
+   }
 
    // set card *i* to be *card*>
    public void setCard(int i, Card card){
@@ -205,7 +218,7 @@ public class Cards {
    // prints cards
    public void printCards(){
       for (int i = 0; i < size(); i++){
-         println(getCard(i).show());
+         print(getCard(i).show() + " - ");
       }
    }
 

@@ -59,4 +59,9 @@ public class Card {
          return -1;                             //Fix error
       }
    }
+
+   public boolean over10(){
+      return (points() >= 10);
+   }
+
 }

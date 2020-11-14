@@ -6,6 +6,10 @@ public class Hand extends Cards{
       super(label);
    }
 
+   public Hand(){
+
+   }
+
    // simply draw
    public Cards draw(Pile pile){
       return pile.deal(this, 1, pile.lastCard());
@@ -17,9 +21,11 @@ public class Hand extends Cards{
    }
 
 
+
    // deal starting hand
    public void starter(Pile pile, int amount){
-      pile.deal(this, amount, 0);
+      removeAll();
+      pile.deal(this, amount, (pile.lastCard()));
    }
 
    public void printWorstCard(){

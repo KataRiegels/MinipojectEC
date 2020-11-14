@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Player{
+   String comReply = (char) 0x2B9A + " ";
    String name;
    Hand hand;
    Case discPile  = new Case("discard", 1);
@@ -100,6 +101,21 @@ public class Player{
       return (hand.maxPoints() >= 31 && !hand.bestGroup().anyUnder(10) && hand.bestGroup().anyOver(10));
 
    }
+
+   // dice roll
+   public int dieRoll(){
+      int die = -1;
+      Scanner in = new Scanner(System.in);
+      System.out.println("Are you ready to roll your die?");
+      String input = in.nextLine();
+      String p = "";
+      if (input.contains("yes")) {
+         die=(int)(Math.random()*6+1);
+
+      }
+      return die;
+   }
+
 
    //waiting method
    public void waiting(long seconds){
