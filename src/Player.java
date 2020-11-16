@@ -4,9 +4,9 @@ public class Player{
    String comReply = (char) 0x2B9A + " ";
    String name;
    Hand hand;
-   Case discPile  = new Case("discard", 1);
-   Case stockPile = new Case("stock", 0);
-   Case knocked   = new Case("knock", 2);
+   //Case discPile  = new Case("discard", 1);
+   //Case stockPile = new Case("stock", 0);
+   //Case knocked   = new Case("knock", 2);
    boolean knock;
 
    public void printOpen(){
@@ -133,9 +133,9 @@ public class Player{
       Scanner in = new Scanner(System.in);
       String drawAnswer = in.nextLine();
 
-      if (drawAnswer.contains(discPile.getInput()))  return discPile.getKeyMap();
-      if (drawAnswer.contains(stockPile.getInput())) return stockPile.getKeyMap();
-      if (drawAnswer.contains(knocked.getInput()))   return knocked.getKeyMap();
+      if (drawAnswer.contains("discard")) return 1;
+      if (drawAnswer.contains("stock")) return 0;
+      if (drawAnswer.contains("knock"))   return 2;
       return -1;
    }
 
