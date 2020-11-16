@@ -40,30 +40,27 @@ public class Game extends Conversation{
       boolean trainingGame;
       trainingGame = true;
 
+      p1 = new Bot("Liza", trainingGame);
+      p2 = new Bot("bot2", true);
+
+
       do {
 
+         endGame = false;
+         knocked = false;
          Deck deck = new Deck("Deck");
          deck.shuffle();
 
-         stock = new Pile("stock");
+         //stock = new Pile("stock");
          stock.createStock(deck);
 
-         discard = new Pile("discard");
+         //discard = new Pile("discard");
          discard.turnCard(stock);
 
          turnNr = 0;
          in = new Scanner(System.in);
 
-         endGame = false;
-         knocked = false;
-
-
-         p1 = new Bot("Liza", trainingGame);
-         p2 = new Bot("bot2", true);
-
          p1.hand.starter(stock, 3);
-
-
          p2.hand.starter(stock, 3);
 
          println("Let's get ready to play! We will decide who starts by rolling a die. \n");
@@ -72,7 +69,7 @@ public class Game extends Conversation{
          player = whoStarts(p1, p2);
 
          printLine();
-         println("\n              The game begins!");
+         println("\n              The game begins!\n");
          printLine();
 
          turns();
@@ -96,11 +93,10 @@ public class Game extends Conversation{
       //System.out.println();
       waiting(1);
       discard.printTop();
-      if (player == user){
-         //waiting(1);
-         System.out.print(comReply + "Your hand:   ");
-         user.printHand();
-      }
+      waiting(1);
+      System.out.print(comReply + player.getName() + "'s hand:   ");
+      player.printHand();
+
    }
 
    // taking turns
@@ -115,22 +111,23 @@ public class Game extends Conversation{
          player = nextPlayer(player);
          if (player.hasKnocked()) return;
          if (endGame()) return;
-         System.out.println(comReply + "Turn number: " + turnNr);
+         //System.out.println(comReply + "Turn number: " + turnNr);
          turnNr ++;
-         discard.printCards();
+         //discard.printCards();
       }
    }
 
    // Drawing part of the turn
    public void drawTurn(){
       waiting(2);
-      println("\n================================================ ");
+      printLine();
 
-      System.out.println("\n               " + player.getName() + "'s turn\n");
+      System.out.print("\n               " + player.getName() + "'s turn\n");
 
-      println("================================================ \n");
+      printLine();
+      System.out.println();
 
-      waiting(2);
+      waiting(1);
       if (player.isUser()) waiting(1);
       printState();
       player.drawTurn(discard, stock, knocked, turnNr);
@@ -189,7 +186,7 @@ public class Game extends Conversation{
    public void comparePoints(){
       Player[] ps = {p1,p2};
       println("\n\n=================================================\n");
-
+      printWait(2);
       println("Are you ready to see who won?");
       String reply = in.nextLine();
         // IF THEY SAY SOMETHING ELSE THAN YES?!?!??!
@@ -209,20 +206,19 @@ public class Game extends Conversation{
             return;
          } else winner = p1;
          println(comReply + winner.getName() + " had most points. " + winner.getName() + " won!");
+         printWait(2);
+         if (winner.isUser()){
+            println("Congratulations, you played well");
+         } else if (winner == null){
+            println("I guess we were both too good ;-)");
+         } else {
+            println("Can't say I'm surprised I won.. ;-)");
+         }
+
       }
    }
 
-   // Makes a bit of waiting time between answers
-   public void waiting(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      /*
-      try {
-         Thread.sleep(seconds*1000);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-      */
-   }
+
 
    // rolls a die to check who starts
    public Player whoStarts(Player p1, Player p2){
@@ -255,18 +251,17 @@ public class Game extends Conversation{
    // prints the die all nicely :)
    public String diePrint(int die){
       String p;
-      if (die == 1) p = (char) 0x2802 + "";
+      if (die == 1)      p = (char) 0x2802 + "";
       else if (die == 2) p = (char) 0x2801 + " " + (char) 0x2804;
-      else if (die == 3) p = (char) 0x2801 + "" + (char) 0x2802 + "" + (char) 0x2804;
+      else if (die == 3) p = (char) 0x2801 + ""  + (char) 0x2802 + "" + (char) 0x2804;
       else if (die == 4) p = (char) 0x2805 + " " + (char) 0x2805;
-      else if (die == 5) p = (char) 0x2805 + "" + (char) 0x2802 + "" + (char) 0x2805;
-      else p = (char) 0x2807 + " " + (char) 0x2807;
-
+      else if (die == 5) p = (char) 0x2805 + ""  + (char) 0x2802 + "" + (char) 0x2805;
+      else               p = (char) 0x2807 + " " + (char) 0x2807;
       return p;
    }
 
    public void printLine(){
-      println("\n\n======================================\n");
+      print("\n=======================================================\n");
    }
 
    public void print(String string){
@@ -280,6 +275,7 @@ public class Game extends Conversation{
    public boolean playAgain(){
 
       printLine();
+      printWait(1);
       if (gameNr == 1) println("That was fun! Shall we play again?");
       if (gameNr == 2) println("Great! Shall we play again?");
       if (gameNr == 3) println("Alright. Do you want to play again?");
@@ -303,6 +299,51 @@ public class Game extends Conversation{
       if (reply.contains("yes")) return true;
       else if (reply.contains("no")) return false;
       return false;
+   }
+
+   // Makes a bit of waiting time between answers
+   public void waiting(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+
+      try {
+         Thread.sleep(seconds*1000);
+      }
+      catch(InterruptedException ex) {
+         Thread.currentThread().interrupt();
+      }
+
+   }
+
+   public void waitingHalf(long seconds){
+      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+      try {
+         Thread.sleep(seconds*500);
+      }
+      catch(InterruptedException ex) {
+         Thread.currentThread().interrupt();
+      }
+
+
+   }
+
+   public void printWait(long waitTime){
+      int dots = 3;
+      String delete = "\b";
+      String dot;
+      for (int n = 0; n <= dots*2; n++){
+         delete += "\b";
+      }
+      for (int j = 0; j < waitTime; j++) {
+         dot = "";
+         for (int i = 0; i < dots; i++) {
+            dot += (char)0x26AC + " ";
+            waitingHalf(1);
+            System.out.print(dot + "\r");
+
+         }
+         waitingHalf(1);
+         System.out.print(delete);
+      }
+      waiting(1);
    }
 
 

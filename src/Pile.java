@@ -10,11 +10,13 @@ public class Pile extends Cards{
 
    // Creates the stock from the given deck
    public void createStock(Cards deck){
+      clear();
       deck.deal(this, deck.size(), 0);
    }
 
    // Turns top card of this and puts it on pile
    public void turnCard(Pile pile){
+      clear();
       pile.deal(this, 1, 0);
    }
 

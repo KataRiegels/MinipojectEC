@@ -24,7 +24,7 @@ public class Hand extends Cards{
 
    // deal starting hand
    public void starter(Pile pile, int amount){
-      removeAll();
+      clear();
       pile.deal(this, amount, (pile.lastCard()));
    }
 

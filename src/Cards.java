@@ -169,8 +169,8 @@ public class Cards {
       return cs;
    }
 
-   public void removeAll(){
-      for (int i = 0; i < size(); i++){
+   public void clear(){
+      while(!isEmpty()){
          cards.remove(0);
       }
 
