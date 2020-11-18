@@ -7,7 +7,7 @@ public class Main {
 
 
 
-
+        /*
         int ave = 0;
         int iter = 1;
         for (int i = 0; i < iter; i++) {
@@ -20,18 +20,37 @@ public class Main {
         ave = ave/iter;
 
         System.out.println("average winning: " + ave);
+        */
 
 
-        /*
         // welcome/starting message
         System.out.println("Welcome to Blackjack!");
         System.out.println("Do you know the rules or would you like me to explain them?");
-
+        /*
         String answer = readString();
         Case case1 = new Case(answer);
         Reply reply1 = new Reply(case1.getTrigger());
-
          */
+
+        Output welcome = new Output("welcome");
+
+        Output explain = new Output("Ok, I'll explain the rules then.");
+        String explainTrigger1[] = {"explain"};
+        String explainTrigger2[] = {"know", "rules"};
+        String explainTriggers[][] = {explainTrigger1, explainTrigger2};
+        explain.setKeyword(explainTriggers);
+
+        Output noexplain = new Output("Let's start the game then.");
+        String noexplainTrigger1[] = {"explain", "don't"};
+        String noexplainTrigger2[] = {"don't", "know", "rules"};
+        String noexplainTriggers[][] = {noexplainTrigger1, noexplainTrigger2};
+        noexplain.setKeyword(noexplainTriggers);
+
+        Output possibleReplies[] = {explain, noexplain};
+
+        // this might be the loop (looping through Output objects, 'welcome' being the first)
+        String input = readString();
+        welcome.getNext(input, possibleReplies);
 
     }
 
@@ -41,6 +60,10 @@ public class Main {
         return in.nextLine();
     }
 
+    // method that converts String into String[]
+    public static String[] split(String s) {
+        return s.toLowerCase().split(" ");
+    }
 }
 
 /*
