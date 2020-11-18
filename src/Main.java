@@ -50,7 +50,8 @@ public class Main {
 
         // this might be the loop (looping through Output objects, 'welcome' being the first)
         String input = readString();
-        welcome.getNext(input, possibleReplies);
+        Output next = welcome.getNext(input, possibleReplies);
+        next.print();
 
     }
 
