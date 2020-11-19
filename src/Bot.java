@@ -1,172 +1,23 @@
 
-
-import java.util.Random;
-
 public class Bot extends Player {
+   private String comReply;
+   private String name;
+   //Hand hand;
+   private boolean isUser, knock, unicode;;
 
-   boolean trainingGame;
-
-   public Bot(String name, boolean trainingGame){
+   public Bot(String name){
       super(name);
-      this.trainingGame = trainingGame;
+      this.isUser = false;
+      unicode = true;
    }
 
 
-   // returns what pile bot chooses to draw from
-   public Pile choosePile(Pile discard, Pile stock, boolean knocked, int gameTurn) {
-      Card pileCard = discard.topCard();
-      Pile choice = stock; int dCPoint = pileCard.points(); //discard pile point
-      Cards HD = new Cards();
-      HD.appendCards(hand, pileCard);
-      String p = "";
-      boolean justBetter, notBadCard, bestSuit_anyOver9,
-              improveHandEnough, discCard_GT_minPoint,
-              pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit
-              , betterCard, changeLowestCard, badSuitGoodCard, discCard_2GT_minPointSUIT, bestSuit_anyUnder10;
-
-      justBetter           = HD.maxPoints() > (hand.maxPoints());
-      notBadCard           = dCPoint > 5;    //hand.worstCardAndSuit().points();
-      bestSuit_anyOver9    = HD.bestGroup().anyOver(9);
-      discCard_GT_minPoint = (dCPoint > hand.worstCardAndSuit().points()) ;
-      discCard_2GT_minPointSUIT =  dCPoint+2 > hand.bestGroup().worstCard().points();
-      pileCard_GT_8        = dCPoint > 8;
-
-      pileCard_GTE_10      = dCPoint >= 10;
-      badCardGoodSuit      = hand.bestGroup().worstCard().points() > 4;
-      betterCard           = dCPoint > hand.worstCard().points();
-      changeLowestCard     = hand.worstCard().points() < 8;
-      badSuitGoodCard    = hand.worstGroup().anyOver(9);
-      bestSuit_anyUnder10 = hand.bestGroup().anyUnder(10);
-      Card temp = new Card(); int counter = 0;
-
-      for (int i = 0; i < hand.bestGroup().size(); i++){
-         if (hand.bestGroup().getCard(i).over10()) counter += 1;
-      }
-
-      if (knocked && justBetter) choice = discard;
-
-      else if (notBadCard
-              &&           ((justBetter && bestSuit_anyOver9
-              &&           (discCard_GT_minPoint || discCard_2GT_minPointSUIT )
-              && ((counter >= 2  || pileCard_GT_8))))){
-         choice = discard;}
-      else if (pileCard_GTE_10 && changeLowestCard && !badSuitGoodCard && bestSuit_anyUnder10){
-
-         choice = discard;} // if discard pile card is 10 or 11, you wanna switch out with cards lower than 6 of best suit.
-      else if ( shouldKnock(gameTurn, knocked, HD.removeCard(HD.worstCard()))) {
-         System.out.println("will knock nexy huhu");
-         knock = true;
-         choice = discard;
-      }
-      /*
-          else if (notBadCard
-                  &&           ((justBetter && bestSuit_anyOver9
-                               &&           (discCard_GT_minPoint || discCard_2GT_minPointSUIT )
-                                             && ((counter >= 2  || pileCard_GT_8)))
-
-                  ||           (pileCard_GTE_10 && changeLowestCard && !badSuitGoodCard && hand.bestGroup().anyUnder(10))) // if discard pile card is 10 or 11, you wanna switch out with cards lower than 6 of best suit.
-                  || shouldKnock(gameTurn, knocked, HD.removeCard(HD.worstCard())))
-            {
-               System.out.println(p);
-         choice = discard;
-
-       */
-
-
-
-      return choice;
-   }
-
-   // Returns the worst card in hand
-   public Card chooseCard(boolean knocked) {
-      Card choice = new Card(); int counter = 0;
-      for (int i = 0; i < hand.bestGroup().size(); i++){
-         if (hand.bestGroup().getCard(i).over10()) counter += 1;
-      }
-      boolean justBetter, notBadCard, bestSuit_anyOver9,
-              improveHandEnough, discCard_GT_minPoint,
-              pileCard_GT_8, pileCard_GTE_10, badCardGoodSuit, betterCard, changeLowestCard, noBadinBadSuit;
-      changeLowestCard = hand.worstGroup().anyOver(9);
-      noBadinBadSuit = !hand.worstGroup().anyUnder(10);
-      if (!knocked && hand.worstCard().points() < 8 && changeLowestCard && noBadinBadSuit && ((hand.anyUnder(6) && counter <2) || (counter >= 2 && hand.anyUnder(5)))) choice = hand.worstCard();
-      else choice = hand.worstCardAndSuit();
-      return choice;
-   }
-
-
-      // prints chosen draw
-   public void announceDraw(Pile pile){
-   printWait(2);
-      System.out.println("I draw from the " + pile.label + " pile.");
-      waiting(1);
-      System.out.println();
-   }
-
-   // prints chosen card to play
-   public void announcePlay(Card chosen){
-      printWait(2);
-      System.out.println("I choose to play card nr. " + (hand.getIndex(chosen)+1) + ": " + chosen.show());
-      waitingHalf(1);
-      System.out.println();
-   }
-
-
-   // prints bot's hand. Override: will print hidden cards.
-   @Override
-   public void printHand(){
-      int handSize = hand.size();
-      //System.out.print(comReply + name + "'s hand: ");
-      for (int i = 0; i < handSize; i++){
-         System.out.print("|x|");
-         if (i<handSize-1){
-            System.out.print(" - ");
-         }
-      }
-      hand.printHand();
-      System.out.println();
-   }
-
-   // bot decides whether to knock or not.
-   public boolean shouldKnock(int gameTurn, boolean knocked, Cards hand){
-      boolean earlyGame, midGame, lateGame, neverKnock;
-      int lowerTurn, midTurn, lateTurn;
-      lowerTurn = 4; midTurn = 8; lateTurn = 12;
-      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > areaOfSurprise(23);
-      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(26);
-      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(28);
-      neverKnock = gameTurn > lateTurn;
-      if ( !knocked && (earlyGame && gameTurn > 0 || midGame || lateGame  || hand.maxPoints() >= 30)){
-
-         //waiting(2);
-         printWait(1);
-         System.out.println("I want to knock");
-         //return false;
-         return true;
-      }
+   @Override public boolean isUser(){
       return false;
    }
 
-
-   // creates random number in interval of 5 around points.
-   // to make bot not just always knock when at _ points.
-   public int areaOfSurprise(int points){
-      return (int)Math.random() * ((points-1) - (points + 1) + 1) + points-1;
-   }
-
-   // prints bot's hand like normally
-   public void printOpen(){
-      hand.printHand();
-   }
-
-   // dice roll
-   @Override
-   public int dieRoll(){
-      return (int)(Math.random()*6+1);
-   }
-
    // How bot takes their turn
-   @Override
-   public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
+   @Override public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
       //printHand();
       if (shouldKnock(gameTurn, knocked, hand)){
          knock = true;
@@ -176,14 +27,11 @@ public class Bot extends Player {
          //waiting(1);
          announceDraw(pileChoice);
          hand.draw(pileChoice);
-         System.out.print(comReply + name + "'s hand");
-         printHand();
+         //System.out.print(comReply + name + "'s hand");
+         //printHand();
       }
    }
-
-   // how bot plays their turn
-   @Override
-   public void playTurn(Pile discard, boolean knocked){
+   @Override public void playTurn(Pile discard, boolean knocked){
       //waiting(3);
       Card chosenCard = chooseCard(knocked);
       announcePlay(chosenCard);
@@ -191,58 +39,146 @@ public class Bot extends Player {
    }
 
 
-   // returns that player is not user.
-   public boolean isUser(){
+   // Which pile to draw form, and which card to play.
+   public Pile choosePile(Pile discard, Pile stock, boolean knocked, int gameTurn) {
+      Card pileCard = discard.topCard();
+      Pile choice = stock;
+      int dCPoint = pileCard.points(); //discard pile point
+      Cards HD = new Cards();
+      HD.appendCards(hand, pileCard);
+      boolean justBetter, notBadCard, bestSuit_anyOver9, discCard_GT_minPoint,
+              pileCard_GT_8, pileCard_GTE_10, changeLowestCard, badSuitGoodCard,
+              discCard_2GT_minPointSUIT, bestSuit_anyUnder10;
+
+      justBetter                = HD.maxPoints() > (hand.maxPoints());
+      notBadCard                = dCPoint > 5;    //hand.worstCardAndSuit().points();
+      bestSuit_anyOver9         = HD.bestGroup().anyOver(9);
+      discCard_GT_minPoint      = (dCPoint > hand.worstGroup().worstCard().points()) ;
+      discCard_2GT_minPointSUIT =  dCPoint+2 > hand.bestGroup().worstCard().points();
+      pileCard_GT_8             = dCPoint > 8;
+      pileCard_GTE_10           = dCPoint >= 10;
+      changeLowestCard          = hand.worstCard().points() < 8;
+      badSuitGoodCard           = hand.worstGroup().anyOver(9);
+      bestSuit_anyUnder10       = hand.bestGroup().anyUnder(10);
+      int counter = 0;
+
+      for (int i = 0; i < hand.bestGroup().size(); i++){
+         if (hand.bestGroup().getCard(i).over10()) counter += 1;
+      }
+
+      if (knocked && justBetter) choice = discard;
+      else if (notBadCard
+              &&           ((justBetter && bestSuit_anyOver9
+              &&           (discCard_GT_minPoint || discCard_2GT_minPointSUIT )
+              &&           ((counter >= 2  || pileCard_GT_8))))){
+         choice = discard;
+      }
+      else if (pileCard_GTE_10 && changeLowestCard && !badSuitGoodCard && bestSuit_anyUnder10){
+         choice = discard;   // if discard pile card is 10 or 11, you wanna switch out with cards lower than 6 of best suit.
+      }
+      else if ( shouldKnock(gameTurn, knocked, HD.removeCard(HD.worstCard()))) {
+         //System.out.println("will knock nexy huhu");
+         knock = true;
+         choice = discard;
+      }
+      return choice;
+   }
+   public Card chooseCard(boolean knocked) {
+      Card choice; int counter = 0;
+      for (int i = 0; i < hand.bestGroup().size(); i++){
+         if (hand.bestGroup().getCard(i).over10()) counter += 1;
+      }
+      boolean changeLowestCard = hand.worstGroup().anyOver(9);
+      boolean noBadinBadSuit   = !hand.worstGroup().anyUnder(10);
+      if    (!knocked && hand.worstCard().points() < 8 && changeLowestCard && noBadinBadSuit && ((hand.anyUnder(6) && counter <2) || (counter >= 2 && hand.anyUnder(5)))) choice = hand.worstCard();
+      else  choice = hand.worstGroup().worstCard();
+      return choice;
+   }
+
+   // Prints which cards were picked above.
+   public void announceDraw(Pile pile){
+   printWait(2);
+      println("I draw from the " + pile.getLabel() + " pile.");
+      waiting(1);
+      //println();
+   }
+   public void announcePlay(Card chosen){
+      printWait(2);
+      println("I choose to play card nr. " + (hand.getIndex(chosen)+1) + ": " + hand.showCard(chosen));
+      waitingMilSec(500);
+      println();
+   }
+
+
+   // prints bot's hand. Override: will print hidden cards.
+   @Override public void printHand(){
+      //int handSize = hand.size();
+      //System.out.print(comReply + name + "'s hand: ");
+
+      for (int i = 0; i < hand.size(); i++){
+         System.out.print("|x|");
+         if (i<hand.size()-1){
+            System.out.print(" - ");
+         }
+      }
+
+
+      //hand.printHand();
+      System.out.println();
+   }
+
+   // bot decides whether to knock or not.
+   public boolean shouldKnock(int gameTurn, boolean knocked, Cards hand){
+      boolean earlyGame, midGame, lateGame;
+      int lowerTurn, midTurn, lateTurn;
+      lowerTurn = 4; midTurn = 8; lateTurn = 12;
+      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > areaOfSurprise(23);
+      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(26);
+      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(28);
+      if ( !knocked && (earlyGame && gameTurn > 0 || midGame || lateGame  || hand.maxPoints() >= 30)){
+         //waiting(2);
+         printWait(1);
+         System.out.println("I want to knock");
+         //return false;
+         return true;
+      }
       return false;
    }
+   private int areaOfSurprise(int points){
 
 
-   // waiting method
-   public void waiting(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*1000);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
+      return (int)Math.random() * ((points-1) - (points + 1) + 1) + points-1;
+   }              // To make the sure it doesn't just always knock when at x points on turn y.
+
+
+   // printers
+   public void printOpen(){
+      hand.printHand();
    }
-
-   public void waitingHalf(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*500);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-
-
-   }
-
    public void printWait(long waitTime){
       int dots = 3;
+      String dotChar;
+      if (unicode) dotChar = (char)0x26AC + "";
+      else dotChar = ".";
       String delete = "\b";
       String dot;
+      println();
       for (int n = 0; n <= dots*2; n++){
-      delete += "\b";
+         delete += "\b";
       }
       for (int j = 0; j < waitTime; j++) {
          dot = "";
          for (int i = 0; i < dots; i++) {
-            dot += (char)0x26AC + " ";
-            waitingHalf(1);
-            System.out.print(dot + "\r");
+            dot += dotChar + " ";
+            waitingMilSec(300);
+            print(dot + "\r");
 
          }
-         waitingHalf(1);
-         System.out.print(delete);
+         waitingMilSec(500);
+         print(delete);
       }
-      waiting(1);
-   }
+      waitingMilSec(500);
+   } // Print the bubbles while Liza is writing
 
-   public void print(String string){
-      System.out.print(string);
-   }
 
 }

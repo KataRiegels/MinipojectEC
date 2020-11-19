@@ -1,10 +1,9 @@
 import java.util.*;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-
-
 
 
 
@@ -20,6 +19,7 @@ public class Main {
         ave = ave/iter;
 
         System.out.println("average winning: " + ave);
+
 
 
         /*

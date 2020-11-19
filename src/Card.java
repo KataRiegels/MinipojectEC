@@ -4,14 +4,15 @@ import java.util.*;
 public class Card {
    private int rank;
    private int suit;
+   private String[] str_suit = new String[4];
 
    public Card(){
-
    }
 
    public Card(int rank, int suit){
       this.rank = rank;
       this.suit = suit;
+      str_suit[0] = (char)0x2660+""; str_suit[1] = (char)0x2661+""; str_suit[2] = (char)0x2662+""; str_suit[3] = (char)0x2663+"";
    }
 
    public int getSuit(){
@@ -32,13 +33,17 @@ public class Card {
       return cardName;
    }
 
-   public String show(){
+   public String show(boolean uni){
       String[] str_rank = {null, "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-      char[] str_suit = {(char)0x2660, (char)0x2661, (char)0x2662, (char)0x2663};
+      if (!uni) {
+         str_suit[0] = "C.";
+         str_suit[1] = "D.";
+         str_suit[2] = "H.";
+         str_suit[3] = "S.";
+      }
       String cardName = ("|" + str_suit[this.suit] + str_rank[this.rank] + "|");
       return cardName;
    }
-
 
    public boolean equals(Card c1){
       boolean result = false;
@@ -59,7 +64,6 @@ public class Card {
          return -1;                             //Fix error
       }
    }
-
    public boolean over10(){
       return (points() >= 10);
    }
