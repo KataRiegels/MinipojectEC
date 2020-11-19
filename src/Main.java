@@ -46,12 +46,19 @@ public class Main {
         String noexplainTriggers[][] = {noexplainTrigger1, noexplainTrigger2};
         noexplain.setKeyword(noexplainTriggers);
 
-        Output possibleReplies[] = {explain, noexplain};
+        //Output possibleReplies[] = {explain, noexplain};
+        Output possibleReplies[] = {noexplain, explain};
+        welcome.setPossibleOutputs(possibleReplies);
+
 
         // this might be the loop (looping through Output objects, 'welcome' being the first)
         String input = readString();
-        Output next = welcome.getNext(input, possibleReplies);
+        String[] splitInput = split(input);
+        Output next = welcome.getNext(input);
         next.print();
+
+
+
 
     }
 
