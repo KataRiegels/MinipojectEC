@@ -36,13 +36,13 @@ public class Main {
 
         Output explain = new Output("Ok, I'll explain the rules then.");
         String explainTrigger1[] = {"explain"};
-        String explainTrigger2[] = {"know", "rules"};
+        String explainTrigger2[] = {"don't", "know", "rules"};
         String explainTriggers[][] = {explainTrigger1, explainTrigger2};
         explain.setKeyword(explainTriggers);
 
         Output noexplain = new Output("Let's start the game then.");
         String noexplainTrigger1[] = {"explain", "don't"};
-        String noexplainTrigger2[] = {"don't", "know", "rules"};
+        String noexplainTrigger2[] = {"know", "rules"};
         String noexplainTriggers[][] = {noexplainTrigger1, noexplainTrigger2};
         noexplain.setKeyword(noexplainTriggers);
 
