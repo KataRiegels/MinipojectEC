@@ -52,11 +52,18 @@ public class Main {
 
 
         // this might be the loop (looping through Output objects, 'welcome' being the first)
-        String input = readString();
+        /*String input = readString();
         String[] splitInput = split(input);
         Output next = welcome.getNext(input);
-        next.print();
+        next.print();*/
 
+        int counter = 0;
+        while (counter < 4) {
+            String input = readString();
+            welcome = welcome.getNext(input);
+            welcome.print();
+            counter++;
+        }
 
 
 
