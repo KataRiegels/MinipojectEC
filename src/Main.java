@@ -51,6 +51,7 @@ public class Main {
         //welcome.setPossibleOutputs(possibleReplies);
         //System.out.println(Arrays.toString((welcome.defaultKeywords)));
 
+        // method set possibleReplies as an attribute (kinda is already)
 
         // this might be the loop (looping through Output objects, 'welcome' being the first)
         /*String input = readString();
@@ -61,13 +62,13 @@ public class Main {
         int counter = 0;
         while (counter < 4) {   // we need some other condition here
             String input = readString();
-            welcome.setPossibleOutputs(possibleReplies);
+            welcome.setPossibleOutputs(possibleReplies);    // outside of the loop, distinct replies for each output
             welcome = welcome.getNext(input);
             welcome.print();
             counter++;
         }
 
-
+        // save current output, possible replies need to be updated according to output
 
     }
 
