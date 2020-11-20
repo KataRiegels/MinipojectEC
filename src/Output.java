@@ -20,7 +20,9 @@ public class Output {
    // setting the default keywords that always lead to starting the game
    public void setDefaultKeywords() {
       String trigger1[] = {"start", "game"}; // more default triggers can be defined here
-      String defaultKeywords[][] = {trigger1};
+      ArrayList<String[]> triggers = new ArrayList<>();
+      triggers.add(trigger1);
+      defaultKeywords = triggers.toArray(new String[0][0]);
    }
 
    // setKeyword("fine", "good")
@@ -50,11 +52,11 @@ public class Output {
    // get next output based on player's input
    // f.ex. getNext("yes")
    public Output getNext(String input){
-      Output next = new Output("I'm confused.");
+      Output next = new Output("I'm confused. Please clarify what you mean.");
 
       // convert input sentence to String[]
       String[] splitInput = Main.split(input); // maybe we can split it in Main instead or move the method to this class
-      System.out.println(Arrays.toString(splitInput));
+      //System.out.println(Arrays.toString(splitInput));
 
       // check first if player wants to start game (default Output)
       if (containsTrigger(defaultKeywords, splitInput)) {
@@ -63,7 +65,7 @@ public class Output {
       // if player doesn't want to start the game yet, get next output
       for (Output r : possibleOutputs) {
          if (containsTrigger(r.getKeywords(), splitInput)) {
-            System.out.println("worked");
+            //System.out.println("worked");
             return r;
          }
       }
@@ -73,6 +75,8 @@ public class Output {
    // contains method: checks if at least one of the trigger options is contained
    public boolean containsTrigger(String[][] triggers, String[] input) {
       List<String> list = Arrays.asList(input);
+      //System.out.println("triggers: "+Arrays.toString(triggers));
+      //System.out.println(Arrays.toString(list.toArray()));
       for (String[] i : triggers) {
          int counter = 0;
          for (String j : i) {
@@ -84,6 +88,7 @@ public class Output {
             return true;
          }
       }
+      //System.out.println("no keywords contained");
       return false;
    }
 

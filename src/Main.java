@@ -48,7 +48,8 @@ public class Main {
 
         //Output possibleReplies[] = {explain, noexplain};
         Output possibleReplies[] = {noexplain, explain};
-        welcome.setPossibleOutputs(possibleReplies);
+        //welcome.setPossibleOutputs(possibleReplies);
+        //System.out.println(Arrays.toString((welcome.defaultKeywords)));
 
 
         // this might be the loop (looping through Output objects, 'welcome' being the first)
@@ -58,8 +59,9 @@ public class Main {
         next.print();*/
 
         int counter = 0;
-        while (counter < 4) {
+        while (counter < 4) {   // we need some other condition here
             String input = readString();
+            welcome.setPossibleOutputs(possibleReplies);
             welcome = welcome.getNext(input);
             welcome.print();
             counter++;
