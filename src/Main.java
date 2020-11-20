@@ -34,17 +34,18 @@ public class Main {
 
         Output welcome = new Output("welcome");
 
+        Output symbolCheck = new Output("Can you see this symbol: ?");
+
+
         Output explain = new Output("Ok, I'll explain the rules then.");
-        String explainTrigger1[] = {"explain"};
-        String explainTrigger2[] = {"don't", "know", "rules"};
-        String explainTriggers[][] = {explainTrigger1, explainTrigger2};
+        String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
         explain.setKeyword(explainTriggers);
 
         Output noexplain = new Output("Let's start the game then.");
-        String noexplainTrigger1[] = {"explain", "don't"};
-        String noexplainTrigger2[] = {"know", "rules"};
-        String noexplainTriggers[][] = {noexplainTrigger1, noexplainTrigger2};
+        String noexplainTriggers[][] = {{"explain", "don't"}, {"know", "rules"}};
         noexplain.setKeyword(noexplainTriggers);
+
+        // Output: can you see this symbol: ... ?
 
         //Output possibleReplies[] = {explain, noexplain};
         Output possibleReplies[] = {noexplain, explain};
@@ -83,6 +84,11 @@ public class Main {
         return s.toLowerCase().split(" ");
     }
 }
+
+// account for synonyms, dont = don't etc.
+// add user's name --> store as variable
+
+
 
 /*
 - why chosen subject
