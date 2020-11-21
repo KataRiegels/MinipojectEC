@@ -5,13 +5,18 @@ public class Main {
     public static void main(String[] args) {
         boolean gam, con, conC;
         gam = false; con = false; conC = false;
-
+        Game game = new Game();
         conC = true;
 
 
         if (conC){
-            Conversation conv = new Conversation();
+            NormConv conv = new NormConv();
             conv.startConv();
+            if (conv.startedGame()) {
+                game.setuni(conv.getUni());
+                game.playGame();
+            }
+            if (game.stoppedGame()) conv.endConv();
         }
 
 
@@ -19,10 +24,10 @@ public class Main {
             int ave = 0;
             int iter = 1;
             for (int i = 0; i < iter; i++) {
-                Game game = new Game();
-                game.playGame();
+                Game games = new Game();
+                games.playGame();
                 //game.getTurnNr();
-                ave += game.getTurnNr();
+                ave += games.getTurnNr();
             }
 
             ave = ave / iter;

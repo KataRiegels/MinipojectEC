@@ -23,11 +23,11 @@ public class Game extends Conversation{
       endGame = false;
       knocked = false;
       comReply = (char) 0x2B9A + " ";
-
+      stopGameT = false;
 
 
       readyDie     = new GameOutput("Are you ready to roll the die??");
-      rollDie      = new GameOutput("ok, here", 1);
+      rollDie      = new GameOutput("ok, here");
       notRollDie   = new GameOutput("Uhm, okay.. Do you want to stop playing?");
       seeWhoWonQ   = new GameOutput("Are you ready to see who won?");
       seeWhoWon    = new GameOutput("Alright. Let's see");
@@ -40,6 +40,7 @@ public class Game extends Conversation{
       yes  = a("yes");
       dont = a("don't");
       do_  = a("do");
+      setOutputs();
 
    }
 
@@ -58,7 +59,7 @@ public class Game extends Conversation{
       readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
       notRollDie.setPossibleOutputs(aPR);
       playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
-
+      seeWhoWonQ.setPossibleOutputs(seeWhoWon, notSeeWhoWon);
    }
 
 
@@ -82,32 +83,41 @@ public class Game extends Conversation{
 
 
    public Output useOutput(Output output){
-
-      output.print();
-      String input = readString();
-      output = output.getNext(input);
-      specialOutput(output);
+      Output firstOut = output.copy();
+      Output[] firstOutPoss = output.getPossibleOutputs();
+      Output prevOutput;
+      do {
+         output.print();
+         String input = readString();
+         prevOutput = output.copy();
+         output = output.getNext(input);
+         output.setPossibleOutputs(firstOutPoss);
+         System.out.println(firstOut.isInPossibleOutputs(output));
+      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
       return output;
    }
 
+   public void setuni(boolean uni){
+      this.uni = uni;
+   }
 
-   public void stopGame(){
-      stop = true;
+   public boolean stoppedGame(){
+      return stopGameT;
    }
 
    public void playGame(){
       p1 = new Bot("Liza");
       //p2 = new Bot("bot2");
       p2 = new Player("Kata");
-      ps[0] = p1; ps[1] = p2;
+      ps[0] = p2; ps[1] = p1;
       gameNr = 0;
-      stop = false;
+      stopGameT = false;
       uni = true;                     // <-- fix!
-      setOutputs();
+
 
       do {
 
-         endGame = false;
+         endGame = stopGameT;
          knocked = false;
 
          stock.createStock();
@@ -122,26 +132,27 @@ public class Game extends Conversation{
 
          if (gameNr == 0) botReply("\nLet's get ready to play! We will decide who starts by rolling a die. \n", 1);
          else botReply("\nDie time \n", 1);
-         waiting(1);
+         //waiting(1);
 
 
-         player = whoStarts(p1, p2);
+         //player = whoStarts(p1, p2);
+         //if (stopGameT) break;
          //waiting(2);
 
-         player = p1;
-
+         player = p2;
+/*
          printLine();
          println("\n              The game begins!");
          printLine();
          waiting(1);
 
-
+*/
          turns();
          if (knocked) comparePoints();
          winner = playerWon();
          gameNr++;
-         //System.out.println("Game nr " + gameNr);  // <-- remove
-      } while (playAgain() && !stop);
+         //if (!(playAgain() || !stopGameT)) break;
+      } while (playAgain() || !stopGameT);
    }
 
    // getters and setters
@@ -175,7 +186,7 @@ public class Game extends Conversation{
                waiting(1);
             } else if (output == notRollDie){
                return null;
-            }
+            } else if (output == stopGame) return null;
          }
          if (dice[0] == dice[1]) {
             println("Whoops, we rolled the same. Let's try again.\n");
@@ -190,7 +201,7 @@ public class Game extends Conversation{
 
    // taking turns
    public void turns(){
-      while (!endGame){
+      while (!stopGameT){
          playerWon();
          if (endGame) return;
          if (stock.isEmpty()) reshuffle();
@@ -204,14 +215,13 @@ public class Game extends Conversation{
          if (player.hasKnocked() || endGame) return;
          //System.out.println(comReply + "Turn number: " + turnNr);
          turnNr ++;
-         if (turnNr > 2) return;
+         //if (turnNr > 2) return;
          //discard.printCards();
       }
    }
 
    // Drawing and playing (in turns)
    public void drawTurn(){
-      waiting(1);
       printLine();
       System.out.print("\n               " + player.getName() + "'s turn\n");
       printLine();
@@ -225,7 +235,10 @@ public class Game extends Conversation{
    }
    public void playTurn(){
       boolean checkKnock = player.hasKnocked();
-      if (player.hasKnocked()) println(comReply +  player.getName() + " knocked");
+      if (player.hasKnocked()) {
+         waitingMilSec(500);
+         println(comReply +  player.getName() + " knocked");
+      }
       if (!checkKnock){
          player.playTurn(discard, knocked);
          printState();
@@ -247,42 +260,6 @@ public class Game extends Conversation{
       discard.shuffle();
       discard.turnCard(stock);
    }
-   /*
-   public void   dieRoll(Player p){
-      if (p.isUser()) {
-         Scanner in = new Scanner(System.in);
-         botReply("Are you ready to roll your die?",1);
-         String input = in.nextLine();
-         if (input.contains("yes")) {
-            printDieWait();
-
-         }
-      } else {
-         botReply("I'll roll now",1);
-         printDieWait();
-
-      }
-   }                   // the print (or asking) before rolling die
-   */
-
-
-   /*
-   public void dieRoll(Player p){
-      if (p.isUser()) {
-         Scanner in = new Scanner(System.in);
-         botReply("Are you ready to roll your die?",1);
-         String input = in.nextLine();
-         if (input.contains("yes")) {
-            printDieWait();
-
-         }
-      } else {
-         botReply("I'll roll now",1);
-         printDieWait();
-
-      }
-   }
-   */
 
    public void dieRoll(Player p){
       if (p.isUser()) {
@@ -329,7 +306,7 @@ public class Game extends Conversation{
          println(comReply + winner.getName() + " had most points. " + winner.getName() + " won!");
          printWait(2);
          if (winner.isUser()){
-            println("Congratulations, you played well");
+            println("\nCongratulations, you played well");
          } else if (winner == null){
             println("I guess we were both too good ;-)");
          } else {
@@ -387,7 +364,6 @@ public class Game extends Conversation{
 
    // Methods that are simply concerned with how to print certain things. Are only used within other methods.
    public void    printState(){
-      waiting(1);
       print(comReply);
       discard.printTop();
       waiting(1);

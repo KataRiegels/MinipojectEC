@@ -4,10 +4,12 @@ public class Output {
    boolean uni;
    String reply;
    ArrayList<String> additionalDisplay;
+   Output errOutput = null;
    String[][] keywords; // keywords that trigger this particular output
    Output[] allOutputs;
    String[][] notKeywords;
    Output[] possibleOutputs;
+   boolean anything = false;
    //ArrayList<Output> possibleOutputs;
    Output defaultOutput; // = new Output("starting the game");
    String[][] defaultKeywords;
@@ -20,6 +22,7 @@ public class Output {
       //setDefaultKeywords();
       uni = true;             // This is whether we use cool symbols or not
       notKeywords = null;
+
    }
 
    public Output(){}          // this is needed for my GameOutput class
@@ -76,6 +79,19 @@ public class Output {
       return possibleOutputs;
    }
 
+   public String getReply(){
+      return reply;
+   }
+
+
+   public boolean isInPossibleOutputs(Output output){
+      for (Output o : possibleOutputs){
+         if (output == o) return true;
+      }
+      return false;
+   }
+
+
    // set possible outputs (method) - Output[] as input for this method
    // define the default Output, then the other possible Outputs
    // in getNext() check for default Output first, then the other Outputs
@@ -97,11 +113,19 @@ public class Output {
             this.possibleOutputs[i] = possibleOutputs[i];
          }
       }*/
-
+      if (possibleOutputs != null) {
+         System.out.println(possibleOutputs.length);
+         Output[] temp = new Output[possibleOutputs.length];
+         for (int i = 0; i < possibleOutputs.length; i++) {
+            temp[i] = possibleOutputs[i];
+         }
+         this.possibleOutputs = temp;
+      }
+      /*
       this.possibleOutputs = new Output[possibleOutputs.length];
       for (int i = 0; i < possibleOutputs.length; i++) {
          this.possibleOutputs[i] = possibleOutputs[i];
-      }
+      }*/
    }
 
 /*
@@ -111,15 +135,36 @@ public class Output {
    }
 */
 
+   public void setErrOutput(Output output){
+      errOutput = output;
+   }
+
+   public Output getErrOutput(){
+      return errOutput;
+   }
+
+
+   public boolean equals(Output output){
+      return (this == output);
+   }
+
+   public void setAnything(boolean b){
+      anything = b;
+   }
+
+
    // get next output based on player's input
    // f.ex. getNext("yes")
    public Output getNext(String input){
-      Output next = new Output("I'm confused. Please clarify what you mean.");
+      if (errOutput == null) errOutput = new Output("I'm confused. Please clarify");
+      errOutput.setPossibleOutputs(errOutput);
+      Output next = errOutput;
+      next.setPossibleOutputs(errOutput);
 
       // convert input sentence to String[]
       input.toLowerCase();
-      String[] words        = a("do not", "can not", "will not", "are not", "is not", "you are", "i am");
-      String[] contractioned = a("don't", "can't",   "won't",    "aren't",  "isn't", "you're", "i'm");
+      String[] words        = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
+      String[] contractioned = a("don't", "can't",   "won't",    "aren't",  "isn't", "you're", "i'm",    "it's");
 
       for (int i = 0; i < words.length; i++){
          if (input.contains(words[i])) input = input.replace(words[i],contractioned[i]);
@@ -135,8 +180,12 @@ public class Output {
          return defaultOutput;
       }
 
+
+
+      if (possibleOutputs != null){
       // if player doesn't want to start the game yet, get next output
       for (Output r : possibleOutputs) {
+         if (r.getKeywords().equals("dummy")) return r;
          // check if there are any triggers
          /*if (this.getKeywords().length == 0) {
             return r;
@@ -146,6 +195,7 @@ public class Output {
             //System.out.println("worked");
             return r;
          }
+      }
       }
       return next;
    }
@@ -193,9 +243,11 @@ public class Output {
 
    // copy method that copies Output object with all its attributes etc.
    public Output copy() {
-      Output newOutput = new Output(this.reply);
-      newOutput.setKeyword(this.getKeywords());
-      newOutput.setPossibleOutputs(this.possibleOutputs);
+      Output newOutput = new Output(reply);
+      newOutput.setKeyword(getKeywords());
+      if (possibleOutputs == null) newOutput.setPossibleOutputs(errOutput);
+         newOutput.setPossibleOutputs(possibleOutputs);
+      //}
       return newOutput;
    }
 

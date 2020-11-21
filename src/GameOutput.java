@@ -60,10 +60,13 @@ public GameOutput(String reply, int trigger){
       return in.nextLine();
    }
 
-   @Override public void print() {
-      printWait(1);
-      System.out.println("\n" + this.reply);
-   }
+
+
+
+
+
 
 
 }
+
+

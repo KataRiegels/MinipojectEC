@@ -19,7 +19,7 @@ public class Bot extends Player {
    // How bot takes their turn
    @Override public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
       //printHand();
-      if (shouldKnock(gameTurn, knocked, hand)){
+      if (shouldKnock(gameTurn, knocked, hand) && !knock){
          knock = true;
       } else {
          //waiting(3);
