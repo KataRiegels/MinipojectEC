@@ -3,24 +3,32 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        boolean gam, con, conC;
+        gam = false; con = false; conC = false;
+
+        conC = true;
 
 
-
-
-        /*
-        int ave = 0;
-        int iter = 1;
-        for (int i = 0; i < iter; i++) {
-            Game game = new Game();
-            game.playGame();
-            //game.getTurnNr();
-            ave += game.getTurnNr();
+        if (conC){
+            Conversation conv = new Conversation();
+            conv.startConv();
         }
 
-        ave = ave/iter;
 
-        System.out.println("average winning: " + ave);
-        */
+        if (gam) {
+            int ave = 0;
+            int iter = 1;
+            for (int i = 0; i < iter; i++) {
+                Game game = new Game();
+                game.playGame();
+                //game.getTurnNr();
+                ave += game.getTurnNr();
+            }
+
+            ave = ave / iter;
+
+            System.out.println("average winning: " + ave);
+        }
 
 
         // welcome/starting message
@@ -32,98 +40,110 @@ public class Main {
         Reply reply1 = new Reply(case1.getTrigger());
          */
 
-        Output welcome = new Output("welcome");
 
-        Output wyn = new Output("What's your name?");
+        if (con) {
+            Output welcome = new Output("welcome");
 
-        Output hyd = new Output("How are you?");
-        String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}};
-        hyd.setKeyword(hydTriggers);
+            Output wyn = new Output("What's your name?");
 
-        Output nth = new Output("Good to hear. Let's play blackjack!");
-        String nthTriggers[][] = {{"good"},{"very", "good"}, {"fantastic"}};
-        nth.setKeyword(nthTriggers);
+            Output hyd = new Output("How are you?");
+            String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}};
+            hyd.setKeyword(hydTriggers);
 
-        Output ohno = new Output("Sorry about that. Let's play blackjack to cheer you up!");
-        String ohnoTriggers[][] = {{"bad"}, {"not", "good"}};
-        ohno.setKeyword(ohnoTriggers);
+            Output nth = new Output("Good to hear. Let's play blackjack!");
+            String nthTriggers[][] = {{"good"}, {"not", "bad"}};
+            nth.setNotKeywords(a("not", "good"));
+            nth.setKeyword(nthTriggers);
 
-        Output iag = new Output("I'm good, thanks for asking! Let's play blackjack to cheer you up!");
-        String iagTriggers[][] = {{"bad", "you"}, {"not", "good", "you"}};
-        iag.setKeyword(iagTriggers);
+            Output ohno = new Output("Sorry about that. Let's play blackjack to cheer you up!");
+            String ohnoTriggers[][] = {{"bad"}, {"not", "good"}};
+            ohno.setNotKeywords(a("not", "bad"));
+            ohno.setKeyword(ohnoTriggers);
 
-        Output igt = new Output("I'm good too. Thanks for asking! Let's play blackjack!");
-        String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
-        igt.setKeyword(igtTriggers);
+            Output iag = new Output("I'm good, thanks for asking! Let's play blackjack to cheer you up!");
+            String iagTriggers[][] = {{"bad", "you"}, {"not", "good", "you"}};
+            iag.setNotKeywords(a("not", "bad"));
+            iag.setKeyword(iagTriggers);
 
-        //Output ywp = new Output("Wanna play blackjack?");
+            Output igt = new Output("I'm good too. Thanks for asking! Let's play blackjack!");
+            String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
+            igt.setKeyword(igtTriggers);
 
-        // Output: can you see this symbol: ... ?
-        Output symbolCheck = new Output("Can you see this symbol: ?");
+            //Output ywp = new Output("Wanna play blackjack?");
 
-        Output askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-        String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
-        askIfExplain.setKeyword(askIfExplainTriggers);
+            // Output: can you see this symbol: ... ?
+            Output symbolCheck = new Output("Can you see this symbol: ?");
 
-        Output explain = new Output("Ok, these are the rules:");
-        String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
-        explain.setKeyword(explainTriggers);
-        String rule1 = new String("The goal of blackjack is to beat the dealer's hand without going over 21.");
-        String rule2 = new String("Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.");
-        String question = new String("Do you need clarification?");
-        explain.setAdditionalDisplay(rule1, rule2, question);
+            Output askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
+            String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
+            askIfExplain.setKeyword(askIfExplainTriggers);
 
-        Output startGame = new Output("Let's start the game then.");
-        String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}};
-        startGame.setKeyword(startGameTriggers);
+            Output explain = new Output("Ok, these are the rules:");
+            String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
+            explain.setKeyword(explainTriggers);
+            String rule1 = new String("The goal of blackjack is to beat the dealer's hand without going over 21.");
+            String rule2 = new String("Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.");
+            String question = new String("Do you need clarification?");
+            explain.setAdditionalDisplay(rule1, rule2, question);
 
-        Output clarifyAsk = new Output("Which rule would you like me to clarify?");
-        String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
-        clarifyAsk.setKeyword(clarifyAskTriggers);
+            Output startGame = new Output("Let's start the game then.");
+            String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}};
+            startGame.setKeyword(startGameTriggers);
 
-        //Output rule1 = new Output("");
+            Output clarifyAsk = new Output("Which rule would you like me to clarify?");
+            String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
+            clarifyAsk.setKeyword(clarifyAskTriggers);
 
-        //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
-        Output allReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, explain, clarifyAsk};
-        Output[] possibleReplies = allReplies;
-        //welcome.setPossibleOutputs(possibleReplies);
+            //Output rule1 = new Output("");
 
-        wyn.setPossibleOutputs(hyd);
-        hyd.setPossibleOutputs(nth, ohno, iag, igt);
-        nth.setPossibleOutputs(askIfExplain);
-        ohno.setPossibleOutputs(askIfExplain);
-        iag.setPossibleOutputs(askIfExplain);
-        igt.setPossibleOutputs(askIfExplain);
-        //ywp.setPossibleOutputs(askIfExplain);
-        askIfExplain.setPossibleOutputs(explain, startGame);
-        explain.setPossibleOutputs(clarifyAsk, startGame);
+            //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
+            Output allReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, explain, clarifyAsk};
+            Output[] possibleReplies = allReplies;
+            //welcome.setPossibleOutputs(possibleReplies);
 
-        //System.out.println(Arrays.toString((welcome.defaultKeywords)));
+            wyn.setPossibleOutputs(hyd);
+            hyd.setPossibleOutputs(nth, ohno, iag, igt);
+            nth.setPossibleOutputs(askIfExplain);
+            ohno.setPossibleOutputs(askIfExplain);
+            iag.setPossibleOutputs(askIfExplain);
+            igt.setPossibleOutputs(askIfExplain);
+            //ywp.setPossibleOutputs(askIfExplain);
+            askIfExplain.setPossibleOutputs(explain, startGame);
+            explain.setPossibleOutputs(clarifyAsk, startGame);
+
+            //System.out.println(Arrays.toString((welcome.defaultKeywords)));
 
 
+            // this might be the loop (looping through Output objects, 'welcome' being the first)
+            int counter = 0;
 
-        // this might be the loop (looping through Output objects, 'welcome' being the first)
-        int counter = 0;
-
-        Output output = hyd.copy();   // first output
-        output.print();
-        while (counter < 6) {   // we need some other condition here
-            String input = readString();
-            //possibleReplies = welcome.getPossibleOutputs();
-            output.setPossibleOutputs(possibleReplies);    // outside of the loop, distinct replies for each output
-            output = output.getNext(input);
-            // check which output the new output is
-            for (Output r : allReplies) {
-                if (output.equals(r)) {                         // get the possible replies based on output
-                    possibleReplies = r.getPossibleOutputs();   // update possibleReplies
-                }
-            }
+            Output output = hyd.copy();   // first output
             output.print();
-            counter++;
+            while (counter < 6) {   // we need some other condition here
+                String input = readString();
+                //possibleReplies = welcome.getPossibleOutputs();
+                output.setPossibleOutputs(possibleReplies);    // outside of the loop, distinct replies for each output
+                output = output.getNext(input);
+                // check which output the new output is
+                for (Output r : allReplies) {
+                    if (output.equals(r)) {                         // get the possible replies based on output
+                        possibleReplies = r.getPossibleOutputs();   // update possibleReplies
+                    }
+                }
+                output.print();
+                counter++;
+            }
+            // only read new input if input needed, otherwise just get next output (?)
+            // save current output, possible replies need to be updated according to output
         }
-        // only read new input if input needed, otherwise just get next output (?)
-        // save current output, possible replies need to be updated according to output
+    }
 
+    public static String[] a(String... strings){
+        String[] a = new String[strings.length];
+        for (int i = 0; i < strings.length; i++){
+            a[i] = strings[i];
+        }
+        return a;
     }
 
     // method that reads input as a string

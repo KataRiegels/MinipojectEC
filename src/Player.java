@@ -4,6 +4,9 @@ public class Player{
    private String comReply,name;
    private boolean isUser, knock, unicode;;
    Hand hand;
+   GameOutput whichCard, whichPile;
+   GameOutput discard, stock, cardNr, knocked;
+   GameOutput card1, card2, card3, card4;
 
    public Player(String name){
       this.name = name;
@@ -12,7 +15,35 @@ public class Player{
       this.isUser = true;
       this.comReply = (char) 0x2B9A + " ";
       unicode = true;
+      whichCard = new GameOutput("Which card from the left do you want to play?");
+      whichPile = new GameOutput("Which pile do you want to draw from?");
+      discard = new GameOutput();
+      stock = new GameOutput();
+      knocked = new GameOutput("Oh no, you knocked. Let's see if I can beat you");
+      card1 = new GameOutput();
+      card2 = new GameOutput();
+      card3 = new GameOutput();
+      card4 = new GameOutput();
+      setOutputs();
    }
+
+   public void setOutputs(){
+     whichCard.setNotKeywords();
+     discard.setKeyword(a("discard"), a("open"));
+     stock.setKeyword(a("stock"),a("closed"));
+     knocked.setKeyword(a("knock"), a("knocked"));
+     card1.setKeyword(a("1"));
+     card2.setKeyword(a("2"));
+     card3.setKeyword(a("3"));
+     card4.setKeyword(a("4"));
+
+     whichPile.setPossibleOutputs(discard, stock, knocked);
+     whichCard.setPossibleOutputs(card1, card2, card3, card4);
+
+
+   }
+
+
    public Player (){
       this.hand = new Hand();
       this.knock = false;
@@ -65,26 +96,32 @@ public class Player{
    // asks user to choose pile
    public boolean whichPile(Pile discard, Pile stock){
       //Scanner in = new Scanner(System.in);
-      System.out.println();
-      System.out.println(comReply + "Do you want to draw from stock pile or discard pile?");
+      //System.out.println();
+      //System.out.println(comReply + "Do you want to draw from stock pile or discard pile?");
+
+      Output output = useOutput(whichPile);
 
       Pile drawn;
       drawn = null;
-      int      reply = lookForCase();
-      if      (reply == 1) drawn = discard;
-      else if (reply == 0) drawn = stock;
-      else if (reply == 2) knock = true;
 
-      if (drawn!= null) hand.draw(drawn);
+      if      (output == this.discard) drawn = discard;
+      else if (output == this.stock) drawn = stock;
+      else if (output == this.knocked) knock = true;
+      if (drawn != null) hand.draw(drawn);         // and then what?
       return knock;
    }
    public void    whichCard(Pile discard){
-      waiting(1);
-      System.out.println("\nWhich card number from left do you want to play?"); //playing card 0 means write 1!!
-      Scanner in = new Scanner(System.in);
+      waiting(1);int playAnswer;
+      //System.out.println("\nWhich card number from left do you want to play?"); //playing card 0 means write 1!!
+      //Scanner in = new Scanner(System.in);
       //Needs something for if player tries to knock..
-      int drawAnswer = in.nextInt();
-      hand.play(discard,drawAnswer);
+      //int drawAnswer = in.nextInt();
+      Output o = useOutput(whichCard);
+      if (o == card1 || o == card2 || o == card3 || o==card4){
+         playAnswer = Integer.parseInt(o.getKeyword(0,0));
+      } else return;
+
+      hand.play(discard,playAnswer);
    }
 
 
@@ -98,8 +135,8 @@ public class Player{
       return knock;
    }
    public boolean blitz(){
-      return (hand.maxPoints() >= 31 && !hand.bestGroup().anyUnder(10) && hand.bestGroup().anyOver(10));
-
+      //return (hand.maxPoints() >= 31 && !hand.bestGroup().anyUnder(10) && hand.bestGroup().anyOver(10));
+      return (hand.maxPoints() >= 9);
    }
    public boolean isUser(){
       return isUser;
@@ -155,6 +192,43 @@ public class Player{
    }
    public void println(){
       System.out.println();
+   }
+
+   public Output[] a(Output... outputs){
+      Output[] a = new Output[outputs.length];
+      for (int i = 0; i < outputs.length; i++){
+         a[i] = outputs[i];
+      }
+      return a;
+   }
+   public void aa(Output... outputs){
+
+   }
+   public String[] a(String... strings){
+      String[] a = new String[strings.length];
+      for (int i = 0; i < strings.length; i++){
+         a[i] = strings[i];
+      }
+      return a;
+   }
+   public String[][] a(String[]... stringss){
+      String[][] a = new String[stringss.length][];
+      for (int i = 0; i < stringss.length; i++){
+         a[i] = stringss[i];
+      }
+      return a;
+   }
+   public Output useOutput(Output welcome){
+      welcome.print();
+      String input = readString();
+
+      welcome = welcome.getNext(input);
+      return welcome;
+      //welcome.print();
+   }
+   private static String readString() {
+      Scanner in = new Scanner(System.in);
+      return in.nextLine();
    }
 
 
