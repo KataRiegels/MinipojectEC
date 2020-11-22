@@ -26,8 +26,7 @@ public class NormConv extends Conversation {
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
       yni.setKeywords(null);
-      //yni.setKeywords(a("dummy"));
-      yni.setNotKeywords(a("hello"), a("hi"), a("good", "day"), a("yes"));
+      yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"));
 
       // reaction if name incorrect
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
