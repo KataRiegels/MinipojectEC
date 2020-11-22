@@ -26,7 +26,7 @@ public class Player{
       lastTurn = new GameOutput("This is your last turn. Choose wisely");
       errPile = new GameOutput("You need to tell whether you want to draw from the discard pile or the stock pile.");
       errCard = new GameOutput("You need to tell me which card you want to play. So if you want to play the card most to the left, you write \"1\"");
-   card1 = new GameOutput();
+      card1 = new GameOutput();
       card2 = new GameOutput();
       card3 = new GameOutput();
       card4 = new GameOutput();

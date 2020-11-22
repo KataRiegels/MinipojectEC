@@ -119,7 +119,7 @@ public class NormConv extends Conversation {
 
 
 
-      output = wyn; //.copy();   // first output
+      output = hyd; //.copy();   // first output
       output.print();
 
 
