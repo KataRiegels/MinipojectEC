@@ -1,15 +1,15 @@
+import java.util.Scanner;
 
-
-
-public class NormConv extends Conversation {
+//public class NormConv extends Conversation {
+   public class NormConv {
    Game game;
-   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, hobbies, ilcg, ihcg, fav,
+   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
            ywp, symbolCheck, askIfExplain, explain,
-           startGame, clarifyAsk, stopGame, afterGame,
+           startGame, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
-   Output[] possibleReplies, allReplies, aPR;
    String userName, input;
+   boolean startGameT, stopGameT, uni;
 
    public NormConv(){
       game = new Game();
@@ -23,7 +23,7 @@ public class NormConv extends Conversation {
 
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
-      yni.setKeywords(null);
+      yni.setKeywords(a("dummy"));
       yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"));
 
       // reaction if name incorrect
@@ -67,10 +67,6 @@ public class NormConv extends Conversation {
 
       // next question: ask for reason of feelings
 
-      // question: ask about card games
-      //cg = new Output("Do you like card games?");
-      //cg.setKeywords(a(null));
-
       // reaction if player likes card games
       ilcg = new Output("Me too!");
       ilcg.setKeywords(a("yes"), a("do"), a("love"));
@@ -78,7 +74,7 @@ public class NormConv extends Conversation {
       ilcg.setAdditionalDisplay("What is your favorite card game?");
 
       // reaction to player's favorite card game
-      fav = new Output(input + "? That's a cool game!"); // look for right word
+      fav = new Output(input + "? That sounds cool!"); // look for right word
       fav.setKeywords(null);
       fav.setAdditionalDisplay("Would you like to play the card game 31 with me?");
 
@@ -100,7 +96,7 @@ public class NormConv extends Conversation {
 
       // reaction if player wants to play: ask about explaining the rules
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-      askIfExplain.setKeywords(null, a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
+      askIfExplain.setKeywords(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
       explain = new Output("Ok, these are the rules:");
@@ -136,7 +132,7 @@ public class NormConv extends Conversation {
 
       // starting the game
       startGame = new Output("Let's start the game then.");
-      startGame.setKeywords(null, a("explain", "don't"), a("start", "game"), a("know", "rules"));
+      startGame.setKeywords( a("explain", "don't"), a("start", "game"), a("know", "rules"));
 
       afterGame = new Output("Well played!");
       uni = true;
@@ -149,7 +145,7 @@ public class NormConv extends Conversation {
 
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
-      yni.setPossibleOutputs(startGame, intro, yniN);                                     // <- Should lead to some "my name is"
+      yni.setPossibleOutputs(startGame, intro, yniN);
       yniN.setPossibleOutputs(startGame, yni);
       intro.setPossibleOutputs(startGame, hyd);
       hyd.setPossibleOutputs(startGame,nth, ohno, iag, igt);
@@ -177,7 +173,7 @@ public class NormConv extends Conversation {
    public void startConv() {
       int counter = 0;
 
-      output = symbolCheck;   // first output
+      output = welcome;   // first output
       output.print();
 
       while(counter < 20 && !startGameT) {
@@ -201,7 +197,8 @@ public class NormConv extends Conversation {
                          // sets the new output's possible outputs to the possible outputs of the first output
 
             output.print();
-            specialOutput(output);
+            //specialOutput(output);
+            normSpecialOutput(output, input);
             //
             //System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
          } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
@@ -212,6 +209,10 @@ public class NormConv extends Conversation {
 
 
       }
+   }
+
+   public boolean startedGame(){
+      return startGameT;
    }
 
    public void endConv(){
@@ -235,8 +236,9 @@ public class NormConv extends Conversation {
       if (output == yni)         {
          userName = wyn.getPart(input);
          userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
-         //yni.setReply("Your name is " + userName + "?");
-         //hyd.setReply("How are you " + userName + "?");
+      }
+      if (output == startGame){
+         startGameT = true;
       }
    }
 
@@ -251,7 +253,31 @@ public class NormConv extends Conversation {
       return userName;
    }
 
+   public String[] a(String... strings){
+      String[] a = new String[strings.length];
+      for (int i = 0; i < strings.length; i++){
+         a[i] = strings[i];
+      }
+      return a;
+   }
 
+   // method that reads input as a string
+   public String readString() {
+      Scanner in = new Scanner(System.in);
+      return in.nextLine();
+   }
+
+   public Output[] a(Output... outputs){
+      Output[] a = new Output[outputs.length];
+      for (int i = 0; i < outputs.length; i++){
+         a[i] = outputs[i];
+      }
+      return a;
+   }
+
+   public boolean getUni(){
+      return uni;
+   }
 
 
 }

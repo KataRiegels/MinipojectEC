@@ -142,7 +142,6 @@ public class Output {
       contractions(input);
       String[] splitInput = split(input);
       if (possibleOutputs != null) {
-         // if player doesn't want to start the game yet, get next output
          for (Output o : possibleOutputs)
             for (String i : splitInput)
                for (String[] notK : o.notKeywords)

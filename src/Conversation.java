@@ -12,8 +12,8 @@ public class Conversation {
 
    public Conversation(){
 
-         /*startGame = new Output("Let's start the game then.");
-         startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));*/
+         startGame = new Output("Let's start the game then.");
+         startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));
 
 
          stopGame = new Output("Ok, let's stop");
@@ -31,9 +31,7 @@ public class Conversation {
       return aPR;
    }
 
-   public boolean startedGame(){
-      return startGameT;
-   }
+
 
    public void specialOutput(Output output){
       if (output == startGame){
