@@ -93,12 +93,13 @@ public class NormConv extends Conversation {
       ihcg.setNotKeywords(a("don't", "hate"), a("don't", "dislike"));
       ihcg.setAdditionalDisplay("Have you heard of the card game 31?");
 
-      // reaction if player doesn't know 31
-      // ask if explain?
+      // reaction if player doesn't know 31: explain the rules
+      //expl = new Output("Don't worry, I will explain them to you.");
 
       // reaction if player knows 31: ask about playing
       ywp = new Output("Would you like to play the card game 31 with me?");
-      ywp.setKeyword(a("yes"), a("do"));
+      ywp.setKeyword(a("yes"), a("i","have"));
+      ywp.setNotKeywords(a("haven't"));
 
       // reaction if player doesn't want to play: more smalltalk?
 
@@ -106,8 +107,26 @@ public class NormConv extends Conversation {
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
       askIfExplain.setKeyword(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
+      // explain the rules
+      explain = new Output("Ok, these are the rules:");
+      explain.setKeyword(a("don't", "know", "rules"), a("explain"));
+      String rule1 = new String("You have a hand of 3 cards.");
+      String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
+      String rule3 = new String("Only cards of the same suit count together.");
+      String rule4 = new String("All face cards count as 10. Ace counts as 11.");
+      String rule5 = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
+      String rule6 = new String("After a \"knock\" the other player gets one more round.");
+      String rule7 = new String("The player who is closer to 31 wins the round.");
+      String question = new String("Are you ready to play?");
+      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7, question);
+
+      // reaction if player ready to play: ask about symbols
+      symbolCheck  = new Output("One more question before we start:");
+      symbolCheck.setKeyword(a("yes"));
+      symbolCheck.setAdditionalDisplay("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
+
       // Output: can you see this symbol: ... ?
-      symbolCheck  = new Output("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
+
       symbolCheckY = new Output("Alright, thanks.");
       symbolCheckY.setKeyword(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
       symbolCheckY.setNotKeywords(a("can", "not"));
@@ -120,25 +139,9 @@ public class NormConv extends Conversation {
       symbolCheckN.setNotKeywords(a("no", "square"), a("no", "squares"));
 
 
-
-
-
-      explain = new Output("Ok, these are the rules:");
-      String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
-      explain.setKeyword(explainTriggers);
-      String rule1 = new String("You have a hand of 3 cards.");
-      String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
-      String rule3 = new String("Only cards of the same suit count together.");
-      String rule4 = new String("All face cards count as 10. Ace counts as 11.");
-      String rule5 = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
-      String rule6 = new String("After a \"knock\" the other player gets one more round.");
-      String rule7 = new String("The player who is closer to 31 wins the round.");
-      String question = new String("Do you need clarification?");
-      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7);
-
-      clarifyAsk = new Output("Which rule would you like me to clarify?");
+      /*clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
-      clarifyAsk.setKeyword(clarifyAskTriggers);
+      clarifyAsk.setKeyword(clarifyAskTriggers);*/
 
       afterGame = new Output("Well played!");
       uni = true;
@@ -167,11 +170,12 @@ public class NormConv extends Conversation {
       iag.setPossibleOutputs(getaPR(), ihcg, ilcg);
       igt.setPossibleOutputs(getaPR(), ihcg, ilcg);
       ilcg.setPossibleOutputs(getaPR(), fav);
-      ihcg.setPossibleOutputs(getaPR(), ywp);
+      ihcg.setPossibleOutputs(getaPR(), ywp, explain);
       fav.setPossibleOutputs(getaPR(), askIfExplain);
       ywp.setPossibleOutputs(getaPR(), askIfExplain);
-      askIfExplain.setPossibleOutputs(getaPR(),explain, startGame);
-      explain.setPossibleOutputs(getaPR(),clarifyAsk, startGame);
+      askIfExplain.setPossibleOutputs(getaPR(),explain, symbolCheck);
+      explain.setPossibleOutputs(getaPR(),symbolCheck);
+      symbolCheck.setPossibleOutputs(getaPR(), symbolCheckY, symbolCheckWhat, symbolCheckN);
       afterGame.setPossibleOutputs(wyn);   // fix
 
 
