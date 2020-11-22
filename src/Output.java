@@ -286,6 +286,7 @@ public class Output {
       System.out.println(reply);
       if (additionalDisplay != null) {
          for (String s : additionalDisplay) {
+            printWait(1);
             System.out.println(s);
          }
       }
