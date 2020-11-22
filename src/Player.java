@@ -202,17 +202,18 @@ public class Player{
       return a;
    }
    public Output useOutput(Output output){
-      Output firstOut = output.copy();
-      Output[] firstOutPoss = output.getPossibleOutputs();
-      Output prevOutput;
+      Output firstOut = output.copy();                         // creates a copy of the first output
+      Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the first output
+      Output prevOutput;                                       // previous output (?)
       do {
-         output.print();
-         String input = readString();
-         prevOutput = output.copy();
-         output = output.getNext(input);
-         output.setPossibleOutputs(firstOutPoss);
-         System.out.println(firstOut.isInPossibleOutputs(output));
-      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
+         output.print();                                       // prints the output
+         String input = readString();                          // reads player's input
+         prevOutput = output.copy();                           // saves current output as previous output
+         output = output.getNext(input);                       // gets the next output based on player's input
+         output.setPossibleOutputs(firstOutPoss);              // sets the output's possible outputs to the possible outputs of the first output (?)
+         System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (?)
+      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is not the error output of the previous output
+                                                                                                      // and the output is not in the possible outputs of the first output
       return output;
    }
    private static String readString() {
