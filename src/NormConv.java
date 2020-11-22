@@ -1,14 +1,14 @@
 import java.util.*;
 
 public class NormConv {
-   Game game;
-   Output welcome,  wyn, yni, yniN, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
+   private Game game;
+   private Output welcome,  wyn, yni, yniN, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
            lp, ywp, symbolCheck, askIfExplain, explain, why, wsp, convincePlay, ygt,
            startGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
-   Output output;
-   String userName;
-   boolean startGameT, uni;
+   private Output output;
+   private String userName;
+   private boolean startGameT, uni;
 
    // getters
    public String getUserName(){

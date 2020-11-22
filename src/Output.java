@@ -5,16 +5,11 @@ public class Output {
    private String reply;
    private ArrayList<String> additionalDisplay;
    private Output errOutput = null;
-   private String[][] keywords; // keywords that trigger this particular output
-   private Output[] allOutputs;
-   private String[][] notKeywords;
+   private String[][] keywords, notKeywords;       // keywords that trigger this particular output
    private Output[] possibleOutputs;
    private boolean anything = false;
    private String[] words         = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
    private String[] contractioned = a("don't",  "can't",   "won't",    "aren't",  "isn't",  "you're",  "i'm",  "it's");
-   //ArrayList<Output> possibleOutputs;
-   //private Output defaultOutput; // = new Output("starting the game");
-   //private String[][] defaultKeywords;
    private ArrayList<Output> previous;
 
    public Output(String reply){
@@ -25,29 +20,12 @@ public class Output {
 
    }
 
-   public Output(){}
-
-
-
-   public void setPrevious(Output current) {
-      //previous.add(current);
-   }
-
-   // setKeyword("fine", "good")
-   public void setReply(String string){
-      reply = string;
-   }
-   public void       setKeywords(String[]... keywords) {
-      this.keywords = keywords;
-   }
+   // getters
    public String[][] getKeywords() {
       return keywords;
    }
    public String     getKeyword(int i, int j){
       return keywords[i][j];
-   }  // keywordS
-   public void       setNotKeywords(String[]... notKeywords){
-      this.notKeywords = notKeywords;
    }
    public String[][] getNotKeywords() {
       return notKeywords;
@@ -55,6 +33,21 @@ public class Output {
    public Output[]   getPossibleOutputs() {
       return possibleOutputs;
    }
+   public Output     getErrOutput(){
+      return errOutput;
+   }
+
+   // setters
+   public void       setReply(String string){
+      reply = string;
+   }
+   public void       setKeywords(String[]... keywords) {
+      this.keywords = keywords;
+   }
+   public void       setNotKeywords(String[]... notKeywords){
+      this.notKeywords = notKeywords;
+   }
+
    public void       setPossibleOutputs(Output... possibleOutputs) {
       if (possibleOutputs != null) {
          Output[] temp = new Output[possibleOutputs.length];
@@ -79,11 +72,6 @@ public class Output {
    public void       setErrOutput(Output output){
       errOutput = output;
    }
-   public Output     getErrOutput(){
-      return errOutput;
-   }
-
-
 
    public void addPossibleOutput(Output possibleOutput){
          Output[] newArr = new Output[possibleOutputs.length+1];
@@ -164,10 +152,6 @@ public class Output {
    public Output getNext(String input){
          if (errOutput == null) {
             errOutput = new Output("I'm confused. Please clarify");
-            /*Output originalQ = errOutput.findOriginalQuestion();
-            String[][] previousKeys = originalQ.getKeywords();
-            errOutput.setKeyword(previousKeys);
-            errOutput.setPossibleOutputs(originalQ.possibleOutputs);*/
          }
          errOutput.setPossibleOutputs(errOutput);
          Output next = errOutput;
@@ -318,20 +302,6 @@ public class Output {
    }
    private String[] split(String s) {
       return s.toLowerCase().split(" ");
-   }
-
-
-
-
-   public Output findOriginalQuestion() {
-      Output originalQ = null;
-      if (errOutput != null) {
-         if (previous.contains(errOutput)) {
-            int indexOriginalQ = previous.indexOf(errOutput) - 1;
-            originalQ = previous.get(indexOriginalQ);
-         }
-      }
-      return originalQ;
    }
 
    public String[] a(String... strings){
