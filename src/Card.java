@@ -13,7 +13,7 @@ public class Card {
    public int getSuit(){
       return suit;
    }
-   public String show(boolean uni){
+   public String show(boolean uni){          // A string of the card
       String[] str_rank = {null, "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
       if (!uni) {
          str_suit[0] = "C.";

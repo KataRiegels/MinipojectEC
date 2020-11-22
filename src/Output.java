@@ -25,7 +25,7 @@ public class Output {
 
    }
 
-   public Output(){}          // this is needed for my GameOutput class
+   public Output(){}
 
 
 
@@ -136,9 +136,6 @@ public class Output {
 
    public String getPart(String input) {
       String[] syn;
-
-      // insert contractions
-
       contractions(input);
       String[] splitInput = split(input);
       if (possibleOutputs != null) {
@@ -296,7 +293,6 @@ public class Output {
       waitingMilSec(500);
    } // Print the bubbles while Liza is writing
    private void waitingMilSec(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
       try {
          Thread.sleep(seconds);
       }
