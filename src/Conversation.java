@@ -17,11 +17,8 @@ public class Conversation {
 
          aPR = a(startGame, stopGame);
 
-         //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
          allReplies = a(wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, stopGame, explain, clarifyAsk);
          possibleReplies = allReplies;
-         //welcome.setPossibleOutputs(possibleReplies);
-         //System.out.println(Arrays.toString((welcome.defaultKeywords)));
    }
 
    public Output[] getaPR(){

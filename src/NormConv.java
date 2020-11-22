@@ -169,26 +169,26 @@ public class NormConv {
    // method that sets the possible replies for each Output
    public void settingPossibleOutputs(){
       welcome.setPossibleOutputs(wyn);
-      wyn.setPossibleOutputs(yni);
-      yni.setPossibleOutputs(startGame, intro, yniN);
-      yniN.setPossibleOutputs(startGame, yni);
+      wyn.setPossibleOutputs(  yni);
+      yni.setPossibleOutputs(  startGame, intro, yniN);
+      yniN.setPossibleOutputs( startGame, yni);
       intro.setPossibleOutputs(startGame, hyd);
-      hyd.setPossibleOutputs(startGame,nth, ohno, iag, igt);
-      nth.setPossibleOutputs(startGame, ihcg, ilcg);
-      ohno.setPossibleOutputs(startGame, lp);
-      iag.setPossibleOutputs(startGame, lp);
-      lp.setPossibleOutputs(askIfExplain);
-      igt.setPossibleOutputs(startGame, ihcg, ilcg);
-      ilcg.setPossibleOutputs(startGame, fav);
-      ihcg.setPossibleOutputs(startGame, ywp, wsp);
-      wsp.setPossibleOutputs(startGame, askIfExplain);
-      fav.setPossibleOutputs(startGame, ywp, wsp);
-      ywp.setPossibleOutputs(startGame, askIfExplain, convincePlay);
+      hyd.setPossibleOutputs(  startGame, nth, ohno, iag, igt);
+      nth.setPossibleOutputs(  startGame, ihcg, ilcg);
+      ohno.setPossibleOutputs( startGame, lp);
+      iag.setPossibleOutputs(  startGame, lp);
+      lp.setPossibleOutputs(   askIfExplain);
+      igt.setPossibleOutputs(  startGame, ihcg, ilcg);
+      ilcg.setPossibleOutputs( startGame, fav);
+      ihcg.setPossibleOutputs( startGame, ywp, wsp);
+      wsp.setPossibleOutputs(  startGame, askIfExplain);
+      fav.setPossibleOutputs(  startGame, ywp, wsp);
+      ywp.setPossibleOutputs(  startGame, askIfExplain, convincePlay);
       askIfExplain.setPossibleOutputs(startGame, explain, symbolCheck);
-      explain.setPossibleOutputs(startGame,symbolCheck, ygt);
-      ygt.setPossibleOutputs(startGame, symbolCheck);
-      symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
-      symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
+      explain.setPossibleOutputs(     startGame, symbolCheck, ygt);
+      ygt.setPossibleOutputs(         startGame, symbolCheck);
+      symbolCheck.setPossibleOutputs( symbolCheckWhat, symbolCheckN,  symbolCheckY);
+      symbolCheckWhat.setPossibleOutputs(symbolCheckY, symbolCheckN);
       symbolCheckN.setPossibleOutputs(startGame);
       symbolCheckY.setPossibleOutputs(startGame);
    }
@@ -200,7 +200,7 @@ public class NormConv {
       output = welcome;   // first output
       output.print();
 
-      while(counter < 20 && !startGameT) {
+      while(counter < 20 && !startGameT) {         // conversation (while loop) goes on until the game is started
 
          Output firstOut = output.copy();
          Output[] firstOutPoss = output.getPossibleOutputs();
@@ -253,9 +253,9 @@ public class NormConv {
 
    // method that updates the replies of the Outputs that use the username in their reply
    public void updateReplies(){
-      yni.setReply("Your name is " + userName + "?");
+      yni.setReply(  "Your name is "      + userName + "?");
       intro.setReply("Nice to meet you, " + userName + "!");
-      hyd.setReply("How are you " + userName + "?");
+      hyd.setReply(  "How are you "       + userName + "?");
    }
 
    // method that concerts strings to a string array
