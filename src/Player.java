@@ -202,18 +202,18 @@ public class Player{
       return a;
    }
    public Output useOutput(Output output){                     // output = current output
-      Output firstOut = output.copy();                         // creates a copy of the first output
-      Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the first output
+      Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
+      Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the current output
       Output prevOutput;                                       // previous output (?)
       do {
-         output.print();                                       // prints the output
+         output.print();                                       // prints the current output
          String input = readString();                          // reads player's input
          prevOutput = output.copy();                           // saves current output as previous output
-         output = output.getNext(input);                       // gets the next output based on player's input
-         output.setPossibleOutputs(firstOutPoss);              // sets the output's possible outputs to the possible outputs of the first output (?)
-         System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (?)
-      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is not the error output of the previous output
-                                                                                                      // and the output is not in the possible outputs of the first output
+         output = output.getNext(input);                       // updates the current output based on player's input
+         output.setPossibleOutputs(firstOutPoss);              // sets the new output's possible outputs to the possible outputs of the first output
+         System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
+      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
+                                                                                                      // nor in the possible outputs of the first output
       return output;
    }
    private static String readString() {
