@@ -2,13 +2,10 @@
 public class Bot extends Player {
    private String comReply;
    private String name;
-   //Hand hand;
-   private boolean isUser, knock, unicode;;
+   private boolean knock;
 
    public Bot(String name){
       super(name);
-      this.isUser = false;
-      unicode = true;
    }
 
 
@@ -30,7 +27,6 @@ public class Bot extends Player {
       announcePlay(chosenCard);
       hand.play(discard, hand.getIndex(chosenCard)+1);
    }
-
 
    // Which pile to draw form, and which card to play.
    public Cards choosePile(Cards discard, Cards stock, boolean knocked, int gameTurn) {
@@ -99,47 +95,33 @@ public class Bot extends Player {
       println();
    }
 
-
    // prints bot's hand. Override: will print hidden cards.
    @Override public void printHand(){
-      //int handSize = hand.size();
-      //System.out.print(comReply + name + "'s hand: ");
-
       for (int i = 0; i < hand.size(); i++){
-         System.out.print("|x|");
-         if (i<hand.size()-1){
-            System.out.print(" - ");
-         }
+         print("|x|");
+         if (i<hand.size()-1) print(" - ");
       }
-
-
-      //hand.printHand();
-      System.out.println();
+      println();
    }
 
    // bot decides whether to knock or not.
    public boolean shouldKnock(int gameTurn, boolean knocked, Cards hand){
       boolean earlyGame, midGame, lateGame;
-      int lowerTurn, midTurn, lateTurn;
+      int     lowerTurn, midTurn, lateTurn;
       lowerTurn = 4; midTurn = 8; lateTurn = 12;
-      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > areaOfSurprise(23);
-      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > areaOfSurprise(26);
-      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > areaOfSurprise(28);
+      earlyGame  = gameTurn < lowerTurn &&                          hand.maxPoints() > diverseKnockChoices(23);
+      midGame    = gameTurn > lowerTurn && gameTurn <= midTurn   && hand.maxPoints() > diverseKnockChoices(26);
+      lateGame   = gameTurn > midTurn   && gameTurn <= lateTurn  && hand.maxPoints() > diverseKnockChoices(28);
       if ( !knocked && (earlyGame && gameTurn > 0 || midGame || lateGame  || hand.maxPoints() >= 30)){
-         //waiting(2);
          printWait(1);
-         System.out.println("I want to knock");
-         //return false;
+         println("I want to knock");
          return true;
       }
       return false;
    }
-   private int areaOfSurprise(int points){
-
-
-      return (int)Math.random() * ((points-1) - (points + 1) + 1) + points-1;
+   private int diverseKnockChoices(int points){
+      return (int)(Math.random() * ((points-1) - (points + 1) + 1) + points-1);
    }              // To make the sure it doesn't just always knock when at x points on turn y.
-
 
    // printers
    public void printOpen(){
@@ -147,9 +129,7 @@ public class Bot extends Player {
    }
    public void printWait(long waitTime){
       int dots = 3;
-      String dotChar;
-      if (unicode) dotChar = (char)0x26AC + "";
-      else dotChar = ".";
+      String dotChar = ".";
       String delete = "\b";
       String dot;
       println();
@@ -162,13 +142,12 @@ public class Bot extends Player {
             dot += dotChar + " ";
             waitingMilSec(300);
             print(dot + "\r");
-
          }
          waitingMilSec(500);
          print(delete);
       }
       waitingMilSec(500);
-   } // Print the bubbles while Liza is writing
+   } // Prints dots while Liza is writing
 
 
 }

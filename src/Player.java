@@ -36,7 +36,7 @@ public class Player{
       card2       = new Output();
       card3       = new Output();
       card4       = new Output();
-   } // Initializing all the Outputs we use in the Player class
+   }                  // Initializing all the Outputs we use in the Player class
    public void setOutputs(){
      discard.setKeywords(a("discard"), a("open"), a("disc"));
      stock.setKeywords(a("stock"),a("closed"));
@@ -54,12 +54,12 @@ public class Player{
      whichCard.setPossibleOutputs(card1, card2, card3, card4, cannotKnock, stopped);
      whichCard.setErrOutput(errCard);
      cannotKnock.setPossibleOutputs(whichCard);
-   }    // Sets the keywords and possible outputs for each Output.
+   }                     // Sets the keywords and possible outputs for each Output.
    public Output useOutput(Output output){
-      Output firstOut = output.copy();
+      Output   firstOut = output.copy();
       Output[] firstOutPoss = output.getPossibleOutputs();
       Output prevOutput;
-      do {
+      do {                                           // Will run through "error" outputs until user gave a meaningful answer
          output.print();
          String input = readString();
          prevOutput = output.copy();
@@ -68,7 +68,7 @@ public class Player{
          System.out.println(firstOut.isInPossibleOutputs(output));
       } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
       return output;
-   }
+   }       // Runs the outputs and finds next output.
 
 
    // getters and setters
@@ -87,10 +87,15 @@ public class Player{
    public void    setUnicode(boolean r){
       unicode = r;
    }
+   public boolean hasKnocked(){
+      return knock;
+   }
+   public boolean isUser(){
+      return isUser;
+   }
 
    // what happens if player is the who to has to draw
    public void drawTurn(Cards discard, Cards stock, boolean knocked, int gameTurn){
-      //waitingMilSec(1);
       if (knocked) lastTurn.print();
       Output o = useOutput(whichPile);
       Cards drawn = null;
@@ -106,7 +111,7 @@ public class Player{
          }
          if (o == this.discard) drawn = discard;
          else if (o == this.stock) drawn = stock;
-         if (drawn != null) hand.draw(drawn);         // and then what?
+         if (drawn != null) hand.draw(drawn);
       }
       stop = true;
    }
@@ -130,20 +135,13 @@ public class Player{
    }
 
 
-   // die roll
    public int     dieRoll(){
       return (int)(Math.random()*6+1);
    }
-   public boolean hasKnocked(){
-      return knock;
-   }
    public boolean blitz(){
       return (hand.maxPoints() >= 31 && !hand.bestGroup().anyUnder(10) && hand.bestGroup().anyOver(10));
-      //return (hand.maxPoints() >= 9);
-   }
-   public boolean isUser(){
-      return isUser;
-   }
+   }  // If a player has 31 points, they automatically win
+
 
    // prints hand
    public void printHand(){
@@ -163,7 +161,6 @@ public class Player{
          System.out.println("There was a problem :( ");
       }
    }
-
 
    // Methods for convenience.
    public void print(String string){
@@ -186,32 +183,4 @@ public class Player{
       }
       return a;
    }
-   public String[][] a(String[]... stringss){
-      String[][] a = new String[stringss.length][];
-      for (int i = 0; i < stringss.length; i++){
-         a[i] = stringss[i];
-      }
-      return a;
-   }
-   /*
-   public Output useOutput(Output output){
-                    // output = current output
-      Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
-      Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the current output
-      Output prevOutput;                                       // previous output (?)
-      do {
-         output.print();                                       // prints the current output
-         String input = readString();                          // reads player's input
-         prevOutput = output.copy();                           // saves current output as previous output
-         output = output.getNext(input);                       // updates the current output based on player's input
-         output.setPossibleOutputs(firstOutPoss);              // sets the new output's possible outputs to the possible outputs of the first output
-         System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
-      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
-                                                                                                      // nor in the possible outputs of the first output
-      return output;
-   }
-
-    */
-
-
 }
