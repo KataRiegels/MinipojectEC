@@ -78,10 +78,15 @@ public class NormConv extends Conversation {
       explain = new Output("Ok, these are the rules:");
       String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
       explain.setKeyword(explainTriggers);
-      String rule1 = new String("The goal of blackjack is to beat the dealer's hand without going over 21.");
-      String rule2 = new String("Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.");
+      String rule1 = new String("You have a hand of 3 cards.");
+      String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
+      String rule3 = new String("Only cards of the same suit count together.");
+      String rule4 = new String("All face cards count as 10. Ace counts as 11.");
+      String rule5 = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
+      String rule6 = new String("After a \"knock\" the other player gets one more round.");
+      String rule7 = new String("The player who is closer to 31 wins the round.");
       String question = new String("Do you need clarification?");
-      explain.setAdditionalDisplay(rule1, rule2, question);
+      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, question);
 
       clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
