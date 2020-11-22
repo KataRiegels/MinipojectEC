@@ -65,7 +65,7 @@ public class NormConv extends Conversation {
 
       // reaction if player feels bad and asks how Liza is feeling
       igt = new Output("I'm good too. Thanks for asking!");
-      igt.setKeyword(a("good", "you"), a("great", "you"));
+      igt.setKeywords(a("good", "you"), a("great", "you"));
       igt.setNotKeywords(a("not", "good"), a("not", "great"));
       igt.setAdditionalDisplay("Do you like card games?");
 
@@ -73,26 +73,26 @@ public class NormConv extends Conversation {
 
       // next question: ask about interests
       hobbies = new Output("What are your interests?");
-      hobbies.setKeyword(a("dummy"));
+      hobbies.setKeywords(a("dummy"));
 
       // question: ask about card games
       //cg = new Output("Do you like card games?");
-      //cg.setKeyword(a("dummy"));
+      //cg.setKeywords(a("dummy"));
 
       // reaction if player likes card games
       ilcg = new Output("Me too!");
-      ilcg.setKeyword(a("yes"), a("do"), a("love"));
+      ilcg.setKeywords(a("yes"), a("do"), a("love"));
       ilcg.setNotKeywords(a("don't", "like"), a("dislike"));
       ilcg.setAdditionalDisplay("What is your favorite card game?");
 
       // reaction to player's favorite card game
       fav = new Output(input + "? That's a cool game!"); // look for right word
-      fav.setKeyword(a("dummy"));
+      fav.setKeywords(a("dummy"));
       fav.setAdditionalDisplay("Would you like to play the card game 31 with me?");
 
       // reaction if player doesn't like card games
       ihcg = new Output("Really? But they are so fun!");
-      ihcg.setKeyword(a("don't"), a("no"), a("dislike"), a("hate"));
+      ihcg.setKeywords(a("don't"), a("no"), a("dislike"), a("hate"));
       ihcg.setNotKeywords(a("don't", "hate"), a("don't", "dislike"));
       ihcg.setAdditionalDisplay("Have you heard of the card game 31?");
 
@@ -101,18 +101,18 @@ public class NormConv extends Conversation {
 
       // reaction if player knows 31: ask about playing
       ywp = new Output("Would you like to play the card game 31 with me?");
-      ywp.setKeyword(a("yes"), a("i","have"));
+      ywp.setKeywords(a("yes"), a("i","have"));
       ywp.setNotKeywords(a("haven't"));
 
       // reaction if player doesn't want to play: more smalltalk?
 
       // reaction if player wants to play: ask about explaining the rules
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-      askIfExplain.setKeyword(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
+      askIfExplain.setKeywords(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
       explain = new Output("Ok, these are the rules:");
-      explain.setKeyword(a("don't", "know", "rules"), a("explain"));
+      explain.setKeywords(a("don't", "know", "rules"), a("explain"));
       String rule1 = new String("You have a hand of 3 cards.");
       String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
       String rule3 = new String("Only cards of the same suit count together.");
@@ -125,26 +125,26 @@ public class NormConv extends Conversation {
 
       // reaction if player ready to play: ask about symbols
       symbolCheck  = new Output("One more question before we start:");
-      symbolCheck.setKeyword(a("yes"));
+      symbolCheck.setKeywords(a("yes"));
       symbolCheck.setAdditionalDisplay("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
 
       // Output: can you see this symbol: ... ?
 
       symbolCheckY = new Output("Alright, thanks.");
-      symbolCheckY.setKeyword(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
+      symbolCheckY.setKeywords(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
       symbolCheckY.setNotKeywords(a("can", "not"));
 
       symbolCheckWhat = new Output("\"yes\" as in you don't see three squares?");
-      symbolCheckWhat.setKeyword(a("yes"));
+      symbolCheckWhat.setKeywords(a("yes"));
 
       symbolCheckN = new Output("Good, thanks");
-      symbolCheckN.setKeyword( a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
+      symbolCheckN.setKeywords( a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
       symbolCheckN.setNotKeywords(a("no", "square"), a("no", "squares"));
 
 
       /*clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
-      clarifyAsk.setKeyword(clarifyAskTriggers);*/
+      clarifyAsk.setKeywords(clarifyAskTriggers);*/
 
       afterGame = new Output("Well played!");
       uni = true;
