@@ -258,7 +258,7 @@ public class NormConv {
       hyd.setReply(  "How are you "       + userName + "?");
    }
 
-   // method that concerts strings to a string array
+   // method that converts strings to a string array
    public String[] a(String... strings){
       String[] a = new String[strings.length];
       for (int i = 0; i < strings.length; i++){
