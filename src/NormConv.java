@@ -17,11 +17,9 @@ public class NormConv extends Conversation {
       // starting message
       welcome = new Output("Welcome!");
 
-
-      wyn = new Output("Welcome. What's your first name?");
-      wyn.setKeywords(a("dummy"));
       // first question: ask for name
       wyn = new Output("What's your first name?");
+      wyn.setKeywords(null);
 
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
@@ -69,13 +67,9 @@ public class NormConv extends Conversation {
 
       // next question: ask for reason of feelings
 
-      // next question: ask about interests
-      hobbies = new Output("What are your interests?");
-      hobbies.setKeywords(a("dummy"));
-
       // question: ask about card games
       //cg = new Output("Do you like card games?");
-      //cg.setKeywords(a("dummy"));
+      //cg.setKeywords(a(null));
 
       // reaction if player likes card games
       ilcg = new Output("Me too!");
@@ -106,7 +100,7 @@ public class NormConv extends Conversation {
 
       // reaction if player wants to play: ask about explaining the rules
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-      askIfExplain.setKeywords(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
+      askIfExplain.setKeywords(null, a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
       explain = new Output("Ok, these are the rules:");
@@ -131,7 +125,7 @@ public class NormConv extends Conversation {
       symbolCheckY.setKeywords(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
       symbolCheckY.setNotKeywords(a("can", "not"));
 
-      // reaction ?
+      // reaction to ambiguous reply
       symbolCheckWhat = new Output("\"yes\" as in you don't see three squares?");
       symbolCheckWhat.setKeywords(a("yes"));
 
@@ -142,7 +136,7 @@ public class NormConv extends Conversation {
 
       // starting the game
       startGame = new Output("Let's start the game then.");
-      startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));
+      startGame.setKeywords(null, a("explain", "don't"), a("start", "game"), a("know", "rules"));
 
       afterGame = new Output("Well played!");
       uni = true;
@@ -152,12 +146,7 @@ public class NormConv extends Conversation {
 
 
    public void settingPossibleOutputs(){
-      symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
-      symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
-      Output afterSym = hyd;
-      symbolCheckN.setPossibleOutputs(startGame, afterSym);
-      symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
-      //wyn.setPossibleOutputs(startGame, hyd);
+
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
       yni.setPossibleOutputs(startGame, intro, yniN);                                     // <- Should lead to some "my name is"
@@ -174,24 +163,24 @@ public class NormConv extends Conversation {
       ywp.setPossibleOutputs(startGame, askIfExplain);
       askIfExplain.setPossibleOutputs(startGame,explain, symbolCheck);
       explain.setPossibleOutputs(startGame,symbolCheck);
-      symbolCheck.setPossibleOutputs(startGame, symbolCheckY, symbolCheckWhat, symbolCheckN);
-      afterGame.setPossibleOutputs(wyn);   // fix
+      symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
+      symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
+      //Output afterSym = hyd;
+      symbolCheckN.setPossibleOutputs(startGame);
+      //symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
+      symbolCheckY.setPossibleOutputs(startGame);
+      //afterGame.setPossibleOutputs(wyn);   // fix
 
    }
 
 
    public void startConv() {
-      //settingPossibleOutputs();
-      // this might be the loop (looping through Output objects, 'welcome' being the first)
       int counter = 0;
 
-
-
-      output = welcome; //.copy();   // first output
+      output = symbolCheck;   // first output
       output.print();
 
-
-      while(counter < 6 && !startGameT) {
+      while(counter < 20 && !startGameT) {
 
 
          Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
@@ -219,19 +208,6 @@ public class NormConv extends Conversation {
          // nor in the possible outputs of the first output
          //return output;
 
-
-         /*
-         updateReplies();
-         String input = readString();
-         normSpecialOutput(output, input);
-         //Output previous = output.copy();
-         output = output.getNext(input);
-
-         //output.setPrevious(previous);
-         output.print();
-
-         specialOutput(output);
-*/
          counter++;
 
 
@@ -247,13 +223,13 @@ public class NormConv extends Conversation {
       if (output == symbolCheckN) {
          uni = false;
          output.print();
-         this.output = wyn;                                                   // <-- FIX
+         this.output = startGame;
          return;
       }
       if (output == symbolCheckY) {
          output.print();
          uni = true;
-         this.output = wyn;
+         this.output = startGame;
          return;
       }
       if (output == yni)         {
