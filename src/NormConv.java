@@ -4,7 +4,7 @@ import java.util.Scanner;
    public class NormConv {
    Game game;
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
-           lp, ywp, symbolCheck, askIfExplain, explain, why, wsp, convincePlay,
+           lp, ywp, symbolCheck, askIfExplain, explain, why, wsp, convincePlay, ygt,
            startGame, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
@@ -108,8 +108,8 @@ import java.util.Scanner;
 
       // explain the rules
       explain = new Output("Ok, these are the rules:");
-      explain.setKeywords(a("don't", "know", "rules"), a("explain"));
-      explain.setKeywords(a("don't","explain"));
+      explain.setKeywords(a("don't", "know", "rules"), a("explain"), a("dummy"), a("not", "know"));
+      explain.setNotKeywords(a("don't","explain"), a("not", "explain"), a("know", "rules"));
       String rule1    = new String("You have a hand of 3 cards.");
       String rule2    = new String("Your goal is to get a total as close to 31 as possible.");
       String rule3    = new String("Only cards of the same suit count together.");
@@ -120,15 +120,14 @@ import java.util.Scanner;
       String question = new String("Are you ready to play?");
       explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7, question);
 
-      // reaction if player not ready to play: ask why
-      why = new Output("What's the problem?");
-      why.setKeywords(a("no"), a("not"));
-      // just play anyways
+      // reaction if player not ready to play: encourage player
+      ygt = new Output("Don't worry, you got this!");
+      ygt.setKeywords(a("no"), a("not"));
 
 
       // reaction if player ready to play: ask about symbols
       symbolCheck  = new Output("One more question before we start:");
-      symbolCheck.setKeywords(a("yes"));
+      symbolCheck.setKeywords(a("don't", "explain"), a("yes"), a("ok"), a("know", "rules"), a("not", "explain"));
       symbolCheck.setAdditionalDisplay("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
 
       // reaction if player can see symbols
@@ -147,7 +146,7 @@ import java.util.Scanner;
 
       // starting the game
       startGame = new Output("Let's start the game then.");
-      startGame.setKeywords( a("explain", "don't"), a("start", "game"), a("know", "rules"));
+      startGame.setKeywords(a("start", "game"));
 
       afterGame = new Output("Well played!");
       uni = true;
@@ -174,8 +173,9 @@ import java.util.Scanner;
       wsp.setPossibleOutputs(startGame, askIfExplain);
       fav.setPossibleOutputs(startGame, ywp, wsp);
       ywp.setPossibleOutputs(startGame, askIfExplain, convincePlay);
-      askIfExplain.setPossibleOutputs(startGame,explain, symbolCheck);
-      explain.setPossibleOutputs(startGame,symbolCheck, why);
+      askIfExplain.setPossibleOutputs(startGame, explain, symbolCheck);
+      explain.setPossibleOutputs(startGame,symbolCheck, ygt);
+      ygt.setPossibleOutputs(startGame, symbolCheck);
       symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
       symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
       symbolCheckN.setPossibleOutputs(startGame);
