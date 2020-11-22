@@ -19,8 +19,6 @@ public class Conversation {
          stopGame.setKeyword(a("stop"));
          aPR = a(startGame, stopGame);
 
-         //Output rule1 = new Output("");
-
          //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
          allReplies = a(wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, stopGame, explain, clarifyAsk);
          possibleReplies = allReplies;
@@ -81,8 +79,7 @@ public class Conversation {
          specialOutput(output);
          counter++;
       }
-      // only read new input if input needed, otherwise just get next output (?)
-      // save current output, possible replies need to be updated according to output
+      // save current output
 
    }
 

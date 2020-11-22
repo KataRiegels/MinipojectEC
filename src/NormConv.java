@@ -138,7 +138,9 @@ public class NormConv extends Conversation {
 
          String input = readString();
          normSpecialOutput(output, input);
+         Output previous = output.copy();
          output = output.getNext(input);
+         output.setPrevious(previous);
          output.print();
 
          specialOutput(output);
