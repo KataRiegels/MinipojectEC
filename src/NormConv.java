@@ -3,7 +3,7 @@
 
 public class NormConv extends Conversation {
    Game game;
-   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag,
+   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro,
            symbolCheck, askIfExplain, explain,
            startGame, clarifyAsk, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
@@ -14,28 +14,31 @@ public class NormConv extends Conversation {
    public NormConv(){
       game = new Game();
 
-      welcome = new Output("welcome");
+      // starting message
+      welcome = new Output("Welcome!");
 
-
-      wyn = new Output("Welcome. What's your first name?");
+      // first question: ask for name
+      wyn = new Output("What's your first name?");
       wyn.setKeyword(a("dummy"));
 
+      // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
       yni.setKeyword(a("dummy"));
-      String asd[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
-      yni.setNotKeywords(asd);
+      yni.setNotKeywords(a("hello"), a("hi"), a("good", "day"), a("yes"));
 
+      // reaction if name incorrect
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
       yniN.setKeyword(a("no"), a("it's", "not"));
 
-      //yniY = new Output("Welcome " + userName + "!");
-      //yniY.setKeyword(a("yes"));
+      // reaction if name correct: Liza introduces herself
+      intro = new Output("Nice to meet you, " + userName + "!");
+      intro.setKeyword(a("yes"), a("it's"));
+      intro.setNotKeywords(a("it's", "not"));
+      intro.setAdditionalDisplay("My name is Liza.");
 
       hyd = new Output("How are you, " + userName + "?");
-      //String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
-      //hyd.setKeyword(hydTriggers);
-      hyd.setKeyword(a("yes"));
-      hyd.setNotKeywords(a("not", "name"), a("not", "my"));
+      hyd.setKeyword(a("dummy"));
+      //hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       nth = new Output("Good to hear.");
       nth.setKeyword(a("good"), a("not", "bad"));
@@ -57,7 +60,7 @@ public class NormConv extends Conversation {
       igt.setKeyword(igtTriggers);
       igt.setAdditionalDisplay("Let's play 31.");
 
-      //Output ywp = new Output("Wanna play blackjack?");
+
 
       // Output: can you see this symbol: ... ?
       symbolCheck  = new Output("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
@@ -114,8 +117,9 @@ public class NormConv extends Conversation {
       wyn.setPossibleOutputs(yni);
       String[][] dff = {a("yo", "are"), a("jkljlk", "opi")};
       yni.setNotKeywords(dff);
-      yni.setPossibleOutputs(getaPR(), hyd, yniN);                                     // <- Should lead to some "my name is"
+      yni.setPossibleOutputs(getaPR(), intro, yniN);                                     // <- Should lead to some "my name is"
       yniN.setPossibleOutputs(getaPR(), yni);
+      intro.setPossibleOutputs(getaPR(), hyd);
       hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
       nth.setPossibleOutputs(getaPR(), askIfExplain);
       ohno.setPossibleOutputs(getaPR(),askIfExplain);
@@ -138,7 +142,7 @@ public class NormConv extends Conversation {
 
 
 
-      output = wyn; //.copy();   // first output
+      output = welcome; //.copy();   // first output
       output.print();
 
 
@@ -189,6 +193,7 @@ public class NormConv extends Conversation {
    public void updateReplies(){
       yni.setReply("Your name is " + userName + "?");
       hyd.setReply("How are you " + userName + "?");
+      intro.setReply("Nice to meet you, " + userName + "!");
    }
 
 
