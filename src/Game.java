@@ -28,51 +28,45 @@ public class Game extends Conversation{
 
    }
 
-   public void playGame(){
+   public void playGame(){                               // The method used to call in main to play the game.
       p1 = new Bot("Liza");
       p2 = new Player(userName);
       ps[0] = p2; ps[1] = p1;
-      gameNr = 0;
-
+      uniCode();
 
 
       do {
          endGame = false;
          knocked = false;
+         turnNr = 0;
 
          stock.createStock();
          stock.shuffle();
          p1.hand.starter(stock, 3);
          p2.hand.starter(stock, 3);
-
          discard.turnCard(stock);
-         uniCode();
-         turnNr = 0;
-         //in = new Scanner(System.in);
 
          if (gameNr == 0) botReply("\nLet's get ready to play! We will decide who starts by rolling a die. \n", 1);
          else botReply("\nDie time \n", 1);
-         //waitingMilSec(1);
+         waitingMilSec(500);
 
 
          player = whoStarts(p1, p2);
          if (endGame) break;
-         //waitingMilSec(2);
+         waitingMilSec(500);
 
          player = p2;
-/*
+
          printLine();
          println("\n              The game begins!");
          printLine();
-         waitingMilSec(1);
+         waitingMilSec(500);
 
-*/
          turns();
          if (knocked) comparePoints();
          winner = playerWon();
          gameNr++;
          if (endGame) break;
-         //if (!(playAgain() || !endGame)) break;
       } while (playAgain());
 
       if (endGame) botReply("Okay, let's stop then", 1);
@@ -80,7 +74,7 @@ public class Game extends Conversation{
    }
 
    // Output related
-   public void createOutputs(){
+   public void createOutputs(){                             // instantiation of the Outputs used here.
       readyDie     = new Output("Are you ready to roll the die??");
       rollDie      = new Output("ok, here");
       notRollDie   = new Output("Uhm, okay.. Do you want to stop playing?");
@@ -92,8 +86,12 @@ public class Game extends Conversation{
       playAgainQ   = new Output("...");
       notPlayAgain = new Output("Alright, let's stop");
       contin       = new Output("Alright, let's continue");
+      stopGame     = new Output("Ok, let's stop");
+      
+      
+      
    }
-   public void setOutputs(){
+   public void setOutputs(){                                // setting keywords and possible outputs for the Outputs.
       rollDie.setKeywords(a("yes"));
       notRollDie.setKeywords(a("no"));
       seeWhoWon.setKeywords(a("yes"), a("do"));
@@ -105,13 +103,13 @@ public class Game extends Conversation{
       playAgain.setNotKeywords(a("no"), a("not", "play"), a("not", "continue"));
       contin.setKeywords(a("no"), a("continue"),a("don't", "stop"));
       secret.setKeywords(a("yes"));
-
-      readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
-      notRollDie.setPossibleOutputs(aPR, contin, secret );
-      playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
-      seeWhoWonQ.setPossibleOutputs(aPR, seeWhoWon, notSeeWhoWon);
+      stopGame.setKeywords(a("stop"));
+      readyDie.setPossibleOutputs(stopGame,rollDie, notRollDie);
+      notRollDie.setPossibleOutputs(stopGame, contin, secret );
+      playAgainQ.setPossibleOutputs(stopGame,playAgain, notPlayAgain);
+      seeWhoWonQ.setPossibleOutputs(stopGame, seeWhoWon, notSeeWhoWon);
    }
-   public Output useOutput(Output output){
+   public Output useOutput(Output output){                   // For whenever we want to use our outputs. Will take an Output and find the next Output based on keywords and possible outputs.
       Output firstOut = output.copy();
       Output[] firstOutPoss = output.getPossibleOutputs();
       Output prevOutput;
@@ -147,7 +145,7 @@ public class Game extends Conversation{
    }
 
 
-   public Player whoStarts(Player p1, Player p2){
+   public Player whoStarts(Player p1, Player p2){                 // Rolls a die for each player and prints result.
       Player p; Player startingPlayer;
       Player[] ps = {p1,p2};
       int[] dice = new int[2];
@@ -190,7 +188,7 @@ public class Game extends Conversation{
       else  startingPlayer = ps[1];
       println(comReply + startingPlayer.getName() + " rolled highest. " + startingPlayer.getName() + " starts");
       return startingPlayer;
-   }   // Rolls a die for each player and prints result.
+   }
 
    // taking turns
    public void turns(){
@@ -216,7 +214,7 @@ public class Game extends Conversation{
    }
 
    // Drawing and playing (in turns)
-   public void   drawTurn(){
+   public void   drawTurn(){                          // The part of a turn that is concerned with drawing
       if (player.getStop()) {
          endGame = true;
          return;
@@ -232,7 +230,7 @@ public class Game extends Conversation{
       player.drawTurn(discard, stock, knocked, turnNr);
       if (player.isUser() && !player.hasKnocked() && !player.getStop()) printState();
    }
-   public void   playTurn(){
+   public void   playTurn(){                                // The part of the turn concerned with playing a card.
       if (player.getStop()) {
          endGame = true;
          return;
@@ -250,20 +248,20 @@ public class Game extends Conversation{
       }
 
    }
-   public Player nextPlayer(Player current) {
+   public Player nextPlayer(Player current) {                        // returns non-current player
       if (current == p1) {
          return p2 ;
       } else {
          return p1;
       }
-   }           // returns non-current player
+   }
    public void   reshuffle(){
       stock.createStock(discard);
       discard.shuffle();
       discard.turnCard(stock);
    }
 
-   public Player  playerWon(){
+   public Player  playerWon(){                              // checks and prints if someone won by blitz
       for (Player p : ps) {
          if (p.blitz()) {
             println();
@@ -274,8 +272,8 @@ public class Game extends Conversation{
          }
       }
       return null;
-   }                           // checks and prints if someone won by blitz
-   public void    comparePoints(){
+   }
+   public void    comparePoints(){                          // compares points after someone knocked
       Player[] ps = {p1,p2};
       printLine();
       printWait(2);
@@ -310,8 +308,8 @@ public class Game extends Conversation{
             output = useOutput(notSeeWhoWon);
          }
       } while (output != secret);
-   }                       // compares points after someone knocked
-   public boolean playAgain(){
+   }
+   public boolean playAgain(){                     // Asks whether they should play agian
       printLine();
       printWait(1);
       Output o;
@@ -335,23 +333,19 @@ public class Game extends Conversation{
       o = useOutput(playAgainQ);
       if (o == playAgain) return true;
       return false;
-   }                           // Asks whether they should play agian
-   public void    uniCode(){
+   }
+   public void    uniCode(){                          // Sets all necessary things depending on the user's respond to symbols.
       p1.hand.setUni(uni);
       p2.hand.setUni(uni);
-      for (Player p : ps){
-         if (p.isUser() || !uni) p.setComReply((char)45);
-         p.setUnicode(uni);
-      }
       stock.setUni(uni);
       discard.setUni(uni);
       if (!uni) comReply = "- ";
 
-   }                              // Sets all necessary things depending on the user's respond to symbols.
+   }
 
 
    // Methods that are simply concerned with how to print certain things. Are only used within other methods.
-   public void    printState(){
+   public void    printState(){                                   // Prints top card in discard pile and hand of the current player.
       print(comReply);
       discard.printTop();
       waitingMilSec(1000);
@@ -359,15 +353,15 @@ public class Game extends Conversation{
       player.printHand();
 
    }
-   public void    botReply(String string, int waitTime){
+   public void    botReply(String string, int waitTime){                                // This just prints something with "writing bubbles" first.
       printWait(waitTime);
       println(string);
 
    }
-   private void   printLine(){
+   private void   printLine(){                                 // Just prints a line of =
       print("\n=======================================================\n");
    }
-   private void   printWait(long waitTime){
+   private void   printWait(long waitTime){                 // The part that prints "writing bubbles"
       int dots = 3;
       String dotChar;
       if (uni) dotChar = (char)0x26AC + "";
@@ -390,7 +384,7 @@ public class Game extends Conversation{
       }
       waitingMilSec(300);
    }
-   private void   printDieWait(){
+   private void   printDieWait(){                              // Prints a small die roll.
       if (!uni){
          println();
          waitingMilSec(500);
@@ -415,7 +409,7 @@ public class Game extends Conversation{
       print(delete);
 
    }
-   private String diePrint(int die){
+   private String diePrint(int die){                  // Prints the die neatly.
       if (!uni) return Integer.toString(die);
       String p;
       if (die == 1)      p = (char) 0x2802 + "";
@@ -428,7 +422,7 @@ public class Game extends Conversation{
    }
 
 
-   // Makes a bit of waitingMilSec time between answers
+   // waiting method. This will cause a small pause in the console.
    private void waitingMilSec(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
 
       try {

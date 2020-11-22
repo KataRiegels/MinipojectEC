@@ -15,9 +15,6 @@ public class Conversation {
          startGame = new Output("Let's start the game then.");
          startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));
 
-
-         stopGame = new Output("Ok, let's stop");
-         stopGame.setKeywords(a("stop"));
          aPR = a(startGame, stopGame);
 
          //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};

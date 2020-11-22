@@ -1,12 +1,10 @@
 import java.util.*;
 
 public class Cards {
-   //private Card[] cards = null;
    private int clubs = 0, diamond = 1, hearts = 2, spades = 3;
-   private boolean uni;
-   //Cards cs;
+   private boolean uni;                      // The boolean deciding what kind of symbols to print.
    private String label;
-   private ArrayList<Card> cards; // = new ArrayList<Card>(); //new ArrayList<Card>();
+   private ArrayList<Card> cards;
 
    // Constructors
    public Cards() {
@@ -74,7 +72,7 @@ public class Cards {
    }
 
 
-   public Cards  deal(Cards receiver, int amount, int cardIndex){ //cardIndex is where form the cards. you take. it is 0 if top of a pile
+   public Cards  deal(Cards receiver, int amount, int cardIndex){    // Takes a card from this Cards and adds to another. Such as dealing a hand.
       Cards cs = new Cards();
       for (int i = 0; i < amount; i++){
          Card card = takeCard(cardIndex);
@@ -90,12 +88,12 @@ public class Cards {
          swapCards(i, r.nextInt(size()));
       }
    }
-   public String showCard(Card card){
+   public String showCard(Card card){           // Prints a card.
       return card.show(uni);
    }
 
    // Methods that concerns grouping and searching cards depending on their suit and points.
-   public Cards   findGroup(int suit){
+   public Cards   findGroup(int suit){          // Returns Cards of chosen suit.
       Cards group = new Cards();
       for (int i = 0; i < size(); i++){
          if (getCard(i).getSuit() == suit) {
@@ -103,7 +101,7 @@ public class Cards {
          }
       }
       return group;
-   }                     // Returns Cards of chosen suit.
+   }
    public Card    worstCard(){
       Card minC = getCard(0);
       int min = 31;
@@ -115,13 +113,13 @@ public class Cards {
       }
       return minC;
    }
-   public Cards   bestGroup(){
+   public Cards   bestGroup(){                     // The arraylist of cards in the best suit (based on points)
       return findGroup(bestSuit());
-   }                             // The arraylist of cards in the best suit (based on points)
+   }
    public Cards   worstGroup(){
       return findGroup(worstSuit());
    }
-   public int     bestSuit(){
+   public int     bestSuit(){                       // The suits whose cards give most points.
       int suit = 0;
       int maxP = groupPoint(clubs);
       for (int i = 1; i < 4; i++){
@@ -131,7 +129,7 @@ public class Cards {
          }
       }
       return suit;
-   }                              // The suits who's cards give most points.
+   }
    public int     worstSuit(){
       int suit = 0;
       int minP = 100;
@@ -143,12 +141,12 @@ public class Cards {
       }
       return suit;
    }
-   public boolean anyOver(int min){
+   public boolean anyOver(int min){                // checks if there are any cards with points over min
       for (int i = 0; i < size(); i++){
          if (getCard(i).points() > min) return true;
       }
       return false;
-   }                        // checks if there are any cards with points over min
+   }
    public boolean anyUnder(int max){
       for (int i = 0; i < size(); i++){
          if (getCard(i).points() < max) return true;
@@ -157,20 +155,20 @@ public class Cards {
    }
 
    // for finding points
-   public int points() {
+   public int points() {                               // the sum of points.
       int maxP = 0;
       for (int i = 0; i < size(); i++) {
          maxP += getPoint(i);
       }
       return maxP;
    }
-   public int getPoint(int i){
+   public int getPoint(int i){                        // gets the points for a specific card
       return getCard(i).points();
    }
-   public int groupPoint(int suit){
+   public int groupPoint(int suit){                      // Gets the points within a suit.
       return findGroup(suit).points();
    }
-   public int maxPoints(){
+   public int maxPoints(){                                     // The maximum amount of points the Cards can achieve, where points are restricted to suits.
       int maxP = groupPoint(clubs);
       for (int i = 1; i < 4; i++){
          if (groupPoint(i) > maxP){
@@ -179,24 +177,13 @@ public class Cards {
       }
       return maxP;
    }
-   public int minPoints(){
-      int minP = groupPoint(clubs);
-      for (int i = 1; i < 4; i++){
-         if (groupPoint(i) < minP){
-            minP = groupPoint(i);
-         }
-      }
-      return minP;
-   }
-
 
    // Methods primarily for piles
-   public void createStock(Cards deck){
-
+   public void createStock(Cards deck){                   // Just deals all cards from "Cards deck" to this.
       clear();
       deck.deal(this, deck.size(), 0);
    }
-   public void createStock(){
+   public void createStock(){                                     // Creates a pile from 52 fresh cards.
       clear();
       for (int suit = 0; suit < 4; suit++){
          for (int rank = 1; rank < 14; rank++) {
@@ -205,28 +192,28 @@ public class Cards {
          }
       }
    }
-   public void turnCard(Cards pile){
+   public void turnCard(Cards pile){                              // Meant to deal from stock pile to discard.
       clear();
       pile.deal(this, 1, 0);
    }
-   public void printTop(){
+   public void printTop(){                                  // To print the top card in the discard pile
       print("Discard pile: ");
       if (isEmpty()) println("|X|");
       else println(showCard(topCard()));
    }
-   public Card topCard(){
+   public Card topCard(){                                    // Gets the top (last) card.
       return getCard(size()-1);
    }
 
    // Methods primarily for hands
-   public void  starter(Cards pile, int amount){
+   public void  starter(Cards pile, int amount){                  // Dealing the starting hand.
       clear();
       pile.deal(this, amount, pile.size()-1);
    }
-   public Cards draw(Cards pile){
+   public Cards draw(Cards pile){                                 // drawing from Cards pile and adds to this
       return pile.deal(this, 1, pile.size()-1);
    }
-   public void  play(Cards pile, int index){
+   public void  play(Cards pile, int index){                     // deals card nr index to Cards pile.
       deal(pile, 1, index-1);
    }
    public void  printHand(){
@@ -238,10 +225,6 @@ public class Cards {
       }
       println();
    }
-   
-
-
-
 
    // prints
    public void print(String string){
@@ -253,8 +236,6 @@ public class Cards {
    public void println(){
       System.out.println();
    }
-
-
 
 
 }

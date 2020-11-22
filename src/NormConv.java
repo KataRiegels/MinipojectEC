@@ -220,10 +220,6 @@ import java.util.Scanner;
       }
    }
 
-   public boolean startedGame(){
-      return startGameT;
-   }
-
    public void endConv(){
       output = afterGame.copy();
       output.print();
@@ -262,6 +258,9 @@ import java.util.Scanner;
       return userName;
    }
 
+   public boolean startedGame(){
+      return startGameT;
+   }
    public String[] a(String... strings){
       String[] a = new String[strings.length];
       for (int i = 0; i < strings.length; i++){

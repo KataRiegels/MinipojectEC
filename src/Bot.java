@@ -6,7 +6,6 @@ public class Bot extends Player {
       super(name);
    }
 
-
    @Override public boolean isUser(){
       return false;
    }
@@ -93,15 +92,6 @@ public class Bot extends Player {
       println();
    }
 
-   // prints bot's hand. Override: will print hidden cards.
-   @Override public void printHand(){
-      for (int i = 0; i < hand.size(); i++){
-         print("|x|");
-         if (i<hand.size()-1) print(" - ");
-      }
-      println();
-   }
-
    // bot decides whether to knock or not.
    public boolean shouldKnock(int gameTurn, boolean knocked, Cards hand){
       boolean earlyGame, midGame, lateGame;
@@ -117,15 +107,22 @@ public class Bot extends Player {
       }
       return false;
    }
-   private int diverseKnockChoices(int points){
+   private int    diverseKnockChoices(int points){              // To make the sure it doesn't just always knock when at x points on turn y.
       return (int)(Math.random() * ((points-1) - (points + 1) + 1) + points-1);
-   }              // To make the sure it doesn't just always knock when at x points on turn y.
+   }
 
    // printers
+   @Override public void printHand(){
+      for (int i = 0; i < hand.size(); i++){
+         print("|x|");
+         if (i<hand.size()-1) print(" - ");
+      }
+      println();
+   }
    public void printOpen(){
       hand.printHand();
    }
-   public void printWait(long waitTime){
+   public void printWait(long waitTime){                             // Prints dots while Liza is writing
       int dots = 3;
       String dotChar = ".";
       String delete = "\b";
@@ -145,7 +142,7 @@ public class Bot extends Player {
          print(delete);
       }
       waitingMilSec(500);
-   } // Prints dots while Liza is writing
+   }
 
 
 }

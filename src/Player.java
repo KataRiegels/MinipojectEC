@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 public class Player{
-   private String comReply,name;
-   private boolean isUser, knock, unicode;;
+   private String name;
+   private boolean isUser, knock;
    Cards hand;
    private Output whichCard, whichPile, knockedCon, stopped, lastTurn, errCard, errPile, discard, stock, knocked ,card1, card2, card3, card4, cannotKnock;
    private boolean stop;
@@ -13,15 +13,12 @@ public class Player{
       hand = new Cards();
       knock = false;
       isUser = true;
-      comReply = (char) 0x2B9A + " ";
-      unicode = true;
-
       createOutputs();
       setOutputs();
    }
 
    //
-   public void createOutputs(){
+   public void createOutputs(){                       // Initializing all the Outputs we use in the Player class
       whichCard   = new Output("Which card from the left do you want to play?");
       whichPile   = new Output("Which pile do you want to draw from?");
       discard     = new Output("disc");
@@ -36,8 +33,8 @@ public class Player{
       card2       = new Output();
       card3       = new Output();
       card4       = new Output();
-   }                  // Initializing all the Outputs we use in the Player class
-   public void setOutputs(){
+   }
+   public void setOutputs(){                          // Sets the keywords and possible outputs for each Output.
      discard.setKeywords(a("discard"), a("open"), a("disc"));
      stock.setKeywords(a("stock"),a("closed"));
      knocked.setKeywords(a("knock"), a("knocked"));
@@ -54,8 +51,8 @@ public class Player{
      whichCard.setPossibleOutputs(card1, card2, card3, card4, cannotKnock, stopped);
      whichCard.setErrOutput(errCard);
      cannotKnock.setPossibleOutputs(whichCard);
-   }                     // Sets the keywords and possible outputs for each Output.
-   public Output useOutput(Output output){
+   }
+   public Output useOutput(Output output){            // Runs the outputs and finds next output.
       Output   firstOut = output.copy();
       Output[] firstOutPoss = output.getPossibleOutputs();
       Output prevOutput;
@@ -68,7 +65,7 @@ public class Player{
          System.out.println(firstOut.isInPossibleOutputs(output));
       } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
       return output;
-   }       // Runs the outputs and finds next output.
+   }
 
 
    // getters and setters
@@ -81,12 +78,6 @@ public class Player{
    public void    setName(String name){
       this.name = name;
    }
-   public void    setComReply(char c){
-      comReply = c + " ";
-   }
-   public void    setUnicode(boolean r){
-      unicode = r;
-   }
    public boolean hasKnocked(){
       return knock;
    }
@@ -94,8 +85,8 @@ public class Player{
       return isUser;
    }
 
-   // what happens if player is the who to has to draw
-   public void drawTurn(Cards discard, Cards stock, boolean knocked, int gameTurn){
+   // The draw part and play part of a players turn.
+   public void drawTurn(Cards discard, Cards stock, boolean knocked, int gameTurn){    // The player is asked what where they want to draw from. This also handles whether the player chooses to knock.
       if (knocked) lastTurn.print();
       Output o = useOutput(whichPile);
       Cards drawn = null;
@@ -115,7 +106,7 @@ public class Player{
       }
       stop = true;
    }
-   public void playTurn(Cards discard, boolean knocked){
+   public void playTurn(Cards discard, boolean knocked){                             // The player is asked to choose which card they want to play.
       int playAnswer;
       waitingMilSec(1000);
       Output o = useOutput(whichCard);
@@ -138,22 +129,21 @@ public class Player{
    public int     dieRoll(){
       return (int)(Math.random()*6+1);
    }
-   public boolean blitz(){
+   public boolean blitz(){                                        // If a player has 31 points, they automatically win
       return (hand.maxPoints() >= 31 && !hand.bestGroup().anyUnder(10) && hand.bestGroup().anyOver(10));
-   }  // If a player has 31 points, they automatically win
+   }
 
 
-   // prints hand
+   // Prints hand
    public void printHand(){
       hand.printHand();
    }
-   public void printOpen(){                                 // This is here because it is needed to be overwritten in the Bot class.
+   public void printOpen(){                        // This is the same as printHand(), but it is here due to the interaction between the Player, Bot subclass and Game.
       hand.printHand();
    }
 
-   //waiters
+   // waiting method. This will cause a small pause in the console.
    public void waitingMilSec(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
       try {
          Thread.sleep(seconds);
       }
