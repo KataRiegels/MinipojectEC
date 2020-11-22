@@ -17,16 +17,13 @@ public class NormConv extends Conversation {
       welcome = new Output("welcome");
 
 
-      setOutputs();
-      settingPossibleOutputs();
-   }
-
-   public void setOutputs(){
       wyn = new Output("Welcome. What's your first name?");
       wyn.setKeyword(a("dummy"));
 
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
       yni.setKeyword(a("dummy"));
+      String asd[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
+      yni.setNotKeywords(asd);
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
 
 
@@ -85,6 +82,7 @@ public class NormConv extends Conversation {
       clarifyAsk.setKeyword(clarifyAskTriggers);
 
       afterGame = new Output("Well played!");
+      settingPossibleOutputs();
    }
 
 
@@ -95,7 +93,9 @@ public class NormConv extends Conversation {
       symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
       //wyn.setPossibleOutputs(getaPR(), hyd);
       welcome.setPossibleOutputs(wyn);
-      wyn.setPossibleOutputs(getaPR(),yni);
+      wyn.setPossibleOutputs(yni);
+      String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
+      yni.setNotKeywords(dff);
       yni.setPossibleOutputs(getaPR(), yniY, yniN);
       hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
       nth.setPossibleOutputs(getaPR(), askIfExplain);
@@ -117,16 +117,20 @@ public class NormConv extends Conversation {
       // this might be the loop (looping through Output objects, 'welcome' being the first)
       int counter = 0;
 
-      output = wyn.copy();   // first output
+
+
+      output = wyn; //.copy();   // first output
       output.print();
 
 
       while(counter < 6 && !startGameT) {
          //loopingReplies();
+
          String input = readString();
+         normSpecialOutput(output, input);
          output = output.getNext(input);
          output.print();
-         normSpecialOutput(output, input);
+
          specialOutput(output);
 
          counter++;
@@ -136,8 +140,6 @@ public class NormConv extends Conversation {
    public void endConv(){
       output = afterGame.copy();
       output.print();
-
-
    }
 
    public void normSpecialOutput(Output output, String input){
@@ -145,7 +147,7 @@ public class NormConv extends Conversation {
       if (output == symbolCheckY) uni = true;
       if (output == wyn)         {
          userName = wyn.getPart(input);
-         System.out.println(userName);
+         //System.out.println(userName);
          yni.setReply("Your name is " + userName + "?");
       }
    }

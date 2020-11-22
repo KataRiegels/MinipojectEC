@@ -3,6 +3,7 @@ import java.util.*;
 public class Output {
    boolean uni;
    String reply;
+   String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
    ArrayList<String> additionalDisplay;
    Output errOutput = null;
    String[][] keywords; // keywords that trigger this particular output
@@ -114,7 +115,7 @@ public class Output {
          }
       }*/
       if (possibleOutputs != null) {
-         System.out.println(possibleOutputs.length);
+         //System.out.println(possibleOutputs.length);
          Output[] temp = new Output[possibleOutputs.length];
          for (int i = 0; i < possibleOutputs.length; i++) {
             temp[i] = possibleOutputs[i];
@@ -153,23 +154,24 @@ public class Output {
    }
 
    public String getPart(String input) {
-      String[] m;
+      String[] syn;
       String string = null;
       String[] splitInput = split(input);
+      // insert contractions
       if (possibleOutputs != null) {
          // if player doesn't want to start the game yet, get next output
          for (Output r : possibleOutputs){
             for (String i : splitInput) {
-               for (String[] k : notKeywords)
-                  for (String l : k) {
-                     m = checkJ(l);
-                     for (String n : m){
+               for (String[] notK : r.notKeywords) {
+                  for (String l : notK) {
+                     syn = checkJ(l);
+                     for (String n : syn) {
                         if (!i.equals(l) && !i.equals(n)) {
                            return i;
                         }
                      }
                   }
-               }
+               }}
             }
          }
       return "";
@@ -388,5 +390,14 @@ public class Output {
       }
       return a;
    }
+
+   public String[][] a(String[]... stringss){
+      String[][] a = new String[stringss.length][];
+      for (int i = 0; i < stringss.length; i++){
+         a[i] = stringss[i];
+      }
+      return a;
+   }
+
 
 }
