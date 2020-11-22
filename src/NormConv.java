@@ -10,6 +10,19 @@ public class NormConv {
    String userName;
    boolean startGameT, uni;
 
+   // getters
+   public String getUserName(){
+      return userName;
+   }
+
+   public boolean getUni(){
+      return uni;
+   }
+
+   public boolean startedGame(){
+      return startGameT;
+   }
+
    public NormConv(){
       game = new Game();
 
@@ -153,10 +166,8 @@ public class NormConv {
       settingPossibleOutputs();
    }
 
-
    // method that sets the possible replies for each Output
    public void settingPossibleOutputs(){
-
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
       yni.setPossibleOutputs(startGame, intro, yniN);
@@ -207,15 +218,8 @@ public class NormConv {
 
             output.print();
             normSpecialOutput(output, input);
-            //
-            //System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
-         } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
-         // nor in the possible outputs of the first output
-         //return output;
-
+         } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
          counter++;
-
-
       }
    }
 
@@ -224,6 +228,7 @@ public class NormConv {
       output.print();
    }
 
+   // method that determines special Outputs for some Outputs
    public void normSpecialOutput(Output output, String input){
       if (output == symbolCheckN) {
          uni = false;
@@ -246,20 +251,14 @@ public class NormConv {
       }
    }
 
+   // method that updates the replies of the Outputs that use the username in their reply
    public void updateReplies(){
       yni.setReply("Your name is " + userName + "?");
       intro.setReply("Nice to meet you, " + userName + "!");
       hyd.setReply("How are you " + userName + "?");
    }
 
-
-   public String getUserName(){
-      return userName;
-   }
-
-   public boolean startedGame(){
-      return startGameT;
-   }
+   // method that concerts strings to a string array
    public String[] a(String... strings){
       String[] a = new String[strings.length];
       for (int i = 0; i < strings.length; i++){
@@ -274,6 +273,7 @@ public class NormConv {
       return in.nextLine();
    }
 
+   // method that converts Outputs to an Output[]
    public Output[] a(Output... outputs){
       Output[] a = new Output[outputs.length];
       for (int i = 0; i < outputs.length; i++){
@@ -281,10 +281,4 @@ public class NormConv {
       }
       return a;
    }
-
-   public boolean getUni(){
-      return uni;
-   }
-
-
 }
