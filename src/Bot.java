@@ -1,7 +1,5 @@
 
 public class Bot extends Player {
-   private String comReply;
-   private String name;
    private boolean knock;
 
    public Bot(String name){
@@ -32,7 +30,7 @@ public class Bot extends Player {
    public Cards choosePile(Cards discard, Cards stock, boolean knocked, int gameTurn) {
       Card pileCard = discard.topCard();
       Cards choice = stock;
-      int dCPoint = pileCard.points(); //discard pile point
+      int dCPoint = pileCard.points();                                                    //discard pile points
       Cards HD = new Cards();                                                             // HD is what the player's hand will look like if they pick up the discard pile's card
       HD.appendCards(hand, pileCard);
       boolean justBetter, notBadCard, bestSuit_anyOver9, discCard_GT_minPoint, pileCard_GT_8, pileCard_GTE_10, changeLowestCard, badSuitGoodCard, discCard_2GT_minPointSUIT, bestSuit_anyUnder10;
@@ -67,7 +65,7 @@ public class Bot extends Player {
 
       return choice;
    }
-   public Card chooseCard(boolean knocked) {
+   public Card  chooseCard(boolean knocked) {
       int counter = 0;
       for (int i = 0; i < hand.bestGroup().size(); i++)
          if (hand.bestGroup().getCard(i).over10()) counter += 1;

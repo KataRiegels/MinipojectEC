@@ -1,5 +1,3 @@
-import java.util.*;
-
 
 public class Card {
    private int rank;
@@ -15,15 +13,6 @@ public class Card {
    public int getSuit(){
       return suit;
    }
-
-   public String name(){
-      String[] str_rank = {null, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
-      char[] str_suit = {(char)0x2660, (char)1, (char)1, (char)1};
-      String cardName = (str_rank[this.rank] + " of " + str_suit[this.suit]);
-
-      return cardName;
-   }
-
    public String show(boolean uni){
       String[] str_rank = {null, "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
       if (!uni) {
@@ -34,13 +23,6 @@ public class Card {
       }
       return ("|" + str_suit[suit] + str_rank[rank] + "|");
    }
-
-   public boolean equals(Card c1){
-      boolean result = false;
-      if (this.rank == c1.rank && this.suit == c1.suit) result = true;
-      return result;
-   }
-
    public int points() {
       int points;
       int r = this.rank;

@@ -14,8 +14,6 @@ public class Game extends Conversation{
            notSeeWhoWon, seeWhoWon, seeWhoWonQ,
            playAgain, playAgainQ, notPlayAgain;
 
-   String[] yes, do_;
-   String[] no, dont;
 
    public Game() {
       stock   = new Cards("stock");
@@ -24,95 +22,17 @@ public class Game extends Conversation{
       endGame = false;
       knocked = false;
       comReply = (char) 0x2B9A + " ";
-      endGame = false;
-
-
-
-      no   = a(("no"));
-      yes  = a("yes");
-      dont = a("don't");
-      do_  = a("do");
 
       createOutputs();
       setOutputs();
 
    }
 
-   public void createOutputs(){
-      readyDie     = new Output("Are you ready to roll the die??");
-      rollDie      = new Output("ok, here");
-      notRollDie   = new Output("Uhm, okay.. Do you want to stop playing?");
-      seeWhoWonQ   = new Output("Are you ready to see who won?");
-      seeWhoWon    = new Output("Alright. Let's see");
-      notSeeWhoWon = new Output("Okay, shall we keep it a secret then?");
-      secret       = new Output("We will keep it a secret then");
-      playAgain    = new Output("Okay, let's play");
-      playAgainQ   = new Output("...");
-      notPlayAgain = new Output("Alright, let's stop");
-      contin = new Output("Alright, let's continue");
-   }
-   public void setOutputs(){
-      rollDie.setKeywords(yes);
-      notRollDie.setKeywords(no);
-      seeWhoWon.setKeywords(yes, do_);
-      seeWhoWon.setNotKeywords(no, dont);
-      notSeeWhoWon.setKeywords(no,dont);
-      notSeeWhoWon.setNotKeywords(yes);
-      playAgain.setKeywords(yes, a("play"));
-      playAgain.setNotKeywords(no, a("not", "play"), a("not", "continue"));
-      notPlayAgain.setKeywords(no, a("not", "play"), a("not", "continue"));
-      contin.setKeywords(no, a("continue"),a("don't", "stop"));
-      secret.setKeywords(yes);
-
-      readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
-      notRollDie.setPossibleOutputs(aPR, contin, secret );
-      playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
-      seeWhoWonQ.setPossibleOutputs(aPR, seeWhoWon, notSeeWhoWon);
-   }
-
-   public void setUserName(String name){
-       userName = name;
-   }
-
-   public String[] a(String... strings){
-      String[] a = new String[strings.length];
-      for (int i = 0; i < strings.length; i++){
-         a[i] = strings[i];
-      }
-      return a;
-   }
-
-
-   public Output useOutput(Output output){
-      Output firstOut = output.copy();
-      Output[] firstOutPoss = output.getPossibleOutputs();
-      Output prevOutput;
-      do {
-         output.print();
-         String input = readString();
-         prevOutput = output.copy();
-         output = output.getNext(input);
-         output.setPossibleOutputs(firstOutPoss);
-         System.out.println(firstOut.isInPossibleOutputs(output));
-      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
-      return output;
-   }
-
-   public void setuni(boolean uni){
-      this.uni = uni;
-   }
-
-   public boolean stoppedGame(){
-      return endGame;
-   }
-
    public void playGame(){
       p1 = new Bot("Liza");
-      //p2 = new Bot("bot2");
       p2 = new Player(userName);
       ps[0] = p2; ps[1] = p1;
       gameNr = 0;
-      endGame = false;
 
 
 
@@ -159,7 +79,63 @@ public class Game extends Conversation{
 
    }
 
+   // Output related
+   public void createOutputs(){
+      readyDie     = new Output("Are you ready to roll the die??");
+      rollDie      = new Output("ok, here");
+      notRollDie   = new Output("Uhm, okay.. Do you want to stop playing?");
+      seeWhoWonQ   = new Output("Are you ready to see who won?");
+      seeWhoWon    = new Output("Alright. Let's see");
+      notSeeWhoWon = new Output("Okay, shall we keep it a secret then?");
+      secret       = new Output("We will keep it a secret then");
+      playAgain    = new Output("Okay, let's play");
+      playAgainQ   = new Output("...");
+      notPlayAgain = new Output("Alright, let's stop");
+      contin       = new Output("Alright, let's continue");
+   }
+   public void setOutputs(){
+      rollDie.setKeywords(a("yes"));
+      notRollDie.setKeywords(a("no"));
+      seeWhoWon.setKeywords(a("yes"), a("do"));
+      seeWhoWon.setNotKeywords(a("no"), a("dont"));
+      notSeeWhoWon.setKeywords(a("no"), a("dont"));
+      notSeeWhoWon.setNotKeywords(a("yes"));
+      playAgain.setKeywords(a("yes"), a("play"));
+      notPlayAgain.setKeywords(a("no"), a("not", "play"), a("not", "continue"));
+      playAgain.setNotKeywords(a("no"), a("not", "play"), a("not", "continue"));
+      contin.setKeywords(a("no"), a("continue"),a("don't", "stop"));
+      secret.setKeywords(a("yes"));
+
+      readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
+      notRollDie.setPossibleOutputs(aPR, contin, secret );
+      playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
+      seeWhoWonQ.setPossibleOutputs(aPR, seeWhoWon, notSeeWhoWon);
+   }
+   public Output useOutput(Output output){
+      Output firstOut = output.copy();
+      Output[] firstOutPoss = output.getPossibleOutputs();
+      Output prevOutput;
+      do {
+         output.print();
+         String input = readString();
+         prevOutput = output.copy();
+         output = output.getNext(input);
+         output.setPossibleOutputs(firstOutPoss);
+         System.out.println(firstOut.isInPossibleOutputs(output));
+      } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
+      return output;
+   }
+
    // getters and setters
+   public void setUserName(String name){
+      userName = name;
+   }
+   public void setUni(boolean uni){
+      this.uni = uni;
+   }
+   public boolean stoppedGame(){
+      return endGame;
+   }
    public int    getTurnNr(){
       return turnNr;
    }
@@ -172,7 +148,6 @@ public class Game extends Conversation{
 
 
    public Player whoStarts(Player p1, Player p2){
-      //String p = "";
       Player p; Player startingPlayer;
       Player[] ps = {p1,p2};
       int[] dice = new int[2];
@@ -241,7 +216,7 @@ public class Game extends Conversation{
    }
 
    // Drawing and playing (in turns)
-   public void drawTurn(){
+   public void   drawTurn(){
       if (player.getStop()) {
          endGame = true;
          return;
@@ -257,7 +232,7 @@ public class Game extends Conversation{
       player.drawTurn(discard, stock, knocked, turnNr);
       if (player.isUser() && !player.hasKnocked() && !player.getStop()) printState();
    }
-   public void playTurn(){
+   public void   playTurn(){
       if (player.getStop()) {
          endGame = true;
          return;
@@ -275,8 +250,6 @@ public class Game extends Conversation{
       }
 
    }
-
-
    public Player nextPlayer(Player current) {
       if (current == p1) {
          return p2 ;
@@ -290,19 +263,6 @@ public class Game extends Conversation{
       discard.turnCard(stock);
    }
 
-   public void dieRoll(Player p){
-      if (p.isUser()) {
-         useOutput(readyDie);
-            printDieWait();
-
-      } else {
-         botReply("I'll roll now",1);
-         printDieWait();
-
-      }
-   }                   // the print (or asking) before rolling die
-
-
    public Player  playerWon(){
       for (Player p : ps) {
          if (p.blitz()) {
@@ -314,10 +274,10 @@ public class Game extends Conversation{
          }
       }
       return null;
-   }                          // checks and prints if someone one by blitz
+   }                           // checks and prints if someone won by blitz
    public void    comparePoints(){
       Player[] ps = {p1,p2};
-      println("\n\n=================================================\n");
+      printLine();
       printWait(2);
       Output output = useOutput(seeWhoWonQ);
       do {
@@ -350,21 +310,20 @@ public class Game extends Conversation{
             output = useOutput(notSeeWhoWon);
          }
       } while (output != secret);
-   }// compares points after someone knocked
+   }                       // compares points after someone knocked
    public boolean playAgain(){
       printLine();
       printWait(1);
       Output o;
-      //if (gameNr == 0) playAgainQ.setReply("That was fun! Shall we play again?");
       if (gameNr == 1) playAgainQ.setReply("That was fun! Shall we play again?");
       if (gameNr == 2) playAgainQ.setReply("Great! Shall we play again?");
       if (gameNr == 3) playAgainQ.setReply("Alright. Do you want to play again?");
       if (gameNr == 4 || gameNr == 5) {
          if (gameNr == 4) {
             playAgainQ.setReply("Nice! Are we done playing?");
-            playAgain.setKeywords(no, a("not"), a("aren't"));
-            notPlayAgain.setKeywords(yes, a("are", "done"));
-            notPlayAgain.setNotKeywords(no, a("not"));
+            playAgain.setKeywords((a("no")), a("not"), a("aren't"));
+            notPlayAgain.setKeywords(a("yes"), a("are", "done"));
+            notPlayAgain.setNotKeywords(a("no"), a("not"));
          } else {
             playAgainQ.setReply("Soo.. Shall we call it a night for the games?");
          }
@@ -373,30 +332,22 @@ public class Game extends Conversation{
          println("We played enough now");
          return false;
       }
-
       o = useOutput(playAgainQ);
-
       if (o == playAgain) return true;
-      else if (o == notPlayAgain) return false;
-
       return false;
-   }
+   }                           // Asks whether they should play agian
+   public void    uniCode(){
+      p1.hand.setUni(uni);
+      p2.hand.setUni(uni);
+      for (Player p : ps){
+         if (p.isUser() || !uni) p.setComReply((char)45);
+         p.setUnicode(uni);
+      }
+      stock.setUni(uni);
+      discard.setUni(uni);
+      if (!uni) comReply = "- ";
 
-
-   public void uniCode(){
-
-         p1.hand.setUni(uni);
-         p2.hand.setUni(uni);
-         for (Player p : ps){
-            if (p.isUser() || !uni) p.setComReply((char)45);
-            p.setUnicode(uni);
-         }
-         stock.setUni(uni);
-         discard.setUni(uni);
-         if (!uni) comReply = "- ";
-
-   }
-
+   }                              // Sets all necessary things depending on the user's respond to symbols.
 
 
    // Methods that are simply concerned with how to print certain things. Are only used within other methods.
@@ -438,10 +389,6 @@ public class Game extends Conversation{
          System.out.print(delete);
       }
       waitingMilSec(300);
-   }
-   private void   printHand(){
-      print(comReply + player.getName() + "'s hand");
-      player.printHand();
    }
    private void   printDieWait(){
       if (!uni){
@@ -498,7 +445,6 @@ public class Game extends Conversation{
    private void print(String string){
       System.out.print(string);
    }
-
    private void println(String string){
       System.out.println(string);
    }
@@ -509,7 +455,10 @@ public class Game extends Conversation{
       Scanner in = new Scanner(System.in);
       return in.nextLine();
    }
-
-
+   public String[] a(String... strings){
+      String[] a = new String[strings.length];
+      System.arraycopy(strings, 0, a, 0, strings.length);
+      return a;
+   }
 
 }

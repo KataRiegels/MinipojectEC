@@ -73,8 +73,8 @@ public class Cards {
       return (size() == 0);
    }
 
-   // takes "amount" card from this.cards and adds to cs cards
-   public Cards deal(Cards receiver, int amount, int cardIndex){ //cardIndex is where form the cards. you take. it is 0 if top of a pile
+
+   public Cards  deal(Cards receiver, int amount, int cardIndex){ //cardIndex is where form the cards. you take. it is 0 if top of a pile
       Cards cs = new Cards();
       for (int i = 0; i < amount; i++){
          Card card = takeCard(cardIndex);
@@ -84,13 +84,15 @@ public class Cards {
       }
       return cs;
    }
-   public void  shuffle(){
+   public void   shuffle(){
       Random r = new Random();
       for (int i = 0; i <size(); i++){
          swapCards(i, r.nextInt(size()));
       }
    }
-
+   public String showCard(Card card){
+      return card.show(uni);
+   }
 
    // Methods that concerns grouping and searching cards depending on their suit and points.
    public Cards   findGroup(int suit){
@@ -101,10 +103,10 @@ public class Cards {
          }
       }
       return group;
-   }                                // Return: Cards of chosen suit.
+   }                     // Returns Cards of chosen suit.
    public Cards   bestGroup(){
       return findGroup(bestSuit());
-   }           // group of cards with the best suit
+   }                             // Grouped cards with the best suit
    public Cards   worstGroup(){
       return findGroup(worstSuit());
    }
@@ -242,21 +244,8 @@ public class Cards {
       println();
    }
    
-   
-   public void printCards(){
-      for (int i = 0; i < size(); i++){
-         print(showCard(getCard(i)) + " - ");
-      }
-   }
-   public String showCard(Card card){
-      return card.show(uni);
-   }
-   public void printCards(int lower, int upper){
-      int i = lower;
-      for (; i < upper; i++) {
-         System.out.println(showCard(getCard(i)));
-      }
-   }
+
+
 
 
    // prints
