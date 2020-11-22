@@ -104,12 +104,6 @@ public class Cards {
       }
       return group;
    }                     // Returns Cards of chosen suit.
-   public Cards   bestGroup(){
-      return findGroup(bestSuit());
-   }                             // Grouped cards with the best suit
-   public Cards   worstGroup(){
-      return findGroup(worstSuit());
-   }
    public Card    worstCard(){
       Card minC = getCard(0);
       int min = 31;
@@ -121,6 +115,12 @@ public class Cards {
       }
       return minC;
    }
+   public Cards   bestGroup(){
+      return findGroup(bestSuit());
+   }                             // The arraylist of cards in the best suit (based on points)
+   public Cards   worstGroup(){
+      return findGroup(worstSuit());
+   }
    public int     bestSuit(){
       int suit = 0;
       int maxP = groupPoint(clubs);
@@ -131,7 +131,7 @@ public class Cards {
          }
       }
       return suit;
-   }
+   }                              // The suits who's cards give most points.
    public int     worstSuit(){
       int suit = 0;
       int minP = 100;
@@ -148,18 +148,13 @@ public class Cards {
          if (getCard(i).points() > min) return true;
       }
       return false;
-   }
+   }                        // checks if there are any cards with points over min
    public boolean anyUnder(int max){
       for (int i = 0; i < size(); i++){
          if (getCard(i).points() < max) return true;
       }
       return false;
    }
-
-   //public Card  worstCardAndSuit(){
-   //return worstGroup().worstCard();
-   //}
-
 
    // for finding points
    public int points() {
