@@ -4,7 +4,8 @@ public class Conversation {
       Game game;
    Output welcome,  wyn, hyd, nth, ohno, igt, iag,
            symbolCheck, askIfExplain, explain,
-           startGame, clarifyAsk, stopGame;
+           startGame, clarifyAsk, stopGame,
+            youAre;
    Output output;
    Output[] possibleReplies, allReplies, aPR;
    boolean startGameT, stopGameT, uni;
@@ -15,75 +16,18 @@ public class Conversation {
          String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}, {"start", "game"}};
          startGame.setKeyword(startGameTriggers);
 
+
          stopGame = new Output("Ok, let's stop");
          stopGame.setKeyword(a("stop"));
          aPR = a(startGame, stopGame);
-
-         //Output rule1 = new Output("");
-
-         //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
          allReplies = a(wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, stopGame, explain, clarifyAsk);
          possibleReplies = allReplies;
          //welcome.setPossibleOutputs(possibleReplies);
          //System.out.println(Arrays.toString((welcome.defaultKeywords)));
    }
 
-
-   public void loopingReplies(){
-      // we need some other condition here
-      String input = readString();
-
-      //possibleReplies = welcome.getPossibleOutputs();
-
-      //**** why is this in?****
-      //output.setPossibleOutputs(possibleReplies);    // outside of the loop, distinct replies for each output
-
-      output = output.getNext(input);
-      // check which output the new output is
-
-
-      //***** and why is this in?****
-      /*
-         for (Output r : allReplies) {
-            if (output.equals(r)) {                         // get the possible replies based on output
-               possibleReplies = r.getPossibleOutputs();   // update possibleReplies
-            }
-         }*/
-
-      output.print();
-      specialOutput(output);
-   }
-
-
-
    public Output[] getaPR(){
       return aPR;
-   }
-
-   public void startConv(){
-      // this might be the loop (looping through Output objects, 'welcome' being the first)
-      int counter = 0;
-
-      Output output = hyd.copy();   // first output
-      output.print();
-      while (counter < 6) {   // we need some other condition here
-         String input = readString();
-         //possibleReplies = welcome.getPossibleOutputs();
-         output.setPossibleOutputs(possibleReplies);    // outside of the loop, distinct replies for each output
-         output = output.getNext(input);
-         // check which output the new output is
-         for (Output r : allReplies) {
-            if (output.equals(r)) {                         // get the possible replies based on output
-               possibleReplies = r.getPossibleOutputs();   // update possibleReplies
-            }
-         }
-         output.print();
-         specialOutput(output);
-         counter++;
-      }
-      // only read new input if input needed, otherwise just get next output (?)
-      // save current output, possible replies need to be updated according to output
-
    }
 
    public boolean startedGame(){

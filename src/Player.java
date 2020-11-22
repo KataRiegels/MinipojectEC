@@ -7,6 +7,7 @@ public class Player{
    GameOutput whichCard, whichPile, knockedCon, stopped, lastTurn, errCard, errPile;
    GameOutput discard, stock, cardNr, knocked;
    GameOutput card1, card2, card3, card4;
+   Output cannotKnock;
    boolean stop;
 
    public Player(String name){
@@ -23,6 +24,7 @@ public class Player{
       stock = new GameOutput("stock");
       stopped = new GameOutput("Okay, let's stop them");
       knocked = new GameOutput("");
+      cannotKnock = new Output("You can only knock before you draw. Wait until next turn.");
       lastTurn = new GameOutput("This is your last turn. Choose wisely");
       errPile = new GameOutput("You need to tell whether you want to draw from the discard pile or the stock pile.");
       errCard = new GameOutput("You need to tell me which card you want to play. So if you want to play the card most to the left, you write \"1\"");
@@ -38,6 +40,7 @@ public class Player{
      discard.setKeyword(a("discard"), a("open"));
      stock.setKeyword(a("stock"),a("closed"));
      knocked.setKeyword(a("knock"), a("knocked"));
+     cannotKnock.setKeyword(a("knock"), a("knocked"));
      //knockedCon.setKeyword(a("no"), a("continue"), a("not", "stop"));
      stopped.setKeyword(a("stop"));
      stopped.setNotKeywords(a("don't", "stop"));
@@ -47,9 +50,10 @@ public class Player{
      card4.setKeyword(a("4"));
      knocked.setPossibleOutputs(knockedCon, stopped);
      whichPile.setErrOutput(errPile);
-     whichPile.setPossibleOutputs(discard, stock, knocked);
-     whichCard.setPossibleOutputs(card1, card2, card3, card4);
+     whichPile.setPossibleOutputs(discard, stock, knocked, stopped);
+     whichCard.setPossibleOutputs(card1, card2, card3, card4, cannotKnock, stopped);
      whichCard.setErrOutput(errCard);
+     cannotKnock.setPossibleOutputs(whichCard);
    }
 
 
@@ -58,6 +62,7 @@ public class Player{
       this.knock = false;
       this.isUser = true;
    }
+
 
 
    // getters and setters
@@ -81,38 +86,82 @@ public class Player{
    public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
       //waiting(1);
       if (knocked) lastTurn.print();
-      whichPile(discard, stock, gameTurn);
+      Output o = useOutput(whichPile);
+      Pile drawn = null;
+      while (o != stopped) {
+         if (o == this.knocked) {
+            if (gameTurn <= 1) {
+               while (o == this.knocked) {
+                  this.knocked.setReply("You cannot knock yet. Wait until your next turn");
+                  this.knocked.print();
+                  o = useOutput(whichPile);
+               }
+            } else knock = true;
+         }
+         if (o == this.discard) drawn = discard;
+         else if (o == this.stock) drawn = stock;
+         if (drawn != null) hand.draw(drawn);         // and then what?
+      }
+      stop = true;
    }
    public void playTurn(Pile discard, boolean knocked){
-         whichCard(discard);
+      int playAnswer;
+      waiting(1);
+      Output o = useOutput(whichCard);
+      while (!(o == card1 || o == card2 || o == card3 || o==card4)) {
+         if (o == cannotKnock) {
+            cannotKnock.print();
+            o = useOutput(whichCard);
+         }
+         if (o == stopped) {
+            stop = true;
+            return;
+         }
+      } playAnswer = Integer.parseInt(o.getKeyword(0, 0));
+
+
+      hand.play(discard,playAnswer);
    }
 
    // asks user to choose pile
    public boolean whichPile(Pile discard, Pile stock, int gameTurn){
-      Output output = useOutput(whichPile);
+      Output o = useOutput(whichPile);
       Pile drawn;
       drawn = null;
 
-      if (output == this.knocked) {
-         if (gameTurn <= 1) {
-            knocked.setReply("You cannot knock yet. Wait until your next turn");
-            knocked.print();
-            output = useOutput(whichPile);
-         } else knock = true;
+      while (o != stopped) {
+         if (o == this.knocked) {
+            if (gameTurn <= 1) {
+               while (o == knocked) {
+                  knocked.setReply("You cannot knock yet. Wait until your next turn");
+                  knocked.print();
+                  o = useOutput(whichPile);
+               }
+            } else knock = true;
+         }
+         if (o == this.discard) drawn = discard;
+         else if (o == this.stock) drawn = stock;
+         if (drawn != null) hand.draw(drawn);         // and then what?
+         return knock;
       }
-
-      if (output == this.discard) drawn = discard;
-      else if (output == this.stock) drawn = stock;
-      if (drawn != null) hand.draw(drawn);         // and then what?
-      return knock;
+      stop = true;
+      return stop;
    }
    public void    whichCard(Pile discard){
-      waiting(1);int playAnswer;
+      waiting(1);int playAnswer = 1;
 
       Output o = useOutput(whichCard);
-      if (o == card1 || o == card2 || o == card3 || o==card4){
-         playAnswer = Integer.parseInt(o.getKeyword(0,0));
-      } else return;
+      while (!(o == card1 || o == card2 || o == card3 || o==card4)) {
+         if (o == cannotKnock) {
+            cannotKnock.print();
+            o = useOutput(whichCard);
+         }
+         if (o == stopped) {
+            stop = true;
+            return;
+         }
+      } playAnswer = Integer.parseInt(o.getKeyword(0, 0));
+
 
       hand.play(discard,playAnswer);
    }
@@ -184,9 +233,7 @@ public class Player{
       }
       return a;
    }
-   public void aa(Output... outputs){
 
-   }
    public String[] a(String... strings){
       String[] a = new String[strings.length];
       for (int i = 0; i < strings.length; i++){

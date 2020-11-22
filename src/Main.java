@@ -13,6 +13,7 @@ public class Main {
             NormConv conv = new NormConv();
             conv.startConv();
             if (conv.startedGame()) {
+                game.setUserName(conv.getUserName());
                 game.setuni(conv.getUni());
                 game.playGame();
             }

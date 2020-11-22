@@ -6,7 +6,7 @@ public class NormConv extends Conversation {
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag,
            symbolCheck, askIfExplain, explain,
            startGame, clarifyAsk, stopGame, afterGame,
-            symbolCheckY, symbolCheckN;
+            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
    Output[] possibleReplies, allReplies, aPR;
    String userName;
@@ -24,8 +24,9 @@ public class NormConv extends Conversation {
       yni.setKeyword(a("dummy"));
       String asd[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
       yni.setNotKeywords(asd);
-      yniN = new Output("I am not good with names.. Write *nothing* but your name.");
 
+      yniN = new Output("I am not good with names.. Write *nothing* but your name.");
+      yniN.setKeyword(a("no"), a("it's", "not"));
 
       hyd = new Output("How are you " + userName + "?");
       String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
@@ -54,14 +55,17 @@ public class NormConv extends Conversation {
       //Output ywp = new Output("Wanna play blackjack?");
 
       // Output: can you see this symbol: ... ?
-      symbolCheck  = new Output("Can you see these symbols or are some just squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
+      symbolCheck  = new Output("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
       symbolCheckY = new Output("Alright, thanks.");
-      symbolCheck.setKeyword(a("yes"), a("i", "can"), a("i", "do"));
-      symbolCheck.setNotKeywords(a("can", "not"));
+      symbolCheckY.setKeyword(a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"));
+      symbolCheckY.setNotKeywords(a("can", "not"));
 
+      symbolCheckWhat = new Output("\"yes\" as in you don't see three squares?");
+      symbolCheckWhat.setKeyword(a("yes"));
 
       symbolCheckN = new Output("Good, thanks");
-      symbolCheckN.setKeyword(a("no"), a("can't"), a("don't"), a("squares"), a("square"));
+      symbolCheckN.setKeyword(a("yes"), a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
+      symbolCheckN.setNotKeywords(a("no", "square"), a("no", "squares"));
 
 
 
@@ -82,21 +86,26 @@ public class NormConv extends Conversation {
       clarifyAsk.setKeyword(clarifyAskTriggers);
 
       afterGame = new Output("Well played!");
+      uni = true;
       settingPossibleOutputs();
+
    }
 
 
 
    public void settingPossibleOutputs(){
+      symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
+      symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
       Output afterSym = hyd;
       symbolCheckN.setPossibleOutputs(getaPR(), afterSym);
       symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
       //wyn.setPossibleOutputs(getaPR(), hyd);
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
-      String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
+      String[][] dff = {a("yo", "are"), a("jkljlk", "opi")};
       yni.setNotKeywords(dff);
-      yni.setPossibleOutputs(getaPR(), yniY, yniN);
+      yni.setPossibleOutputs(getaPR(), hyd, yniN);                                     // <- Should lead to some "my name is"
+      yniN.setPossibleOutputs(getaPR(), yni);
       hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
       nth.setPossibleOutputs(getaPR(), askIfExplain);
       ohno.setPossibleOutputs(getaPR(),askIfExplain);
@@ -119,16 +128,17 @@ public class NormConv extends Conversation {
 
 
 
-      output = hyd; //.copy();   // first output
+      output = symbolCheck; //.copy();   // first output
       output.print();
 
 
       while(counter < 6 && !startGameT) {
          //loopingReplies();
-
+         updateReplies();
          String input = readString();
-         normSpecialOutput(output, input);
          output = output.getNext(input);
+         normSpecialOutput(output, input);
+         updateReplies();
          output.print();
 
          specialOutput(output);
@@ -143,16 +153,33 @@ public class NormConv extends Conversation {
    }
 
    public void normSpecialOutput(Output output, String input){
-      if (output == symbolCheckN) uni = false;
-      if (output == symbolCheckY) uni = true;
-      if (output == wyn)         {
+      if (output == symbolCheckN) {
+         uni = false;
+         this.output = wyn;                                                   // <-- FIX
+         return;
+      }
+      if (output == symbolCheckY) {
+         uni = true;
+         this.output = wyn;
+         return;
+      }
+      if (output == yni)         {
          userName = wyn.getPart(input);
-         //System.out.println(userName);
-         yni.setReply("Your name is " + userName + "?");
+         userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
+         //yni.setReply("Your name is " + userName + "?");
+         //hyd.setReply("How are you " + userName + "?");
       }
    }
 
+   public void updateReplies(){
+      yni.setReply("Your name is " + userName + "?");
+      hyd.setReply("How are you " + userName + "?");
+   }
 
+
+   public String getUserName(){
+      return userName;
+   }
 
 
 
