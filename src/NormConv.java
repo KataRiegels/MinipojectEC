@@ -4,7 +4,7 @@ import java.util.Scanner;
    public class NormConv {
    Game game;
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
-           lp, ywp, symbolCheck, askIfExplain, explain,
+           lp, ywp, symbolCheck, askIfExplain, explain, why, wsp,
            startGame, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
@@ -86,8 +86,11 @@ import java.util.Scanner;
       ihcg.setNotKeywords(a("don't", "hate"), a("don't", "dislike"));
       ihcg.setAdditionalDisplay("Have you heard of the card game 31?");
 
-      // reaction if player doesn't know 31: explain the rules
-      //expl = new Output("Don't worry, I will explain them to you.");
+      // reaction if player doesn't know 31: ask about playing
+      wsp = new Output("It's my favorite card game.");
+      wsp.setKeywords(a("haven't"), a("no"));
+      wsp.setNotKeywords(a("yes"));
+      wsp.setAdditionalDisplay("We should play it!");
 
       // reaction if player knows 31: ask about playing
       ywp = new Output("Would you like to play the card game 31 with me?");
@@ -103,6 +106,7 @@ import java.util.Scanner;
       // explain the rules
       explain = new Output("Ok, these are the rules:");
       explain.setKeywords(a("don't", "know", "rules"), a("explain"));
+      explain.setKeywords(a("don't","explain"));
       String rule1 = new String("You have a hand of 3 cards.");
       String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
       String rule3 = new String("Only cards of the same suit count together.");
@@ -112,6 +116,11 @@ import java.util.Scanner;
       String rule7 = new String("The player who is closer to 31 wins the round.");
       String question = new String("Are you ready to play?");
       explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7, question);
+
+      // reaction if player not ready to play: ask why
+      why = new Output("What's the problem?");
+      why.setKeywords(a("no"), a("not"));
+
 
       // reaction if player ready to play: ask about symbols
       symbolCheck  = new Output("One more question before we start:");
@@ -157,19 +166,16 @@ import java.util.Scanner;
       lp.setPossibleOutputs(askIfExplain);
       igt.setPossibleOutputs(startGame, ihcg, ilcg);
       ilcg.setPossibleOutputs(startGame, fav);
-      ihcg.setPossibleOutputs(startGame, ywp, explain);
+      ihcg.setPossibleOutputs(startGame, ywp, wsp);
+      wsp.setPossibleOutputs(startGame, askIfExplain);
       fav.setPossibleOutputs(startGame, askIfExplain);
       ywp.setPossibleOutputs(startGame, askIfExplain);
       askIfExplain.setPossibleOutputs(startGame,explain, symbolCheck);
-      explain.setPossibleOutputs(startGame,symbolCheck);
+      explain.setPossibleOutputs(startGame,symbolCheck, why);
       symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
       symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
-      //Output afterSym = hyd;
       symbolCheckN.setPossibleOutputs(startGame);
-      //symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
       symbolCheckY.setPossibleOutputs(startGame);
-      //afterGame.setPossibleOutputs(wyn);   // fix
-
    }
 
 
