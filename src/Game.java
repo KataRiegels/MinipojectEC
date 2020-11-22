@@ -34,6 +34,11 @@ public class Game extends Conversation{
       ps[0] = p2; ps[1] = p1;
       uniCode();
 
+      botReply("So, this is how it works: ",1);
+      if (!uni) botReply("The cards are represented like C.10, which means 10 of clubs. D is diamonds, H is hearts and S is spades. ",1);
+      botReply("If you want to knock, you need to do it when I ask what pile you want to draw from.",1);
+      botReply("Enough chitty-chat now!",1);
+
 
       do {
          endGame = false;
@@ -50,17 +55,16 @@ public class Game extends Conversation{
          else botReply("\nDie time \n", 1);
          waitingMilSec(500);
 
-
          player = whoStarts(p1, p2);
          if (endGame) break;
-         waitingMilSec(500);
+         waitingMilSec(1000);
 
          player = p2;
 
          printLine();
          println("\n              The game begins!");
          printLine();
-         waitingMilSec(500);
+         waitingMilSec(1000);
 
          turns();
          if (knocked) comparePoints();
@@ -75,7 +79,7 @@ public class Game extends Conversation{
 
    // Output related
    public void createOutputs(){                             // instantiation of the Outputs used here.
-      readyDie     = new Output("Are you ready to roll the die??");
+      readyDie     = new Output("Are you ready to roll the die?");
       rollDie      = new Output("ok, here");
       notRollDie   = new Output("Uhm, okay.. Do you want to stop playing?");
       seeWhoWonQ   = new Output("Are you ready to see who won?");
@@ -87,9 +91,6 @@ public class Game extends Conversation{
       notPlayAgain = new Output("Alright, let's stop");
       contin       = new Output("Alright, let's continue");
       stopGame     = new Output("Ok, let's stop");
-      
-      
-      
    }
    public void setOutputs(){                                // setting keywords and possible outputs for the Outputs.
       rollDie.setKeywords(a("yes"));
@@ -119,7 +120,6 @@ public class Game extends Conversation{
          prevOutput = output.copy();
          output = output.getNext(input);
          output.setPossibleOutputs(firstOutPoss);
-         System.out.println(firstOut.isInPossibleOutputs(output));
       } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
       return output;
    }
@@ -134,16 +134,6 @@ public class Game extends Conversation{
    public boolean stoppedGame(){
       return endGame;
    }
-   public int    getTurnNr(){
-      return turnNr;
-   }
-   public Player getWinner(){
-      return winner;
-   }
-   public void   setComReply(String c){
-      comReply = c + "";
-   }
-
 
    public Player whoStarts(Player p1, Player p2){                 // Rolls a die for each player and prints result.
       Player p; Player startingPlayer;
@@ -161,14 +151,13 @@ public class Game extends Conversation{
             }
                if (output == rollDie || !p.isUser()) {
                   //dieRoll(p);
-                  if (!p.isUser()) botReply("I'll roll\n", 1);
+                  if (!p.isUser()) botReply("I'll roll", 1);
                   dice[i] = p.dieRoll();
                   printDieWait();
 
                   println(comReply + p.getName() + " rolled |" + diePrint(dice[i]) + "|");
                   waitingMilSec(1000);
                } else if (output == notRollDie) {
-
                   output = useOutput(notRollDie);
                   if (output == stopGame) {
                      endGame = true;
@@ -176,8 +165,6 @@ public class Game extends Conversation{
                   } else if (output == contin) continue;
                }
             }while (output != rollDie && p.isUser() ) ;
-
-
          }
          if (dice[0] == dice[1]) {
             println("Whoops, we rolled the same. Let's try again.\n");
@@ -288,6 +275,7 @@ public class Game extends Conversation{
                print(comReply + p.getName() + "'s hand: ");
                p.printOpen();
                println(comReply + p.getName() + " had " + p.hand.maxPoints() + " points \n");
+               waitingMilSec(300);
             }
             if (p2.hand.maxPoints() > p1.hand.maxPoints()) winner = p2;
             else if (p2.hand.maxPoints() == p1.hand.maxPoints()) {
@@ -298,12 +286,13 @@ public class Game extends Conversation{
             println(comReply + winner.getName() + " had most points. " + winner.getName() + " won!");
             printWait(2);
             if (winner.isUser()) {
-               println("\nCongratulations, you played well");
+               botReply("\nCongratulations, you played well",1);
             } else if (winner == null) {
-               println("I guess we were both too good ;-)");
+               botReply("I guess we were both too good ;-)",1);
             } else {
-               println("Can't say I'm surprised I won.. ;-)");
+               botReply("Can't say I'm surprised I won.. ;-)",1);
             }
+            break;
          } else if (output == notSeeWhoWon) {
             output = useOutput(notSeeWhoWon);
          }
