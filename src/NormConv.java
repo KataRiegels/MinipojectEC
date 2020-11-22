@@ -6,7 +6,7 @@ public class NormConv extends Conversation {
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag,
            symbolCheck, askIfExplain, explain,
            startGame, clarifyAsk, stopGame, afterGame,
-            symbolCheckY, symbolCheckN, symbolCheckWhat;
+           symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
    Output[] possibleReplies, allReplies, aPR;
    String userName;
@@ -57,14 +57,14 @@ public class NormConv extends Conversation {
       // Output: can you see this symbol: ... ?
       symbolCheck  = new Output("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
       symbolCheckY = new Output("Alright, thanks.");
-      symbolCheckY.setKeyword(a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"));
+      symbolCheckY.setKeyword(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
       symbolCheckY.setNotKeywords(a("can", "not"));
 
       symbolCheckWhat = new Output("\"yes\" as in you don't see three squares?");
       symbolCheckWhat.setKeyword(a("yes"));
 
       symbolCheckN = new Output("Good, thanks");
-      symbolCheckN.setKeyword(a("yes"), a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
+      symbolCheckN.setKeyword( a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
       symbolCheckN.setNotKeywords(a("no", "square"), a("no", "squares"));
 
 
@@ -155,10 +155,12 @@ public class NormConv extends Conversation {
    public void normSpecialOutput(Output output, String input){
       if (output == symbolCheckN) {
          uni = false;
+         output.print();
          this.output = wyn;                                                   // <-- FIX
          return;
       }
       if (output == symbolCheckY) {
+         output.print();
          uni = true;
          this.output = wyn;
          return;

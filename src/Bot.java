@@ -99,7 +99,7 @@ public class Bot extends Player {
    public void announceDraw(Pile pile){
    printWait(2);
       println("I draw from the " + pile.getLabel() + " pile.");
-      waiting(1);
+      waitingMilSec(1000);
       //println();
    }
    public void announcePlay(Card chosen){
