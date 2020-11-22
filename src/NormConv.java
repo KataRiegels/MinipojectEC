@@ -120,6 +120,7 @@ import java.util.Scanner;
       // reaction if player not ready to play: ask why
       why = new Output("What's the problem?");
       why.setKeywords(a("no"), a("not"));
+      // just play anyways
 
 
       // reaction if player ready to play: ask about symbols
