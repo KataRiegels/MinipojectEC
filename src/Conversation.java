@@ -12,9 +12,8 @@ public class Conversation {
 
    public Conversation(){
 
-          startGame = new Output("Let's start the game then.");
-         String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}, {"start", "game"}};
-         startGame.setKeywords(startGameTriggers);
+         /*startGame = new Output("Let's start the game then.");
+         startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));*/
 
 
          stopGame = new Output("Ok, let's stop");

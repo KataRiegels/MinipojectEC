@@ -41,7 +41,6 @@ public class NormConv extends Conversation {
       // next question: ask how player is feeling
       hyd = new Output("How are you, " + userName + "?");
       hyd.setKeywords(null);
-      //hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       // reaction if player feels good
       nth = new Output("Good to hear.");
@@ -127,23 +126,23 @@ public class NormConv extends Conversation {
       symbolCheck.setKeywords(a("yes"));
       symbolCheck.setAdditionalDisplay("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
 
-      // Output: can you see this symbol: ... ?
-
+      // reaction if player can see symbols
       symbolCheckY = new Output("Alright, thanks.");
       symbolCheckY.setKeywords(a("yes"),a("i", "can"), a("i", "do"), a("no", "square"), a("no", "squares"), a("symbols"));
       symbolCheckY.setNotKeywords(a("can", "not"));
 
+      // reaction ?
       symbolCheckWhat = new Output("\"yes\" as in you don't see three squares?");
       symbolCheckWhat.setKeywords(a("yes"));
 
+      // reaction if player cannot see symbols
       symbolCheckN = new Output("Good, thanks");
       symbolCheckN.setKeywords( a("no"), a("correct"), a("can't"), a("don't"), a("squares"), a("square"));
       symbolCheckN.setNotKeywords(a("no", "square"), a("no", "squares"));
 
-
-      /*clarifyAsk = new Output("Which rule would you like me to clarify?");
-      String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
-      clarifyAsk.setKeywords(clarifyAskTriggers);*/
+      // starting the game
+      startGame = new Output("Let's start the game then.");
+      startGame.setKeywords(a("explain", "don't"), a("start", "game"), a("know", "rules"));
 
       afterGame = new Output("Well played!");
       uni = true;
@@ -156,31 +155,27 @@ public class NormConv extends Conversation {
       symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
       symbolCheckWhat.setPossibleOutputs(symbolCheckY,symbolCheckN);
       Output afterSym = hyd;
-      symbolCheckN.setPossibleOutputs(getaPR(), afterSym);
+      symbolCheckN.setPossibleOutputs(startGame, afterSym);
       symbolCheckY.setPossibleOutputs((symbolCheckN.getPossibleOutputs()));
-      //wyn.setPossibleOutputs(getaPR(), hyd);
+      //wyn.setPossibleOutputs(startGame, hyd);
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
-      //String[][] dff = {a("yo", "are"), a("jkljlk", "opi")};
-      //yni.setNotKeywords(dff);
-      yni.setPossibleOutputs(getaPR(), intro, yniN);                                     // <- Should lead to some "my name is"
-      yniN.setPossibleOutputs(getaPR(), yni);
-      intro.setPossibleOutputs(getaPR(), hyd);
-      hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
-      nth.setPossibleOutputs(getaPR(), ihcg, ilcg);
-      ohno.setPossibleOutputs(getaPR(), ihcg, ilcg);
-      iag.setPossibleOutputs(getaPR(), ihcg, ilcg);
-      igt.setPossibleOutputs(getaPR(), ihcg, ilcg);
-      ilcg.setPossibleOutputs(getaPR(), fav);
-      ihcg.setPossibleOutputs(getaPR(), ywp, explain);
-      fav.setPossibleOutputs(getaPR(), askIfExplain);
-      ywp.setPossibleOutputs(getaPR(), askIfExplain);
-      askIfExplain.setPossibleOutputs(getaPR(),explain, symbolCheck);
-      explain.setPossibleOutputs(getaPR(),symbolCheck);
-      symbolCheck.setPossibleOutputs(getaPR(), symbolCheckY, symbolCheckWhat, symbolCheckN);
+      yni.setPossibleOutputs(startGame, intro, yniN);                                     // <- Should lead to some "my name is"
+      yniN.setPossibleOutputs(startGame, yni);
+      intro.setPossibleOutputs(startGame, hyd);
+      hyd.setPossibleOutputs(startGame,nth, ohno, iag, igt);
+      nth.setPossibleOutputs(startGame, ihcg, ilcg);
+      ohno.setPossibleOutputs(startGame, ihcg, ilcg);
+      iag.setPossibleOutputs(startGame, ihcg, ilcg);
+      igt.setPossibleOutputs(startGame, ihcg, ilcg);
+      ilcg.setPossibleOutputs(startGame, fav);
+      ihcg.setPossibleOutputs(startGame, ywp, explain);
+      fav.setPossibleOutputs(startGame, askIfExplain);
+      ywp.setPossibleOutputs(startGame, askIfExplain);
+      askIfExplain.setPossibleOutputs(startGame,explain, symbolCheck);
+      explain.setPossibleOutputs(startGame,symbolCheck);
+      symbolCheck.setPossibleOutputs(startGame, symbolCheckY, symbolCheckWhat, symbolCheckN);
       afterGame.setPossibleOutputs(wyn);   // fix
-
-
 
    }
 
