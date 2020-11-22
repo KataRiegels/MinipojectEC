@@ -4,7 +4,7 @@ import java.util.Scanner;
    public class NormConv {
    Game game;
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
-           ywp, symbolCheck, askIfExplain, explain,
+           lp, ywp, symbolCheck, askIfExplain, explain,
            startGame, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
@@ -47,25 +47,27 @@ import java.util.Scanner;
       nth.setAdditionalDisplay("Do you like card games?");
 
       // reaction if player feels bad
-      ohno = new Output("Sorry about that.");
+      ohno = new Output("I'm sorry to hear that.");
       ohno.setKeywords(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
-      //ohno.setAdditionalDisplay("Why are you feeling bad?");
-      ohno.setAdditionalDisplay("Do you like card games?");
-
-      // reaction if player feels good and asks how Liza is feeling
-      iag = new Output("I'm good, thanks for asking!");
-      iag.setKeywords(a("bad", "you"), a("not", "good", "you"));
-      iag.setNotKeywords(a("not", "bad"));
-      iag.setAdditionalDisplay("Do you like card games?");
+      ohno.setAdditionalDisplay("Why are you not feeling good?");
 
       // reaction if player feels bad and asks how Liza is feeling
+      iag = new Output("I'm good, thanks for asking.");
+      iag.setKeywords(a("bad", "you"), a("not", "good", "you"));
+      iag.setNotKeywords(a("not", "bad"));
+      iag.setAdditionalDisplay("Why are you not feeling good?");
+
+      // reaction if player feels good and asks how Liza is feeling
       igt = new Output("I'm good too. Thanks for asking!");
       igt.setKeywords(a("good", "you"), a("great", "you"));
       igt.setNotKeywords(a("not", "good"), a("not", "great"));
       igt.setAdditionalDisplay("Do you like card games?");
 
-      // next question: ask for reason of feelings
+      // next question: ask to play 31
+      lp = new Output("That sounds rough.");
+      lp.setKeywords(a("dummy"));
+      lp.setAdditionalDisplay("Maybe a game of 31 would cheer you up?");
 
       // reaction if player likes card games
       ilcg = new Output("Me too!");
@@ -150,8 +152,9 @@ import java.util.Scanner;
       intro.setPossibleOutputs(startGame, hyd);
       hyd.setPossibleOutputs(startGame,nth, ohno, iag, igt);
       nth.setPossibleOutputs(startGame, ihcg, ilcg);
-      ohno.setPossibleOutputs(startGame, ihcg, ilcg);
-      iag.setPossibleOutputs(startGame, ihcg, ilcg);
+      ohno.setPossibleOutputs(startGame, lp);
+      iag.setPossibleOutputs(startGame, lp);
+      lp.setPossibleOutputs(askIfExplain);
       igt.setPossibleOutputs(startGame, ihcg, ilcg);
       ilcg.setPossibleOutputs(startGame, fav);
       ihcg.setPossibleOutputs(startGame, ywp, explain);
