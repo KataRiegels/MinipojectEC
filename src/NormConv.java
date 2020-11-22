@@ -28,29 +28,34 @@ public class NormConv extends Conversation {
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
       yniN.setKeyword(a("no"), a("it's", "not"));
 
-      hyd = new Output("How are you " + userName + "?");
-      String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
-      hyd.setKeyword(hydTriggers);
+      //yniY = new Output("Welcome " + userName + "!");
+      //yniY.setKeyword(a("yes"));
+
+      hyd = new Output("How are you, " + userName + "?");
+      //String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
+      //hyd.setKeyword(hydTriggers);
+      hyd.setKeyword(a("yes"));
       hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
-      nth = new Output("Good to hear. Let's play blackjack!");
-      String nthTriggers[][] = {{"good"}, {"not", "bad"}};
+      nth = new Output("Good to hear.");
+      nth.setKeyword(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
-      nth.setKeyword(nthTriggers);
+      nth.setAdditionalDisplay("Let's play 31.");
 
-      ohno = new Output("Sorry about that. Let's play blackjack to cheer you up!");
-      String ohnoTriggers[][] = {{"bad"}, {"not", "good"}};
+      ohno = new Output("Sorry about that.");
+      ohno.setKeyword(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
-      ohno.setKeyword(ohnoTriggers);
+      ohno.setAdditionalDisplay("Let's play 31.");
 
-      iag = new Output("I'm good, thanks for asking! Let's play blackjack to cheer you up!");
-      String iagTriggers[][] = {{"bad", "you"}, {"not", "good", "you"}};
+      iag = new Output("I'm good, thanks for asking!");
+      iag.setKeyword(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
-      iag.setKeyword(iagTriggers);
+      iag.setAdditionalDisplay("Let's play 31.");
 
-      igt = new Output("I'm good too. Thanks for asking! Let's play blackjack!");
+      igt = new Output("I'm good too. Thanks for asking!");
       String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
       igt.setKeyword(igtTriggers);
+      igt.setAdditionalDisplay("Let's play 31.");
 
       //Output ywp = new Output("Wanna play blackjack?");
 
@@ -72,14 +77,20 @@ public class NormConv extends Conversation {
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
       String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
       askIfExplain.setKeyword(askIfExplainTriggers);
+      askIfExplain.setKeyword(a("dummy"));
 
       explain = new Output("Ok, these are the rules:");
       String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
       explain.setKeyword(explainTriggers);
-      String rule1 = new String("The goal of blackjack is to beat the dealer's hand without going over 21.");
-      String rule2 = new String("Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.");
+      String rule1 = new String("You have a hand of 3 cards.");
+      String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
+      String rule3 = new String("Only cards of the same suit count together.");
+      String rule4 = new String("All face cards count as 10. Ace counts as 11.");
+      String rule5 = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
+      String rule6 = new String("After a \"knock\" the other player gets one more round.");
+      String rule7 = new String("The player who is closer to 31 wins the round.");
       String question = new String("Do you need clarification?");
-      explain.setAdditionalDisplay(rule1, rule2, question);
+      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7);
 
       clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
@@ -88,7 +99,6 @@ public class NormConv extends Conversation {
       afterGame = new Output("Well played!");
       uni = true;
       settingPossibleOutputs();
-
    }
 
 
@@ -128,7 +138,7 @@ public class NormConv extends Conversation {
 
 
 
-      output = symbolCheck; //.copy();   // first output
+      output = wyn; //.copy();   // first output
       output.print();
 
 
@@ -136,9 +146,12 @@ public class NormConv extends Conversation {
          //loopingReplies();
          updateReplies();
          String input = readString();
+         normSpecialOutput(output, input);
+         //Output previous = output.copy();
          output = output.getNext(input);
          normSpecialOutput(output, input);
          updateReplies();
+         //output.setPrevious(previous);
          output.print();
 
          specialOutput(output);

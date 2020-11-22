@@ -20,6 +20,8 @@ public class Conversation {
          stopGame = new Output("Ok, let's stop");
          stopGame.setKeyword(a("stop"));
          aPR = a(startGame, stopGame);
+
+         //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
          allReplies = a(wyn, hyd, iag, igt, ohno, nth, askIfExplain, startGame, stopGame, explain, clarifyAsk);
          possibleReplies = allReplies;
          //welcome.setPossibleOutputs(possibleReplies);

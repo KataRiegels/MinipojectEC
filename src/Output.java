@@ -14,7 +14,7 @@ public class Output {
    //ArrayList<Output> possibleOutputs;
    Output defaultOutput; // = new Output("starting the game");
    String[][] defaultKeywords;
-
+   ArrayList<Output> previous;
 
 
 
@@ -42,6 +42,10 @@ public class Output {
 
    public void setReply(String string){
       reply = string;
+   }
+
+   public void setPrevious(Output current) {
+      //previous.add(current);
    }
 
    // setKeyword("fine", "good")
@@ -185,7 +189,13 @@ public class Output {
    // get next output based on player's input
    // f.ex. getNext("yes")
    public Output getNext(String input){
-         if (errOutput == null) errOutput = new Output("I'm confused. Please clarify");
+         if (errOutput == null) {
+            errOutput = new Output("I'm confused. Please clarify");
+            /*Output originalQ = errOutput.findOriginalQuestion();
+            String[][] previousKeys = originalQ.getKeywords();
+            errOutput.setKeyword(previousKeys);
+            errOutput.setPossibleOutputs(originalQ.possibleOutputs);*/
+         }
          errOutput.setPossibleOutputs(errOutput);
          Output next = errOutput;
          next.setPossibleOutputs(errOutput);
@@ -383,6 +393,17 @@ public class Output {
          k++;
       }
       possibleOutputs = temp;
+   }
+
+   public Output findOriginalQuestion() {
+      Output originalQ = null;
+      if (errOutput != null) {
+         if (previous.contains(errOutput)) {
+            int indexOriginalQ = previous.indexOf(errOutput) - 1;
+            originalQ = previous.get(indexOriginalQ);
+         }
+      }
+      return originalQ;
    }
 
    public String[] a(String... strings){
