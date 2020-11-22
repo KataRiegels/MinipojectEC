@@ -194,7 +194,8 @@ public class Player{
       return a;
    }
    /*
-   public Output useOutput(Output output){                     // output = current output
+   public Output useOutput(Output output){
+                    // output = current output
       Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
       Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the current output
       Output prevOutput;                                       // previous output (?)

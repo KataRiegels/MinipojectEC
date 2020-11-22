@@ -194,21 +194,50 @@ public class NormConv extends Conversation {
       output.print();
 
 
-      while(counter < 10 && !startGameT) {
-         //loopingReplies();
-         //updateReplies();
+      while(counter < 6 && !startGameT) {
+
+
+         Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
+         Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the current output
+         Output prevOutput;                                       // previous output (?)
+         do {
+            output.setPossibleOutputs(firstOutPoss);
+            updateReplies();
+                                                  // prints the current output
+            String input = readString();                          // reads player's input
+            prevOutput = output.copy();                           // saves current output as previous output
+            output = output.getNext(input);                       // updates the current output based on player's input
+
+            normSpecialOutput(output, input);
+
+
+            updateReplies();
+                         // sets the new output's possible outputs to the possible outputs of the first output
+
+            output.print();
+            specialOutput(output);
+            //
+            //System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
+         } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
+         // nor in the possible outputs of the first output
+         //return output;
+
+
+         /*
+         updateReplies();
          String input = readString();
          normSpecialOutput(output, input);
          //Output previous = output.copy();
          output = output.getNext(input);
-         normSpecialOutput(output, input);
-         //updateReplies();
+
          //output.setPrevious(previous);
          output.print();
 
          specialOutput(output);
-
+*/
          counter++;
+
+
       }
    }
 
@@ -233,11 +262,8 @@ public class NormConv extends Conversation {
       if (output == yni)         {
          userName = wyn.getPart(input);
          userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
-         //updateReplies();
-         yni.setReply("Your name is " + userName + "?");
-         intro.setReply("Nice to meet you, " + userName + "!");
-         hyd.setReply("How are you " + userName + "?");
-
+         //yni.setReply("Your name is " + userName + "?");
+         //hyd.setReply("How are you " + userName + "?");
       }
    }
 
