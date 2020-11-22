@@ -16,9 +16,6 @@ public class Conversation {
          String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}, {"start", "game"}};
          startGame.setKeywords(startGameTriggers);
 
-
-         stopGame = new Output("Ok, let's stop");
-         stopGame.setKeywords(a("stop"));
          aPR = a(startGame, stopGame);
 
          //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};
@@ -32,9 +29,7 @@ public class Conversation {
       return aPR;
    }
 
-   public boolean startedGame(){
-      return startGameT;
-   }
+
 
    public void specialOutput(Output output){
       if (output == startGame){

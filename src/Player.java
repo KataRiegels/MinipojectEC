@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Player{
    private String comReply,name;
-   private boolean isUser, knock, unicode;;
+   private boolean isUser, knock;
    Cards hand;
    private Output whichCard, whichPile, knockedCon, stopped, lastTurn, errCard, errPile, discard, stock, knocked ,card1, card2, card3, card4, cannotKnock;
    private boolean stop;
@@ -14,7 +14,7 @@ public class Player{
       knock = false;
       isUser = true;
       comReply = (char) 0x2B9A + " ";
-      unicode = true;
+
 
       createOutputs();
       setOutputs();
@@ -83,9 +83,6 @@ public class Player{
    }
    public void    setComReply(char c){
       comReply = c + " ";
-   }
-   public void    setUnicode(boolean r){
-      unicode = r;
    }
    public boolean hasKnocked(){
       return knock;

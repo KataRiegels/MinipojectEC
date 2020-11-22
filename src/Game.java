@@ -92,6 +92,10 @@ public class Game extends Conversation{
       playAgainQ   = new Output("...");
       notPlayAgain = new Output("Alright, let's stop");
       contin       = new Output("Alright, let's continue");
+      stopGame     = new Output("Ok, let's stop");
+      
+      
+      
    }
    public void setOutputs(){
       rollDie.setKeywords(a("yes"));
@@ -105,11 +109,11 @@ public class Game extends Conversation{
       playAgain.setNotKeywords(a("no"), a("not", "play"), a("not", "continue"));
       contin.setKeywords(a("no"), a("continue"),a("don't", "stop"));
       secret.setKeywords(a("yes"));
-
-      readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
-      notRollDie.setPossibleOutputs(aPR, contin, secret );
-      playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
-      seeWhoWonQ.setPossibleOutputs(aPR, seeWhoWon, notSeeWhoWon);
+      stopGame.setKeywords(a("stop"));
+      readyDie.setPossibleOutputs(stopGame,rollDie, notRollDie);
+      notRollDie.setPossibleOutputs(stopGame, contin, secret );
+      playAgainQ.setPossibleOutputs(stopGame,playAgain, notPlayAgain);
+      seeWhoWonQ.setPossibleOutputs(stopGame, seeWhoWon, notSeeWhoWon);
    }
    public Output useOutput(Output output){
       Output firstOut = output.copy();

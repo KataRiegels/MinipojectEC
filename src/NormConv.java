@@ -219,7 +219,7 @@ public class NormConv extends Conversation {
 
             output.print();
             specialOutput(output);
-            //
+
             //System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
          } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));   // loop while the output is neither the error output of the previous output
          // nor in the possible outputs of the first output
@@ -281,7 +281,8 @@ public class NormConv extends Conversation {
       return userName;
    }
 
-
-
+   public boolean startedGame(){
+      return startGameT;
+   }
 
 }
