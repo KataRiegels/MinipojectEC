@@ -1,18 +1,19 @@
-import java.util.Scanner;
+import java.util.*;
 
-//public class NormConv extends Conversation {
-   public class NormConv {
+public class NormConv {
    Game game;
-   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
+   Output welcome,  wyn, yni, yniN, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
            lp, ywp, symbolCheck, askIfExplain, explain, why, wsp, convincePlay, ygt,
-           startGame, stopGame, afterGame,
+           startGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
-   String userName, input;
-   boolean startGameT, stopGameT, uni;
+   String userName;
+   boolean startGameT, uni;
 
    public NormConv(){
       game = new Game();
+
+      /* Initializing all the Outputs and setting their keywords */
 
       // starting message
       welcome = new Output("Welcome!");
@@ -40,25 +41,25 @@ import java.util.Scanner;
       hyd = new Output("How are you, " + userName + "?");
       hyd.setKeywords(null);
 
-      // reaction if player feels good
+      // reaction if player feels good: ask about card games
       nth = new Output("Good to hear.");
       nth.setKeywords(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
       nth.setAdditionalDisplay("Do you like card games?");
 
-      // reaction if player feels bad
+      // reaction if player feels bad: ask why
       ohno = new Output("I'm sorry to hear that.");
       ohno.setKeywords(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
       ohno.setAdditionalDisplay("Why are you not feeling good?");
 
-      // reaction if player feels bad and asks how Liza is feeling
+      // reaction if player feels bad and asks how Liza is feeling: ask why player feels bad
       iag = new Output("I'm good, thanks for asking.");
       iag.setKeywords(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
       iag.setAdditionalDisplay("Why are you not feeling good?");
 
-      // reaction if player feels good and asks how Liza is feeling
+      // reaction if player feels good and asks how Liza is feeling: ask about card games
       igt = new Output("I'm good too. Thanks for asking!");
       igt.setKeywords(a("good", "you"), a("great", "you"));
       igt.setNotKeywords(a("not", "good"), a("not", "great"));
@@ -69,18 +70,18 @@ import java.util.Scanner;
       lp.setKeywords(a("dummy"));
       lp.setAdditionalDisplay("Maybe a game of 31 would cheer you up?");
 
-      // reaction if player likes card games
+      // reaction if player likes card games: ask about favorite card game
       ilcg = new Output("Me too!");
       ilcg.setKeywords(a("yes"), a("do"), a("love"));
       ilcg.setNotKeywords(a("don't", "like"), a("dislike"));
       ilcg.setAdditionalDisplay("What is your favorite card game?");
 
-      // reaction to player's favorite card game
+      // reaction to player's favorite card game: ask about 31
       fav = new Output( "That sounds cool!");
       fav.setKeywords(null);
       fav.setAdditionalDisplay("Have you heard of the card game 31?");
 
-      // reaction if player doesn't like card games
+      // reaction if player doesn't like card games: ask about 31
       ihcg = new Output("Really? But they are so fun!");
       ihcg.setKeywords(a("don't"), a("no"), a("dislike"), a("hate"));
       ihcg.setNotKeywords(a("don't", "hate"), a("don't", "dislike"));
@@ -107,7 +108,7 @@ import java.util.Scanner;
       askIfExplain.setKeywords(a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
-      explain = new Output("Ok, these are the rules:");
+      explain         = new Output("Ok, these are the rules:");
       explain.setKeywords(a("don't", "know", "rules"), a("explain"), a("dummy"), a("not", "know"));
       explain.setNotKeywords(a("don't","explain"), a("not", "explain"), a("know", "rules"));
       String rule1    = new String("You have a hand of 3 cards.");
@@ -123,7 +124,6 @@ import java.util.Scanner;
       // reaction if player not ready to play: encourage player
       ygt = new Output("Don't worry, you got this!");
       ygt.setKeywords(a("no"), a("not"));
-
 
       // reaction if player ready to play: ask about symbols
       symbolCheck  = new Output("One more question before we start:");
@@ -154,7 +154,7 @@ import java.util.Scanner;
    }
 
 
-
+   // method that sets the possible replies for each Output
    public void settingPossibleOutputs(){
 
       welcome.setPossibleOutputs(wyn);
@@ -182,35 +182,30 @@ import java.util.Scanner;
       symbolCheckY.setPossibleOutputs(startGame);
    }
 
-
+   // the method that starts the conversation
    public void startConv() {
       int counter = 0;
 
-      output = ywp;   // first output
+      output = welcome;   // first output
       output.print();
 
       while(counter < 20 && !startGameT) {
 
-
-         Output firstOut = output.copy();                         // creates a copy of the current output called firstOut
-         Output[] firstOutPoss = output.getPossibleOutputs();     // gets the possible outputs of the current output
-         Output prevOutput;                                       // previous output (?)
+         Output firstOut = output.copy();
+         Output[] firstOutPoss = output.getPossibleOutputs();
+         Output prevOutput;
          do {
             output.setPossibleOutputs(firstOutPoss);
             updateReplies();
-                                                  // prints the current output
-            String input = readString();                          // reads player's input
-            prevOutput = output.copy();                           // saves current output as previous output
-            output = output.getNext(input);                       // updates the current output based on player's input
+            String input = readString();
+            prevOutput = output.copy();
+            output = output.getNext(input);
 
             normSpecialOutput(output, input);
 
-
             updateReplies();
-                         // sets the new output's possible outputs to the possible outputs of the first output
 
             output.print();
-            //specialOutput(output);
             normSpecialOutput(output, input);
             //
             //System.out.println(firstOut.isInPossibleOutputs(output));   // prints if the output is in the possible outputs of the first output (for testing i assume)
