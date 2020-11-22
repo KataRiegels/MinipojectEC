@@ -38,21 +38,25 @@ public class NormConv extends Conversation {
       hyd.setKeyword(a("yes"));
       hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
-      nth = new Output("Good to hear. Let's play blackjack!");
+      nth = new Output("Good to hear.");
       nth.setKeyword(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
+      nth.setAdditionalDisplay("Let's play 31.");
 
       ohno = new Output("Sorry about that.");
       ohno.setKeyword(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
+      ohno.setAdditionalDisplay("Let's play 31.");
 
       iag = new Output("I'm good, thanks for asking!");
       iag.setKeyword(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
+      iag.setAdditionalDisplay("Let's play 31.");
 
       igt = new Output("I'm good too. Thanks for asking!");
       String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
       igt.setKeyword(igtTriggers);
+      igt.setAdditionalDisplay("Let's play 31.");
 
       //Output ywp = new Output("Wanna play blackjack?");
 
@@ -84,7 +88,7 @@ public class NormConv extends Conversation {
       String rule6 = new String("After a \"knock\" the other player gets one more round.");
       String rule7 = new String("The player who is closer to 31 wins the round.");
       String question = new String("Do you need clarification?");
-      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6);
+      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7);
 
       clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};

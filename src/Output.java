@@ -45,7 +45,7 @@ public class Output {
    }
 
    public void setPrevious(Output current) {
-      previous.add(current);
+      //previous.add(current);
    }
 
    // setKeyword("fine", "good")
@@ -191,10 +191,10 @@ public class Output {
    public Output getNext(String input){
          if (errOutput == null) {
             errOutput = new Output("I'm confused. Please clarify");
-            Output originalQ = errOutput.findOriginalQuestion();
+            /*Output originalQ = errOutput.findOriginalQuestion();
             String[][] previousKeys = originalQ.getKeywords();
             errOutput.setKeyword(previousKeys);
-            errOutput.setPossibleOutputs(originalQ.possibleOutputs);
+            errOutput.setPossibleOutputs(originalQ.possibleOutputs);*/
          }
          errOutput.setPossibleOutputs(errOutput);
          Output next = errOutput;
