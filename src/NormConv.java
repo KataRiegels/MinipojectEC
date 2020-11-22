@@ -196,7 +196,7 @@ public class NormConv extends Conversation {
 
       while(counter < 10 && !startGameT) {
          //loopingReplies();
-         //updateReplies();
+         updateReplies();
          String input = readString();
          normSpecialOutput(output, input);
          //Output previous = output.copy();
