@@ -194,13 +194,13 @@ public class Output {
       // if player doesn't want to start the game yet, get next output
          for (Output r : possibleOutputs) {
             //System.out.println(Arrays.deepToString(r.getKeywords()));
-            if (r.getKeywords().equals(a(a("dummy")))) return r;
+            //if (r.getKeywords().contains(a(a("dummy")))) return r;
             // check if there are any triggers
             /*if (this.getKeywords().length == 0) {
                return r;
             }*/
             //if (containsTrigger(r.getKeywords(), splitInput)) {
-            if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput)) {
+            if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) || !containsTrigger(r.getNotKeywords(), a("dummy"))) {
                //System.out.println("worked");
                return r;
             }
