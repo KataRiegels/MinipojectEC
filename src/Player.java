@@ -20,7 +20,7 @@ public class Player{
    //
    public void createOutputs(){                       // Initializing all the Outputs we use in the Player class
       whichCard   = new Output("Which card from the left do you want to play?");
-      whichPile   = new Output("Which pile do you want to draw from?");
+      whichPile   = new Output("Which pile do you want to draw from? The discard pile or the stock pile?");
       discard     = new Output("disc");
       stock       = new Output("stock");
       stopped     = new Output("Okay, let's stop them");
@@ -62,7 +62,6 @@ public class Player{
          prevOutput = output.copy();
          output = output.getNext(input);
          output.setPossibleOutputs(firstOutPoss);
-         System.out.println(firstOut.isInPossibleOutputs(output));
       } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
       return output;
    }
@@ -90,7 +89,6 @@ public class Player{
       if (knocked) lastTurn.print();
       Output o = useOutput(whichPile);
       Cards drawn = null;
-      while (o != stopped) {
          if (o == this.knocked) {
             if (gameTurn <= 1) {
                while (o == this.knocked) {
@@ -103,8 +101,7 @@ public class Player{
          if (o == this.discard) drawn = discard;
          else if (o == this.stock) drawn = stock;
          if (drawn != null) hand.draw(drawn);
-      }
-      stop = true;
+      if (o == stopped) stop = true;
    }
    public void playTurn(Cards discard, boolean knocked){                             // The player is asked to choose which card they want to play.
       int playAnswer;
@@ -120,8 +117,6 @@ public class Player{
             return;
          }
       } playAnswer = Integer.parseInt(o.getKeyword(0, 0));
-
-
       hand.play(discard,playAnswer);
    }
 
