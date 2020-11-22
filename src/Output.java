@@ -212,18 +212,19 @@ public class Output {
 
       if (possibleOutputs != null){
       // if player doesn't want to start the game yet, get next output
-      for (Output r : possibleOutputs) {
-         if (r.getKeywords().equals("dummy")) return r;
-         // check if there are any triggers
-         /*if (this.getKeywords().length == 0) {
-            return r;
-         }*/
-         //if (containsTrigger(r.getKeywords(), splitInput)) {
-         if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput)) {
-            //System.out.println("worked");
-            return r;
+         for (Output r : possibleOutputs) {
+            System.out.println(Arrays.deepToString(r.getKeywords()));
+            if (r.getKeywords().equals(a(a("dummy")))) return r;
+            // check if there are any triggers
+            /*if (this.getKeywords().length == 0) {
+               return r;
+            }*/
+            //if (containsTrigger(r.getKeywords(), splitInput)) {
+            if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput)) {
+               //System.out.println("worked");
+               return r;
+            }
          }
-      }
       }
       return next;
    }
@@ -285,6 +286,7 @@ public class Output {
       System.out.println(reply);
       if (additionalDisplay != null) {
          for (String s : additionalDisplay) {
+            printWait(1);
             System.out.println(s);
          }
       }

@@ -2,16 +2,16 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Game extends Conversation{
-   String comReply;  //0x2B9A
-   String userName;
-   Pile stock, discard;
-   Player winner, player, p1, p2;
-   Player[] ps = new Player[2];
-   int turnNr, gameNr;
-   boolean endGame, knocked, uni, stop;
+   private String comReply;  //0x2B9A
+   private String userName;
+   private Pile stock, discard;
+   private Player winner, player, p1, p2;
+   private Player[] ps = new Player[2];
+   private int turnNr, gameNr;
+   private boolean endGame, knocked, uni;
 
-   Output contin, secret;
-   GameOutput notRollDie, rollDie, readyDie,
+   private Output contin, secret;
+   private Output notRollDie, rollDie, readyDie,
            notSeeWhoWon, seeWhoWon, seeWhoWonQ,
            playAgain, playAgainQ, notPlayAgain;
 
@@ -25,29 +25,33 @@ public class Game extends Conversation{
       endGame = false;
       knocked = false;
       comReply = (char) 0x2B9A + " ";
-      stopGameT = false;
+      endGame = false;
 
 
-      readyDie     = new GameOutput("Are you ready to roll the die??");
-      rollDie      = new GameOutput("ok, here");
-      notRollDie   = new GameOutput("Uhm, okay.. Do you want to stop playing?");
-      seeWhoWonQ   = new GameOutput("Are you ready to see who won?");
-      seeWhoWon    = new GameOutput("Alright. Let's see");
-      notSeeWhoWon = new GameOutput("Okay, shall we keep it a secret then?");
-      secret       = new Output("We will keep it a secret then");
-      playAgain    = new GameOutput("Okay, let's play");
-      playAgainQ   = new GameOutput("...");
-      notPlayAgain = new GameOutput("Alright, let's stop");
-      contin = new Output("Alright, let's continue");
 
       no   = a(("no"));
       yes  = a("yes");
       dont = a("don't");
       do_  = a("do");
+
+      createOutputs();
       setOutputs();
 
    }
 
+   public void createOutputs(){
+      readyDie     = new Output("Are you ready to roll the die??");
+      rollDie      = new Output("ok, here");
+      notRollDie   = new Output("Uhm, okay.. Do you want to stop playing?");
+      seeWhoWonQ   = new Output("Are you ready to see who won?");
+      seeWhoWon    = new Output("Alright. Let's see");
+      notSeeWhoWon = new Output("Okay, shall we keep it a secret then?");
+      secret       = new Output("We will keep it a secret then");
+      playAgain    = new Output("Okay, let's play");
+      playAgainQ   = new Output("...");
+      notPlayAgain = new Output("Alright, let's stop");
+      contin = new Output("Alright, let's continue");
+   }
    public void setOutputs(){
       rollDie.setKeyword(yes);
       notRollDie.setKeyword(no);
@@ -66,8 +70,6 @@ public class Game extends Conversation{
       playAgainQ.setPossibleOutputs(aPR,playAgain, notPlayAgain);
       seeWhoWonQ.setPossibleOutputs(aPR, seeWhoWon, notSeeWhoWon);
    }
-
-
 
    public void setUserName(String name){
        userName = name;
@@ -102,7 +104,7 @@ public class Game extends Conversation{
    }
 
    public boolean stoppedGame(){
-      return stopGameT;
+      return endGame;
    }
 
    public void playGame(){
@@ -111,14 +113,12 @@ public class Game extends Conversation{
       p2 = new Player(userName);
       ps[0] = p2; ps[1] = p1;
       gameNr = 0;
-      stopGameT = false;
-      //uni = true;                     // <-- fix!
+      endGame = false;
 
 
 
       do {
-         stopGameT = false;
-         endGame = stopGameT;
+         endGame = false;
          knocked = false;
 
          stock.createStock();
@@ -133,30 +133,30 @@ public class Game extends Conversation{
 
          if (gameNr == 0) botReply("\nLet's get ready to play! We will decide who starts by rolling a die. \n", 1);
          else botReply("\nDie time \n", 1);
-         //waiting(1);
+         //waitingMilSec(1);
 
 
          player = whoStarts(p1, p2);
-         if (stopGameT) break;
-         //waiting(2);
+         if (endGame) break;
+         //waitingMilSec(2);
 
          player = p2;
 /*
          printLine();
          println("\n              The game begins!");
          printLine();
-         waiting(1);
+         waitingMilSec(1);
 
 */
          turns();
          if (knocked) comparePoints();
          winner = playerWon();
          gameNr++;
-         if (stopGameT) break;
-         //if (!(playAgain() || !stopGameT)) break;
+         if (endGame) break;
+         //if (!(playAgain() || !endGame)) break;
       } while (playAgain());
 
-      if (stopGameT) botReply("Okay, let's stop then", 1);
+      if (endGame) botReply("Okay, let's stop then", 1);
 
    }
 
@@ -184,22 +184,22 @@ public class Game extends Conversation{
             do {
             if (p.isUser()) output = useOutput(readyDie);
             if (output == stopGame){
-               stopGameT = true;
+               endGame = true;
                return null;
             }
-
                if (output == rollDie || !p.isUser()) {
                   //dieRoll(p);
                   if (!p.isUser()) botReply("I'll roll\n", 1);
                   dice[i] = p.dieRoll();
-                  waiting(1);
+                  printDieWait();
+
                   println(comReply + p.getName() + " rolled |" + diePrint(dice[i]) + "|");
-                  waiting(1);
+                  waitingMilSec(1000);
                } else if (output == notRollDie) {
 
                   output = useOutput(notRollDie);
                   if (output == stopGame) {
-                     stopGameT = true;
+                     endGame = true;
                      return null;
                   } else if (output == contin) continue;
                }
@@ -209,7 +209,7 @@ public class Game extends Conversation{
          }
          if (dice[0] == dice[1]) {
             println("Whoops, we rolled the same. Let's try again.\n");
-            waiting(1);
+            waitingMilSec(1000);
          }
       }
       if    (dice[0] > dice[1]) startingPlayer = ps[0];
@@ -220,7 +220,7 @@ public class Game extends Conversation{
 
    // taking turns
    public void turns(){
-      while (!stopGameT){
+      while (!endGame){
          playerWon();
          if (endGame) return;
          if (stock.isEmpty()) reshuffle();
@@ -244,7 +244,7 @@ public class Game extends Conversation{
    // Drawing and playing (in turns)
    public void drawTurn(){
       if (player.getStop()) {
-         stopGameT = true;
+         endGame = true;
          return;
       }
       printLine();
@@ -252,15 +252,15 @@ public class Game extends Conversation{
       printLine();
       System.out.println();
 
-      waiting(1);
-      if (player.isUser()) waiting(1);
+      waitingMilSec(1000);
+      if (player.isUser()) waitingMilSec(1);
       printState();
       player.drawTurn(discard, stock, knocked, turnNr);
       if (player.isUser() && !player.hasKnocked() && !player.getStop()) printState();
    }
    public void playTurn(){
       if (player.getStop()) {
-         stopGameT = true;
+         endGame = true;
          return;
 
       }
@@ -323,7 +323,7 @@ public class Game extends Conversation{
       Output output = useOutput(seeWhoWonQ);
       do {
          if (output == stopGame){
-            stopGameT = true;
+            endGame = true;
             return;
          }
          if (output == seeWhoWon) {
@@ -404,7 +404,7 @@ public class Game extends Conversation{
    public void    printState(){
       print(comReply);
       discard.printTop();
-      waiting(1);
+      waitingMilSec(1000);
       System.out.print(comReply + player.getName() + "'s hand:   ");
       player.printHand();
 
@@ -465,7 +465,7 @@ public class Game extends Conversation{
       }
       dot = bb + (char)0x25FB + " ";
       println(dot);
-      waiting(1);
+      waitingMilSec(1000);
       print(delete);
 
    }
@@ -482,38 +482,16 @@ public class Game extends Conversation{
    }
 
 
-   // Makes a bit of waiting time between answers
-   private void waiting(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
+   // Makes a bit of waitingMilSec time between answers
+   private void waitingMilSec(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
 
       try {
-         Thread.sleep(seconds*1000);
+         Thread.sleep(seconds);
       }
       catch(InterruptedException ex) {
          println("There was a problem :( ");
          //Thread.currentThread().interrupt();
       }
-
-   }
-   private void waitingHalf(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*500);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-
-
-   }
-   private void waitingMilSec(long seconds){
-      // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds);
-      }
-      catch(InterruptedException ex) {
-         Thread.currentThread().interrupt();
-      }
-
 
    }
 
