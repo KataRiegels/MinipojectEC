@@ -9,7 +9,7 @@ public class NormConv extends Conversation {
             symbolCheckY, symbolCheckN;
    Output output;
    Output[] possibleReplies, allReplies, aPR;
-   String userName;
+   public String userName;
 
    public NormConv(){
       game = new Game();
@@ -24,12 +24,18 @@ public class NormConv extends Conversation {
       yni.setKeyword(a("dummy"));
       String asd[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
       yni.setNotKeywords(asd);
+
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
+      yniN.setKeyword(a("no"), a("not"));
+      // needs to go back to yni
 
+      //yniY = new Output("Welcome " + userName + "!");
+      //yniY.setKeyword(a("yes"));
 
-      hyd = new Output("How are you " + userName + "?");
-      String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
-      hyd.setKeyword(hydTriggers);
+      hyd = new Output("How are you, " + userName + "?");
+      //String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}, {"yes"}};
+      //hyd.setKeyword(hydTriggers);
+      hyd.setKeyword(a("yes"));
       hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       nth = new Output("Good to hear. Let's play blackjack!");
@@ -94,9 +100,10 @@ public class NormConv extends Conversation {
       //wyn.setPossibleOutputs(getaPR(), hyd);
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
-      String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
-      yni.setNotKeywords(dff);
-      yni.setPossibleOutputs(getaPR(), yniY, yniN);
+      //String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
+      //yni.setNotKeywords(dff);
+      yni.setPossibleOutputs(yniN, hyd);
+      yniN.setPossibleOutputs(getaPR(), yni);
       hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
       nth.setPossibleOutputs(getaPR(), askIfExplain);
       ohno.setPossibleOutputs(getaPR(),askIfExplain);
@@ -119,7 +126,7 @@ public class NormConv extends Conversation {
 
 
 
-      output = hyd; //.copy();   // first output
+      output = wyn; //.copy();   // first output
       output.print();
 
 
@@ -149,6 +156,7 @@ public class NormConv extends Conversation {
          userName = wyn.getPart(input);
          //System.out.println(userName);
          yni.setReply("Your name is " + userName + "?");
+         hyd.setReply("How are you, " + userName + "?");
       }
    }
 
