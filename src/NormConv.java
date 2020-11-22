@@ -3,13 +3,13 @@
 
 public class NormConv extends Conversation {
    Game game;
-   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro,
-           symbolCheck, askIfExplain, explain,
+   Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, hobbies, ilcg, ihcg, fav,
+           ywp, symbolCheck, askIfExplain, explain,
            startGame, clarifyAsk, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
    Output[] possibleReplies, allReplies, aPR;
-   String userName;
+   String userName, input;
 
    public NormConv(){
       game = new Game();
@@ -36,31 +36,75 @@ public class NormConv extends Conversation {
       intro.setNotKeywords(a("it's", "not"));
       intro.setAdditionalDisplay("My name is Liza.");
 
+      // next question: ask how player is feeling
       hyd = new Output("How are you, " + userName + "?");
       hyd.setKeyword(a("dummy"));
       //hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
+      // reaction if player feels good
       nth = new Output("Good to hear.");
       nth.setKeyword(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
-      nth.setAdditionalDisplay("Let's play 31.");
+      nth.setAdditionalDisplay("Do you like card games?");
 
+      // reaction if player feels bad
       ohno = new Output("Sorry about that.");
       ohno.setKeyword(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
-      ohno.setAdditionalDisplay("Let's play 31.");
+      //ohno.setAdditionalDisplay("Why are you feeling bad?");
+      ohno.setAdditionalDisplay("Do you like card games?");
 
+      // reaction if player feels good and asks how Liza is feeling
       iag = new Output("I'm good, thanks for asking!");
       iag.setKeyword(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
-      iag.setAdditionalDisplay("Let's play 31.");
+      iag.setAdditionalDisplay("Do you like card games?");
 
+      // reaction if player feels bad and asks how Liza is feeling
       igt = new Output("I'm good too. Thanks for asking!");
-      String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
-      igt.setKeyword(igtTriggers);
-      igt.setAdditionalDisplay("Let's play 31.");
+      igt.setKeyword(a("good", "you"), a("great", "you"));
+      igt.setNotKeywords(a("not", "good"), a("not", "great"));
+      igt.setAdditionalDisplay("Do you like card games?");
 
+      // next question: ask for reason of feelings
 
+      // next question: ask about interests
+      hobbies = new Output("What are your interests?");
+      hobbies.setKeyword(a("dummy"));
+
+      // question: ask about card games
+      //cg = new Output("Do you like card games?");
+      //cg.setKeyword(a("dummy"));
+
+      // reaction if player likes card games
+      ilcg = new Output("Me too!");
+      ilcg.setKeyword(a("yes"), a("do"), a("love"));
+      ilcg.setNotKeywords(a("don't", "like"), a("dislike"));
+      ilcg.setAdditionalDisplay("What is your favorite card game?");
+
+      // reaction to player's favorite card game
+      fav = new Output(input + "? That's a cool game!"); // look for right word
+      fav.setKeyword(a("dummy"));
+      fav.setAdditionalDisplay("Would you like to play the card game 31 with me?");
+
+      // reaction if player doesn't like card games
+      ihcg = new Output("Really? But they are so fun!");
+      ihcg.setKeyword(a("don't"), a("no"), a("dislike"), a("hate"));
+      ihcg.setNotKeywords(a("don't", "hate"), a("don't", "dislike"));
+      ihcg.setAdditionalDisplay("Have you heard of the card game 31?");
+
+      // reaction if player doesn't know 31
+      // ask if explain?
+
+      // reaction if player knows 31: ask about playing
+      ywp = new Output("Would you like to play the card game 31 with me?");
+      ywp.setKeyword(a("yes"), a("do"));
+
+      // reaction if player doesn't want to play: more smalltalk?
+
+      // reaction if player wants to play: ask about explaining the rules
+      askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
+      askIfExplain.setKeyword(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // Output: can you see this symbol: ... ?
       symbolCheck  = new Output("Can you see these symbols or just three squares?: " + (char) 0x2805 + (char)0x235A + (char)0x2661);
@@ -77,10 +121,7 @@ public class NormConv extends Conversation {
 
 
 
-      askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-      String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
-      askIfExplain.setKeyword(askIfExplainTriggers);
-      askIfExplain.setKeyword(a("dummy"));
+
 
       explain = new Output("Ok, these are the rules:");
       String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
@@ -121,11 +162,14 @@ public class NormConv extends Conversation {
       yniN.setPossibleOutputs(getaPR(), yni);
       intro.setPossibleOutputs(getaPR(), hyd);
       hyd.setPossibleOutputs(getaPR(),nth, ohno, iag, igt);
-      nth.setPossibleOutputs(getaPR(), askIfExplain);
-      ohno.setPossibleOutputs(getaPR(),askIfExplain);
-      iag.setPossibleOutputs(getaPR(),askIfExplain);
-      igt.setPossibleOutputs(getaPR(),askIfExplain);
-      //ywp.setPossibleOutputs(askIfExplain);
+      nth.setPossibleOutputs(getaPR(), ihcg, ilcg);
+      ohno.setPossibleOutputs(getaPR(), ihcg, ilcg);
+      iag.setPossibleOutputs(getaPR(), ihcg, ilcg);
+      igt.setPossibleOutputs(getaPR(), ihcg, ilcg);
+      ilcg.setPossibleOutputs(getaPR(), fav);
+      ihcg.setPossibleOutputs(getaPR(), ywp);
+      fav.setPossibleOutputs(getaPR(), askIfExplain);
+      ywp.setPossibleOutputs(getaPR(), askIfExplain);
       askIfExplain.setPossibleOutputs(getaPR(),explain, startGame);
       explain.setPossibleOutputs(getaPR(),clarifyAsk, startGame);
       afterGame.setPossibleOutputs(wyn);   // fix
@@ -146,7 +190,7 @@ public class NormConv extends Conversation {
       output.print();
 
 
-      while(counter < 6 && !startGameT) {
+      while(counter < 10 && !startGameT) {
          //loopingReplies();
          //updateReplies();
          String input = readString();
