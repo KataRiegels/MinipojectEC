@@ -152,33 +152,59 @@ public class Output {
       anything = b;
    }
 
+   public String getPart(String input) {
+      String[] m;
+      String string = null;
+      String[] splitInput = split(input);
+      if (possibleOutputs != null) {
+         // if player doesn't want to start the game yet, get next output
+         for (Output r : possibleOutputs){
+            for (String i : splitInput) {
+               for (String[] k : notKeywords)
+                  for (String l : k) {
+                     m = checkJ(l);
+                     for (String n : m){
+                        if (!i.equals(l) && !i.equals(n)) {
+                           return i;
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      return "";
+      }
+
+
+
+
+
 
    // get next output based on player's input
    // f.ex. getNext("yes")
    public Output getNext(String input){
-      if (errOutput == null) errOutput = new Output("I'm confused. Please clarify");
-      errOutput.setPossibleOutputs(errOutput);
-      Output next = errOutput;
-      next.setPossibleOutputs(errOutput);
+         if (errOutput == null) errOutput = new Output("I'm confused. Please clarify");
+         errOutput.setPossibleOutputs(errOutput);
+         Output next = errOutput;
+         next.setPossibleOutputs(errOutput);
 
-      // convert input sentence to String[]
-      input.toLowerCase();
-      String[] words        = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
-      String[] contractioned = a("don't", "can't",   "won't",    "aren't",  "isn't", "you're", "i'm",    "it's");
+         // convert input sentence to String[]
+         input.toLowerCase();
+         String[] words = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
+         String[] contractioned = a("don't", "can't", "won't", "aren't", "isn't", "you're", "i'm", "it's");
 
-      for (int i = 0; i < words.length; i++){
-         if (input.contains(words[i])) input = input.replace(words[i],contractioned[i]);
-      }
+         for (int i = 0; i < words.length; i++) {
+            if (input.contains(words[i])) input = input.replace(words[i], contractioned[i]);
+         }
 
 
+         String[] splitInput = split(input); // maybe we can split it in Main instead or move the method to this class
+         //System.out.println(Arrays.toString(splitInput));
 
-      String[] splitInput = split(input); // maybe we can split it in Main instead or move the method to this class
-      //System.out.println(Arrays.toString(splitInput));
-
-      // check first if player wants to start game (default Output)
-      if (containsTrigger(defaultKeywords, splitInput)) {
-         return defaultOutput;
-      }
+         // check first if player wants to start game (default Output)
+         if (containsTrigger(defaultKeywords, splitInput)) {
+            return defaultOutput;
+         }
 
 
 
@@ -218,6 +244,7 @@ public class Output {
             if (list.contains(j)) {
                counter++;
             }
+            if (j.equals("dummy")) return true;
          }
          if (i.length == counter) {  // if all of the keywords were contained
             return true;
