@@ -223,7 +223,7 @@ public class Output {
       if (possibleOutputs != null){
       // if player doesn't want to start the game yet, get next output
          for (Output r : possibleOutputs) {
-            System.out.println(Arrays.deepToString(r.getKeywords()));
+            //System.out.println(Arrays.deepToString(r.getKeywords()));
             if (r.getKeywords().equals(a(a("dummy")))) return r;
             // check if there are any triggers
             /*if (this.getKeywords().length == 0) {

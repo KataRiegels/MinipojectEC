@@ -115,8 +115,8 @@ public class NormConv extends Conversation {
       //wyn.setPossibleOutputs(getaPR(), hyd);
       welcome.setPossibleOutputs(wyn);
       wyn.setPossibleOutputs(yni);
-      String[][] dff = {a("yo", "are"), a("jkljlk", "opi")};
-      yni.setNotKeywords(dff);
+      //String[][] dff = {a("yo", "are"), a("jkljlk", "opi")};
+      //yni.setNotKeywords(dff);
       yni.setPossibleOutputs(getaPR(), intro, yniN);                                     // <- Should lead to some "my name is"
       yniN.setPossibleOutputs(getaPR(), yni);
       intro.setPossibleOutputs(getaPR(), hyd);
@@ -148,13 +148,13 @@ public class NormConv extends Conversation {
 
       while(counter < 6 && !startGameT) {
          //loopingReplies();
-         updateReplies();
+         //updateReplies();
          String input = readString();
          normSpecialOutput(output, input);
          //Output previous = output.copy();
          output = output.getNext(input);
          normSpecialOutput(output, input);
-         updateReplies();
+         //updateReplies();
          //output.setPrevious(previous);
          output.print();
 
@@ -185,15 +185,18 @@ public class NormConv extends Conversation {
       if (output == yni)         {
          userName = wyn.getPart(input);
          userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
-         //yni.setReply("Your name is " + userName + "?");
-         //hyd.setReply("How are you " + userName + "?");
+         //updateReplies();
+         yni.setReply("Your name is " + userName + "?");
+         intro.setReply("Nice to meet you, " + userName + "!");
+         hyd.setReply("How are you " + userName + "?");
+
       }
    }
 
    public void updateReplies(){
       yni.setReply("Your name is " + userName + "?");
-      hyd.setReply("How are you " + userName + "?");
       intro.setReply("Nice to meet you, " + userName + "!");
+      hyd.setReply("How are you " + userName + "?");
    }
 
 
