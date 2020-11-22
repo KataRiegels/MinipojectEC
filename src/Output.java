@@ -305,8 +305,8 @@ public class Output {
    public void printWait(long waitTime){
       int dots = 3;
       String dotChar;
-      if (uni) dotChar = (char)0x26AC + "";
-      else dotChar = ".";
+      //if (uni) dotChar = (char)0x26AC + "";
+      dotChar = ".";
       String delete = "\b";
       String dot;
       for (int n = 0; n <= dots*2; n++){
