@@ -39,21 +39,18 @@ public class NormConv extends Conversation {
       hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       nth = new Output("Good to hear. Let's play blackjack!");
-      String nthTriggers[][] = {{"good"}, {"not", "bad"}};
+      nth.setKeyword(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
-      nth.setKeyword(nthTriggers);
 
-      ohno = new Output("Sorry about that. Let's play blackjack to cheer you up!");
-      String ohnoTriggers[][] = {{"bad"}, {"not", "good"}};
+      ohno = new Output("Sorry about that.");
+      ohno.setKeyword(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
-      ohno.setKeyword(ohnoTriggers);
 
-      iag = new Output("I'm good, thanks for asking! Let's play blackjack to cheer you up!");
-      String iagTriggers[][] = {{"bad", "you"}, {"not", "good", "you"}};
+      iag = new Output("I'm good, thanks for asking!");
+      iag.setKeyword(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
-      iag.setKeyword(iagTriggers);
 
-      igt = new Output("I'm good too. Thanks for asking! Let's play blackjack!");
+      igt = new Output("I'm good too. Thanks for asking!");
       String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
       igt.setKeyword(igtTriggers);
 
@@ -74,6 +71,7 @@ public class NormConv extends Conversation {
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
       String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
       askIfExplain.setKeyword(askIfExplainTriggers);
+      askIfExplain.setKeyword(a("dummy"));
 
       explain = new Output("Ok, these are the rules:");
       String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
@@ -86,7 +84,7 @@ public class NormConv extends Conversation {
       String rule6 = new String("After a \"knock\" the other player gets one more round.");
       String rule7 = new String("The player who is closer to 31 wins the round.");
       String question = new String("Do you need clarification?");
-      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, question);
+      explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6);
 
       clarifyAsk = new Output("Which rule would you like me to clarify?");
       String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
