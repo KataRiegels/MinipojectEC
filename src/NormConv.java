@@ -4,7 +4,7 @@ import java.util.Scanner;
    public class NormConv {
    Game game;
    Output welcome,  wyn, yni, yniN, yniY, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
-           lp, ywp, symbolCheck, askIfExplain, explain, why, wsp,
+           lp, ywp, symbolCheck, askIfExplain, explain, why, wsp, convincePlay,
            startGame, stopGame, afterGame,
            symbolCheckY, symbolCheckN, symbolCheckWhat;
    Output output;
@@ -22,7 +22,7 @@ import java.util.Scanner;
       wyn.setKeywords(null);
 
       // reaction: ask if name correct
-      yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
+      yni = new Output("Your name is " + userName + "?");
       yni.setKeywords(a("dummy"));
       yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"));
 
@@ -76,9 +76,9 @@ import java.util.Scanner;
       ilcg.setAdditionalDisplay("What is your favorite card game?");
 
       // reaction to player's favorite card game
-      fav = new Output(input + "? That sounds cool!"); // look for right word
+      fav = new Output( "That sounds cool!");
       fav.setKeywords(null);
-      fav.setAdditionalDisplay("Would you like to play the card game 31 with me?");
+      fav.setAdditionalDisplay("Have you heard of the card game 31?");
 
       // reaction if player doesn't like card games
       ihcg = new Output("Really? But they are so fun!");
@@ -97,23 +97,26 @@ import java.util.Scanner;
       ywp.setKeywords(a("yes"), a("i","have"));
       ywp.setNotKeywords(a("haven't"));
 
-      // reaction if player doesn't want to play: more smalltalk?
+      // reaction if player doesn't want to play: convince to play
+      convincePlay = new Output("Come on, it'll be fun.");
+      convincePlay.setKeywords(a("no"), a("don't", "want"));
+      convincePlay.setAdditionalDisplay("Do you know the rules or would you like me to explain them?");
 
       // reaction if player wants to play: ask about explaining the rules
       askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
-      askIfExplain.setKeywords(a("dummy"), a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
+      askIfExplain.setKeywords(a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
       explain = new Output("Ok, these are the rules:");
       explain.setKeywords(a("don't", "know", "rules"), a("explain"));
       explain.setKeywords(a("don't","explain"));
-      String rule1 = new String("You have a hand of 3 cards.");
-      String rule2 = new String("Your goal is to get a total as close to 31 as possible.");
-      String rule3 = new String("Only cards of the same suit count together.");
-      String rule4 = new String("All face cards count as 10. Ace counts as 11.");
-      String rule5 = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
-      String rule6 = new String("After a \"knock\" the other player gets one more round.");
-      String rule7 = new String("The player who is closer to 31 wins the round.");
+      String rule1    = new String("You have a hand of 3 cards.");
+      String rule2    = new String("Your goal is to get a total as close to 31 as possible.");
+      String rule3    = new String("Only cards of the same suit count together.");
+      String rule4    = new String("All face cards count as 10. Ace counts as 11.");
+      String rule5    = new String("When it is your turn you can \"knock\" if you think you can beat the other player's score.");
+      String rule6    = new String("After a \"knock\" the other player gets one more round.");
+      String rule7    = new String("The player who is closer to 31 wins the round.");
       String question = new String("Are you ready to play?");
       explain.setAdditionalDisplay(rule1, rule2, rule3, rule4, rule5, rule6, rule7, question);
 
@@ -169,8 +172,8 @@ import java.util.Scanner;
       ilcg.setPossibleOutputs(startGame, fav);
       ihcg.setPossibleOutputs(startGame, ywp, wsp);
       wsp.setPossibleOutputs(startGame, askIfExplain);
-      fav.setPossibleOutputs(startGame, askIfExplain);
-      ywp.setPossibleOutputs(startGame, askIfExplain);
+      fav.setPossibleOutputs(startGame, ywp, wsp);
+      ywp.setPossibleOutputs(startGame, askIfExplain, convincePlay);
       askIfExplain.setPossibleOutputs(startGame,explain, symbolCheck);
       explain.setPossibleOutputs(startGame,symbolCheck, why);
       symbolCheck.setPossibleOutputs(symbolCheckWhat, symbolCheckN,  symbolCheckY);
@@ -183,7 +186,7 @@ import java.util.Scanner;
    public void startConv() {
       int counter = 0;
 
-      output = welcome;   // first output
+      output = ywp;   // first output
       output.print();
 
       while(counter < 20 && !startGameT) {
