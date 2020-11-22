@@ -3,7 +3,7 @@ import java.util.*;
 public class Game extends Conversation{
    private String comReply;  //0x2B9A
    private String userName;
-   private Pile stock, discard;
+   private Cards stock, discard;
    private Player winner, player, p1, p2;
    private Player[] ps = new Player[2];
    private int turnNr, gameNr;
@@ -18,8 +18,8 @@ public class Game extends Conversation{
    String[] no, dont;
 
    public Game() {
-      stock   = new Pile("stock");
-      discard = new Pile("discard");
+      stock   = new Cards("stock");
+      discard = new Cards("discard");
       turnNr = 0; gameNr = 0;
       endGame = false;
       knocked = false;

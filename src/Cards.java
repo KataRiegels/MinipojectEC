@@ -192,7 +192,57 @@ public class Cards {
       return minP;
    }
 
-   // prints cards
+
+   // Methods primarily for piles
+   public void createStock(Cards deck){
+
+      clear();
+      deck.deal(this, deck.size(), 0);
+   }
+   public void createStock(){
+      clear();
+      for (int suit = 0; suit < 4; suit++){
+         for (int rank = 1; rank < 14; rank++) {
+            Card card = new Card(rank,suit);
+            this.addCard(card);
+         }
+      }
+   }
+   public void turnCard(Cards pile){
+      clear();
+      pile.deal(this, 1, 0);
+   }
+   public void printTop(){
+      print("Discard pile: ");
+      if (isEmpty()) println("|X|");
+      else println(showCard(topCard()));
+   }
+   public Card topCard(){
+      return getCard(size()-1);
+   }
+
+   // Methods primarily for hands
+   public void  starter(Cards pile, int amount){
+      clear();
+      pile.deal(this, amount, pile.size()-1);
+   }
+   public Cards draw(Cards pile){
+      return pile.deal(this, 1, pile.size()-1);
+   }
+   public void  play(Cards pile, int index){
+      deal(pile, 1, index-1);
+   }
+   public void  printHand(){
+      for (int i = 0; i < size(); i++){
+         print(showCard(getCard(i)));
+         if (i<size()-1){
+            print(" - ");
+         }
+      }
+      println();
+   }
+   
+   
    public void printCards(){
       for (int i = 0; i < size(); i++){
          print(showCard(getCard(i)) + " - ");

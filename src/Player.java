@@ -3,14 +3,14 @@ import java.util.Scanner;
 public class Player{
    private String comReply,name;
    private boolean isUser, knock, unicode;;
-   Hand hand;
+   Cards hand;
    private Output whichCard, whichPile, knockedCon, stopped, lastTurn, errCard, errPile, discard, stock, knocked ,card1, card2, card3, card4, cannotKnock;
    private boolean stop;
 
    public Player(String name){
       stop = false;
       this.name = name;
-      hand = new Hand();
+      hand = new Cards();
       knock = false;
       isUser = true;
       comReply = (char) 0x2B9A + " ";
@@ -89,11 +89,11 @@ public class Player{
    }
 
    // what happens if player is the who to has to draw
-   public void drawTurn(Pile discard, Pile stock, boolean knocked, int gameTurn){
+   public void drawTurn(Cards discard, Cards stock, boolean knocked, int gameTurn){
       //waitingMilSec(1);
       if (knocked) lastTurn.print();
       Output o = useOutput(whichPile);
-      Pile drawn = null;
+      Cards drawn = null;
       while (o != stopped) {
          if (o == this.knocked) {
             if (gameTurn <= 1) {
@@ -110,7 +110,7 @@ public class Player{
       }
       stop = true;
    }
-   public void playTurn(Pile discard, boolean knocked){
+   public void playTurn(Cards discard, boolean knocked){
       int playAnswer;
       waitingMilSec(1000);
       Output o = useOutput(whichCard);
