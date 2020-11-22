@@ -195,12 +195,13 @@ public class Output {
          for (Output r : possibleOutputs) {
             //System.out.println(Arrays.deepToString(r.getKeywords()));
             //if (r.getKeywords().contains(a(a("dummy")))) return r;
+            if (r.keywords == null) return r;
             // check if there are any triggers
             /*if (this.getKeywords().length == 0) {
                return r;
             }*/
             //if (containsTrigger(r.getKeywords(), splitInput)) {
-            if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) || !containsTrigger(r.getNotKeywords(), a("dummy"))) {
+            if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) ) {
                //System.out.println("worked");
                return r;
             }

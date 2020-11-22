@@ -25,8 +25,8 @@ public class NormConv extends Conversation {
 
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
-      yni.setKeywords(a("dummy"));
-      yni.setKeywords(a("dummy"));
+      yni.setKeywords(null);
+      //yni.setKeywords(a("dummy"));
       yni.setNotKeywords(a("hello"), a("hi"), a("good", "day"), a("yes"));
 
       // reaction if name incorrect
@@ -41,7 +41,7 @@ public class NormConv extends Conversation {
 
       // next question: ask how player is feeling
       hyd = new Output("How are you, " + userName + "?");
-      hyd.setKeywords(a("dummy"));
+      hyd.setKeywords(null);
       //hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       // reaction if player feels good
@@ -87,7 +87,7 @@ public class NormConv extends Conversation {
 
       // reaction to player's favorite card game
       fav = new Output(input + "? That's a cool game!"); // look for right word
-      fav.setKeywords(a("dummy"));
+      fav.setKeywords(null);
       fav.setAdditionalDisplay("Would you like to play the card game 31 with me?");
 
       // reaction if player doesn't like card games
