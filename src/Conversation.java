@@ -14,11 +14,11 @@ public class Conversation {
 
           startGame = new Output("Let's start the game then.");
          String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}, {"start", "game"}};
-         startGame.setKeyword(startGameTriggers);
+         startGame.setKeywords(startGameTriggers);
 
 
          stopGame = new Output("Ok, let's stop");
-         stopGame.setKeyword(a("stop"));
+         stopGame.setKeywords(a("stop"));
          aPR = a(startGame, stopGame);
 
          //Output possibleReplies[] = {wyn, hyd, iag, igt, ohno, nth, askIfExplain, noexplain, explain};

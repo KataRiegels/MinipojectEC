@@ -6,9 +6,6 @@ public class Card {
    private int suit;
    private String[] str_suit = new String[4];
 
-   public Card(){
-   }
-
    public Card(int rank, int suit){
       this.rank = rank;
       this.suit = suit;
@@ -19,15 +16,9 @@ public class Card {
       return suit;
    }
 
-   public int getRank() {
-      return rank;
-   }
-
    public String name(){
       String[] str_rank = {null, "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
-      //String[] str_suit = {"Clubs", "Diamonds", "Hearts", "Spades"};
       char[] str_suit = {(char)0x2660, (char)1, (char)1, (char)1};
-      //str_suit = {(char)0x2660,}
       String cardName = (str_rank[this.rank] + " of " + str_suit[this.suit]);
 
       return cardName;
@@ -41,8 +32,7 @@ public class Card {
          str_suit[2] = "H.";
          str_suit[3] = "S.";
       }
-      String cardName = ("|" + str_suit[this.suit] + str_rank[this.rank] + "|");
-      return cardName;
+      return ("|" + str_suit[suit] + str_rank[rank] + "|");
    }
 
    public boolean equals(Card c1){

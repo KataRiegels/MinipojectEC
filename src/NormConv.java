@@ -17,46 +17,49 @@ public class NormConv extends Conversation {
       // starting message
       welcome = new Output("Welcome!");
 
+
+      wyn = new Output("Welcome. What's your first name?");
+      wyn.setKeywords(a("dummy"));
       // first question: ask for name
       wyn = new Output("What's your first name?");
-      wyn.setKeyword(a("dummy"));
 
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?"); // somehow filter all words that could not be names..
-      yni.setKeyword(a("dummy"));
+      yni.setKeywords(a("dummy"));
+      yni.setKeywords(a("dummy"));
       yni.setNotKeywords(a("hello"), a("hi"), a("good", "day"), a("yes"));
 
       // reaction if name incorrect
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
-      yniN.setKeyword(a("no"), a("it's", "not"));
+      yniN.setKeywords(a("no"), a("it's", "not"));
 
       // reaction if name correct: Liza introduces herself
       intro = new Output("Nice to meet you, " + userName + "!");
-      intro.setKeyword(a("yes"), a("it's"));
+      intro.setKeywords(a("yes"), a("it's"));
       intro.setNotKeywords(a("it's", "not"));
       intro.setAdditionalDisplay("My name is Liza.");
 
       // next question: ask how player is feeling
       hyd = new Output("How are you, " + userName + "?");
-      hyd.setKeyword(a("dummy"));
+      hyd.setKeywords(a("dummy"));
       //hyd.setNotKeywords(a("not", "name"), a("not", "my"));
 
       // reaction if player feels good
       nth = new Output("Good to hear.");
-      nth.setKeyword(a("good"), a("not", "bad"));
+      nth.setKeywords(a("good"), a("not", "bad"));
       nth.setNotKeywords(a("not", "good"));
       nth.setAdditionalDisplay("Do you like card games?");
 
       // reaction if player feels bad
       ohno = new Output("Sorry about that.");
-      ohno.setKeyword(a("bad"), a("not", "good"));
+      ohno.setKeywords(a("bad"), a("not", "good"));
       ohno.setNotKeywords(a("not", "bad"));
       //ohno.setAdditionalDisplay("Why are you feeling bad?");
       ohno.setAdditionalDisplay("Do you like card games?");
 
       // reaction if player feels good and asks how Liza is feeling
       iag = new Output("I'm good, thanks for asking!");
-      iag.setKeyword(a("bad", "you"), a("not", "good", "you"));
+      iag.setKeywords(a("bad", "you"), a("not", "good", "you"));
       iag.setNotKeywords(a("not", "bad"));
       iag.setAdditionalDisplay("Do you like card games?");
 

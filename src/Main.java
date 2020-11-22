@@ -54,26 +54,26 @@ public class Main {
 
             Output hyd = new Output("How are you?");
             String hydTriggers[][] = {{"hello"}, {"hi"}, {"good", "day"}};
-            hyd.setKeyword(hydTriggers);
+            hyd.setKeywords(hydTriggers);
 
             Output nth = new Output("Good to hear. Let's play blackjack!");
             String nthTriggers[][] = {{"good"}, {"not", "bad"}};
             nth.setNotKeywords(a("not", "good"));
-            nth.setKeyword(nthTriggers);
+            nth.setKeywords(nthTriggers);
 
             Output ohno = new Output("Sorry about that. Let's play blackjack to cheer you up!");
             String ohnoTriggers[][] = {{"bad"}, {"not", "good"}};
             ohno.setNotKeywords(a("not", "bad"));
-            ohno.setKeyword(ohnoTriggers);
+            ohno.setKeywords(ohnoTriggers);
 
             Output iag = new Output("I'm good, thanks for asking! Let's play blackjack to cheer you up!");
             String iagTriggers[][] = {{"bad", "you"}, {"not", "good", "you"}};
             iag.setNotKeywords(a("not", "bad"));
-            iag.setKeyword(iagTriggers);
+            iag.setKeywords(iagTriggers);
 
             Output igt = new Output("I'm good too. Thanks for asking! Let's play blackjack!");
             String igtTriggers[][] = {{"good", "you"}, {"great", "you"}};
-            igt.setKeyword(igtTriggers);
+            igt.setKeywords(igtTriggers);
 
             //Output ywp = new Output("Wanna play blackjack?");
 
@@ -82,11 +82,11 @@ public class Main {
 
             Output askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
             String askIfExplainTriggers[][] = {{"ok"}, {"sure"}, {"let's", "do", "it"}};
-            askIfExplain.setKeyword(askIfExplainTriggers);
+            askIfExplain.setKeywords(askIfExplainTriggers);
 
             Output explain = new Output("Ok, these are the rules:");
             String explainTriggers[][] = {{"explain"}, {"don't", "know", "rules"}};
-            explain.setKeyword(explainTriggers);
+            explain.setKeywords(explainTriggers);
             String rule1 = new String("The goal of blackjack is to beat the dealer's hand without going over 21.");
             String rule2 = new String("Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.");
             String question = new String("Do you need clarification?");
@@ -94,11 +94,11 @@ public class Main {
 
             Output startGame = new Output("Let's start the game then.");
             String startGameTriggers[][] = {{"explain", "don't"}, {"know", "rules"}};
-            startGame.setKeyword(startGameTriggers);
+            startGame.setKeywords(startGameTriggers);
 
             Output clarifyAsk = new Output("Which rule would you like me to clarify?");
             String clarifyAskTriggers[][] = {{"yes"}, {"do"}};
-            clarifyAsk.setKeyword(clarifyAskTriggers);
+            clarifyAsk.setKeywords(clarifyAskTriggers);
 
             //Output rule1 = new Output("");
 

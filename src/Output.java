@@ -1,22 +1,21 @@
 import java.util.*;
 
 public class Output {
-   boolean uni;
-   String reply;
-   String[][] dff = {a("yo", "ka"), a("jkljlk", "opi")};
-   ArrayList<String> additionalDisplay;
-   Output errOutput = null;
-   String[][] keywords; // keywords that trigger this particular output
-   Output[] allOutputs;
-   String[][] notKeywords;
-   Output[] possibleOutputs;
-   boolean anything = false;
+   private boolean uni;
+   private String reply;
+   private ArrayList<String> additionalDisplay;
+   private Output errOutput = null;
+   private String[][] keywords; // keywords that trigger this particular output
+   private Output[] allOutputs;
+   private String[][] notKeywords;
+   private Output[] possibleOutputs;
+   private boolean anything = false;
+   private String[] words         = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
+   private String[] contractioned = a("don't",  "can't",   "won't",    "aren't",  "isn't",  "you're",  "i'm",  "it's");
    //ArrayList<Output> possibleOutputs;
-   Output defaultOutput; // = new Output("starting the game");
-   String[][] defaultKeywords;
-   ArrayList<Output> previous;
-
-
+   //private Output defaultOutput; // = new Output("starting the game");
+   //private String[][] defaultKeywords;
+   private ArrayList<Output> previous;
 
    public Output(String reply){
       this.reply = reply;
@@ -28,47 +27,62 @@ public class Output {
 
    public Output(){}          // this is needed for my GameOutput class
 
-   // standard answers that work for each output -> start game, method
-   // are checked first (before keywords for other outputs) in getNext()
-   // setting the default keywords that always lead to starting the game
-   public void setDefaultKeywords() {
-      this.keywords = new String[0][0];
-      String trigger1[] = {"start", "game"}; // more default triggers can be defined here
-      ArrayList<String[]> triggers = new ArrayList<>();
-      triggers.add(trigger1);
-      defaultKeywords = triggers.toArray(new String[0][0]);
-   }
 
-
-   public void setReply(String string){
-      reply = string;
-   }
 
    public void setPrevious(Output current) {
       //previous.add(current);
    }
 
    // setKeyword("fine", "good")
-   public void setKeyword(String[]... keywords) {
+   public void setReply(String string){
+      reply = string;
+   }
+   public void       setKeywords(String[]... keywords) {
       this.keywords = keywords;
    }
-
    public String[][] getKeywords() {
       return keywords;
    }
-
-   public String getKeyword(int i, int j){
+   public String     getKeyword(int i, int j){
       return keywords[i][j];
    }  // keywordS
-
-
-   public void setNotKeywords(String[]... notKeywords){
+   public void       setNotKeywords(String[]... notKeywords){
       this.notKeywords = notKeywords;
    }
-
    public String[][] getNotKeywords() {
       return notKeywords;
    }
+   public Output[]   getPossibleOutputs() {
+      return possibleOutputs;
+   }
+   public void       setPossibleOutputs(Output... possibleOutputs) {
+      if (possibleOutputs != null) {
+         Output[] temp = new Output[possibleOutputs.length];
+         for (int i = 0; i < possibleOutputs.length; i++)
+            temp[i] = possibleOutputs[i];
+         this.possibleOutputs = temp;
+      }
+   }
+   public void       setPossibleOutputs(Output[] output, Output... outputs){
+      Output[] temp = new Output[output.length+outputs.length];
+      int k = 0;
+      for (int i = 0; i < output.length; i++){
+         temp[i] = output[i];
+      }
+
+      for (int j = output.length; j < temp.length; j++){
+         temp[j] = outputs[k];
+         k++;
+      }
+      possibleOutputs = temp;
+   }
+   public void       setErrOutput(Output output){
+      errOutput = output;
+   }
+   public Output     getErrOutput(){
+      return errOutput;
+   }
+
 
 
    public void addPossibleOutput(Output possibleOutput){
@@ -80,9 +94,7 @@ public class Output {
       possibleOutputs = newArr;
    }
 
-   public Output[] getPossibleOutputs() {
-      return possibleOutputs;
-   }
+
 
    public String getReply(){
       return reply;
@@ -107,31 +119,6 @@ public class Output {
    }*/
 
    // setPossibleOutputs method with undefined number of Outputs as input
-   public void setPossibleOutputs(Output... possibleOutputs) {
-      defaultOutput = new Output("starting the game");
-
-      /*if (possibleOutputs == null) {
-         this.possibleOutputs = new Output[]{defaultOutput};
-      } else {
-         this.possibleOutputs = new Output[possibleOutputs.length];
-         for (int i = 0; i < possibleOutputs.length; i++) {
-            this.possibleOutputs[i] = possibleOutputs[i];
-         }
-      }*/
-      if (possibleOutputs != null) {
-         //System.out.println(possibleOutputs.length);
-         Output[] temp = new Output[possibleOutputs.length];
-         for (int i = 0; i < possibleOutputs.length; i++) {
-            temp[i] = possibleOutputs[i];
-         }
-         this.possibleOutputs = temp;
-      }
-      /*
-      this.possibleOutputs = new Output[possibleOutputs.length];
-      for (int i = 0; i < possibleOutputs.length; i++) {
-         this.possibleOutputs[i] = possibleOutputs[i];
-      }*/
-   }
 
 /*
    public Output setReply(String triggers, Output reply){
@@ -140,54 +127,44 @@ public class Output {
    }
 */
 
-   public void setErrOutput(Output output){
-      errOutput = output;
-   }
 
-   public Output getErrOutput(){
-      return errOutput;
-   }
 
 
    public boolean equals(Output output){
       return (this == output);
    }
 
-   public void setAnything(boolean b){
-      anything = b;
-   }
-
    public String getPart(String input) {
       String[] syn;
-      String string = null;
-      String[] splitInput = split(input);
+
       // insert contractions
+
+      contractions(input);
+      String[] splitInput = split(input);
       if (possibleOutputs != null) {
          // if player doesn't want to start the game yet, get next output
-         for (Output r : possibleOutputs){
-            for (String i : splitInput) {
-               for (String[] notK : r.notKeywords) {
-                  for (String l : notK) {
-                     syn = checkJ(l);
-                     for (String n : syn) {
-                        if (!i.equals(l) && !i.equals(n)) {
+         for (Output o : possibleOutputs)
+            for (String i : splitInput)
+               for (String[] notK : o.notKeywords)
+                  for (String word : notK) {
+                     syn = checkJ(word);
+                     for (String synword : syn)
+                        if (!i.equals(word) && !i.equals(synword))
                            return i;
-                        }
-                     }
                   }
-               }}
-            }
-         }
-      return "";
       }
+        return "";
+   }
+
+   private String contractions(String input) {
+      for (int i = 0; i < words.length; i++)
+         if (input.contains(words[i]))
+            input = input.replace(words[i], contractioned[i]);
+
+      return input;
+   }
 
 
-
-
-
-
-   // get next output based on player's input
-   // f.ex. getNext("yes")
    public Output getNext(String input){
          if (errOutput == null) {
             errOutput = new Output("I'm confused. Please clarify");
@@ -202,21 +179,14 @@ public class Output {
 
          // convert input sentence to String[]
          input.toLowerCase();
-         String[] words = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
-         String[] contractioned = a("don't", "can't", "won't", "aren't", "isn't", "you're", "i'm", "it's");
 
-         for (int i = 0; i < words.length; i++) {
-            if (input.contains(words[i])) input = input.replace(words[i], contractioned[i]);
-         }
+
 
 
          String[] splitInput = split(input); // maybe we can split it in Main instead or move the method to this class
          //System.out.println(Arrays.toString(splitInput));
 
          // check first if player wants to start game (default Output)
-         if (containsTrigger(defaultKeywords, splitInput)) {
-            return defaultOutput;
-         }
 
 
 
@@ -240,7 +210,7 @@ public class Output {
    }
 
    // contains method: checks if at least one of the trigger options is contained
-   public boolean containsTrigger(String[][] triggers, String... input) {
+   private boolean containsTrigger(String[][] triggers, String... input) {
       if (triggers == null) return false;
       List<String> list = Arrays.asList(input);
       //System.out.println("triggers: "+Arrays.toString(triggers));
@@ -284,7 +254,7 @@ public class Output {
    // copy method that copies Output object with all its attributes etc.
    public Output copy() {
       Output newOutput = new Output(reply);
-      newOutput.setKeyword(getKeywords());
+      newOutput.setKeywords(getKeywords());
       if (possibleOutputs == null) newOutput.setPossibleOutputs(errOutput);
          newOutput.setPossibleOutputs(possibleOutputs);
       //}
@@ -302,10 +272,9 @@ public class Output {
       }
    }
 
-   public void printWait(long waitTime){
+   private void printWait(long waitTime){
       int dots = 3;
       String dotChar;
-      //if (uni) dotChar = (char)0x26AC + "";
       dotChar = ".";
       String delete = "\b";
       String dot;
@@ -325,15 +294,6 @@ public class Output {
       }
       waitingMilSec(500);
    } // Print the bubbles while Liza is writing
-   private void waiting(long seconds){// Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
-      try {
-         Thread.sleep(seconds*1000);
-      }
-      catch(InterruptedException ex) {
-         System.out.println("There was a problem :( ");
-         //Thread.currentThread().interrupt();
-      }
-   }
    private void waitingMilSec(long seconds){
       // Taken from https://stackoverflow.com/questions/24104313/how-do-i-make-a-delay-in-java
       try {
@@ -344,56 +304,35 @@ public class Output {
       }
    }
 
-   public String[] checkJ(String j){
+
+
+   private String[] checkJ(String j){
       String [] k;
       String[] synWords;
       synWords = a("yes", "no", "good", "bad",
               "don't", "can't", "aren't", "won't");
 
 
-         if      (j.equals("yes"))  return a("sure", "totally", "yeah", "yup");
-         else if (j.equals("good")) return a("great", "awesome", "fine", "alright", "well");
-         else if (j.equals("no"))   return a("nope", "nah");
-         else if (j.equals("bad"))  return a("terrible", "awful", "horrible", "poor");
-         else if (j.equals("1"))    return a("first", "one","1st");
-         else if (j.equals("2"))    return a("second", "two","2nd");
-         else if (j.equals("3"))    return a("third", "three","3rd");
-         else if (j.equals("4"))    return a("fourth", "four","4th");
+      if      (j.equals("yes"))  return a("sure", "totally", "yeah", "yup");
+      else if (j.equals("good")) return a("great", "awesome", "fine", "alright", "well");
+      else if (j.equals("no"))   return a("nope", "nah");
+      else if (j.equals("bad"))  return a("terrible", "awful", "horrible", "poor");
+      else if (j.equals("1"))    return a("first", "one","1st");
+      else if (j.equals("2"))    return a("second", "two","2nd");
+      else if (j.equals("3"))    return a("third", "three","3rd");
+      else if (j.equals("4"))    return a("fourth", "four","4th");
 
 
       else k = a("");
 
       return k;
    }
-
-   public String checkContractions(String input){
-      String[] words        = a("do not", "can not", "will not", "are not", "is not", "you are", "i am");
-      String[] contractioned = a("don't", "can't",   "won't",    "aren't",  "isn't", "you're", "i'm");
-
-      for (int i = 0; i < words.length; i++){
-         if (input.contains(words[i])) return contractioned[i];
-      }
-      return null;
-   }
-
-
-   public  String[] split(String s) {
+   private String[] split(String s) {
       return s.toLowerCase().split(" ");
    }
 
 
-   public void setPossibleOutputs(Output[] output, Output... outputs){
-      Output[] temp = new Output[output.length+outputs.length];
-      int k = 0;
-      for (int i = 0; i < output.length; i++){
-         temp[i] = output[i];
-      }
-      for (int j = output.length; j < temp.length; j++){
-         temp[j] = outputs[k];
-         k++;
-      }
-      possibleOutputs = temp;
-   }
+
 
    public Output findOriginalQuestion() {
       Output originalQ = null;
@@ -410,14 +349,6 @@ public class Output {
       String[] a = new String[strings.length];
       for (int i = 0; i < strings.length; i++){
          a[i] = strings[i];
-      }
-      return a;
-   }
-
-   public String[][] a(String[]... stringss){
-      String[][] a = new String[stringss.length][];
-      for (int i = 0; i < stringss.length; i++){
-         a[i] = stringss[i];
       }
       return a;
    }

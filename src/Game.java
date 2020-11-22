@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Game extends Conversation{
    private String comReply;  //0x2B9A
@@ -53,17 +52,17 @@ public class Game extends Conversation{
       contin = new Output("Alright, let's continue");
    }
    public void setOutputs(){
-      rollDie.setKeyword(yes);
-      notRollDie.setKeyword(no);
-      seeWhoWon.setKeyword(yes, do_);
+      rollDie.setKeywords(yes);
+      notRollDie.setKeywords(no);
+      seeWhoWon.setKeywords(yes, do_);
       seeWhoWon.setNotKeywords(no, dont);
-      notSeeWhoWon.setKeyword(no,dont);
+      notSeeWhoWon.setKeywords(no,dont);
       notSeeWhoWon.setNotKeywords(yes);
-      playAgain.setKeyword(yes, a("play"));
+      playAgain.setKeywords(yes, a("play"));
       playAgain.setNotKeywords(no, a("not", "play"), a("not", "continue"));
-      notPlayAgain.setKeyword(no, a("not", "play"), a("not", "continue"));
-      contin.setKeyword(no, a("continue"),a("don't", "stop"));
-      secret.setKeyword(yes);
+      notPlayAgain.setKeywords(no, a("not", "play"), a("not", "continue"));
+      contin.setKeywords(no, a("continue"),a("don't", "stop"));
+      secret.setKeywords(yes);
 
       readyDie.setPossibleOutputs(aPR,rollDie, notRollDie);
       notRollDie.setPossibleOutputs(aPR, contin, secret );
@@ -363,8 +362,8 @@ public class Game extends Conversation{
       if (gameNr == 4 || gameNr == 5) {
          if (gameNr == 4) {
             playAgainQ.setReply("Nice! Are we done playing?");
-            playAgain.setKeyword(no, a("not"), a("aren't"));
-            notPlayAgain.setKeyword(yes, a("are", "done"));
+            playAgain.setKeywords(no, a("not"), a("aren't"));
+            notPlayAgain.setKeywords(yes, a("are", "done"));
             notPlayAgain.setNotKeywords(no, a("not"));
          } else {
             playAgainQ.setReply("Soo.. Shall we call it a night for the games?");

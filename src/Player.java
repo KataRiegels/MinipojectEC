@@ -38,16 +38,16 @@ public class Player{
       card4       = new Output();
    } // Initializing all the Outputs we use in the Player class
    public void setOutputs(){
-     discard.setKeyword(a("discard"), a("open"), a("disc"));
-     stock.setKeyword(a("stock"),a("closed"));
-     knocked.setKeyword(a("knock"), a("knocked"));
-     cannotKnock.setKeyword(a("knock"), a("knocked"));
-     stopped.setKeyword(a("stop"));
+     discard.setKeywords(a("discard"), a("open"), a("disc"));
+     stock.setKeywords(a("stock"),a("closed"));
+     knocked.setKeywords(a("knock"), a("knocked"));
+     cannotKnock.setKeywords(a("knock"), a("knocked"));
+     stopped.setKeywords(a("stop"));
      stopped.setNotKeywords(a("don't", "stop"));
-     card1.setKeyword(a("1"));
-     card2.setKeyword(a("2"));
-     card3.setKeyword(a("3"));
-     card4.setKeyword(a("4"));
+     card1.setKeywords(a("1"));
+     card2.setKeywords(a("2"));
+     card3.setKeywords(a("3"));
+     card4.setKeywords(a("4"));
      knocked.setPossibleOutputs(knockedCon, stopped);
      whichPile.setErrOutput(errPile);
      whichPile.setPossibleOutputs(discard, stock, knocked, stopped);
