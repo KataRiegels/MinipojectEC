@@ -184,16 +184,13 @@ public class Game{
          if (previous.hasKnocked()) knocked = true;
          if (player.getStop()) return;
             drawTurn();
-            //printHand();
             playTurn();
 
-         //printHand();
          player = nextPlayer(player);
          if (player.hasKnocked() || endGame) return;
-         //System.out.println(comReply + "Turn number: " + turnNr);
+
          turnNr ++;
-         //if (turnNr > 2) return;
-         //discard.printCards();
+
       }
    }
 
@@ -228,7 +225,6 @@ public class Game{
       if (!checkKnock){
          player.playTurn(discard, knocked);
          printState();
-         //discard.printTop();
       }
 
    }
