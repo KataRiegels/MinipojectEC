@@ -38,7 +38,7 @@ public class NormConv {
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?");
       yni.setKeywords(a("dummy"));
-      yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"));
+      yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"), a("I"));
 
       // reaction if name incorrect
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
