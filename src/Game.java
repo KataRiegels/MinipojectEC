@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Game extends Conversation{
+public class Game{
    private String comReply;  //0x2B9A
    private String userName;
    private Cards stock, discard;
@@ -12,7 +12,7 @@ public class Game extends Conversation{
    private Output contin, secret;
    private Output notRollDie, rollDie, readyDie,
            notSeeWhoWon, seeWhoWon, seeWhoWonQ,
-           playAgain, playAgainQ, notPlayAgain;
+           playAgain, playAgainQ, notPlayAgain, stopGame;
 
 
    public Game() {
