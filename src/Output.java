@@ -65,6 +65,7 @@ public class Output {
       this.keywords = keywords;
    }
 
+   // set which keywords should not be contained in the input to trigger this output
    public void       setNotKeywords(String[]... notKeywords){
       this.notKeywords = notKeywords;
    }
@@ -82,6 +83,7 @@ public class Output {
       errOutput = output;
    }
 
+   // some outputs should display additional lines of text:
    public void setAdditionalDisplay(String ... strings){
       additionalDisplay = new ArrayList<String>();
       for (String s : strings) {
@@ -132,7 +134,7 @@ public class Output {
       return "";
    }
 
-
+   // method that checks if the input contains any contractions and replaces them
    private String contractions(String input) {
       for (int i = 0; i < words.length; i++)
          if (input.contains(words[i]))
@@ -245,7 +247,7 @@ public class Output {
    }
 
 
-
+   // defining certain common synonyms
    private String[] checkJ(String j){
       String [] k;
       String[] synWords;
@@ -267,6 +269,8 @@ public class Output {
 
       return k;
    }
+
+   // method that converts the input into a String[] in lower case
    private String[] split(String s) {
       return s.toLowerCase().split(" ");
    }
