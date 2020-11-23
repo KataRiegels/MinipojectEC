@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Game extends Conversation{
+public class Game{
    private String comReply;  //0x2B9A
    private String userName;
    private Cards stock, discard;
@@ -12,7 +12,7 @@ public class Game extends Conversation{
    private Output contin, secret;
    private Output notRollDie, rollDie, readyDie,
            notSeeWhoWon, seeWhoWon, seeWhoWonQ,
-           playAgain, playAgainQ, notPlayAgain;
+           playAgain, playAgainQ, notPlayAgain, stopGame;
 
 
    public Game() {
@@ -131,9 +131,6 @@ public class Game extends Conversation{
    public void setUni(boolean uni){
       this.uni = uni;
    }
-   public boolean stoppedGame(){
-      return endGame;
-   }
 
    public Player whoStarts(Player p1, Player p2){                 // Rolls a die for each player and prints result.
       Player p; Player startingPlayer;
@@ -187,16 +184,13 @@ public class Game extends Conversation{
          if (previous.hasKnocked()) knocked = true;
          if (player.getStop()) return;
             drawTurn();
-            //printHand();
             playTurn();
 
-         //printHand();
          player = nextPlayer(player);
          if (player.hasKnocked() || endGame) return;
-         //System.out.println(comReply + "Turn number: " + turnNr);
+
          turnNr ++;
-         //if (turnNr > 2) return;
-         //discard.printCards();
+
       }
    }
 
@@ -231,7 +225,6 @@ public class Game extends Conversation{
       if (!checkKnock){
          player.playTurn(discard, knocked);
          printState();
-         //discard.printTop();
       }
 
    }
