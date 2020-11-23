@@ -14,7 +14,6 @@ public class Output {
 
    public Output(String reply){
       this.reply = reply;
-      //setDefaultKeywords();
       uni = true;             // This is whether we use cool symbols or not
       notKeywords = null;
 
@@ -101,9 +100,6 @@ public class Output {
       possibleOutputs = newArr;
    }
 
-
-
-
    public boolean isInPossibleOutputs(Output output){
       for (Output o : possibleOutputs){
          if (output == o) return true;
@@ -130,7 +126,7 @@ public class Output {
                            return i;
                   }
       }
-        return "";
+      return "";
    }
 
    private String contractions(String input) {
@@ -155,10 +151,9 @@ public class Output {
          String[] splitInput = split(input);
       if (possibleOutputs != null){
          for (Output r : possibleOutputs) {
-            //System.out.println(Arrays.deepToString(r.getKeywords()));
+            System.out.println(Arrays.deepToString(r.getKeywords()));
             if (r.keywords == null) return r;
             if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) ) {
-               //System.out.println("worked");
                return r;
             }
          }
