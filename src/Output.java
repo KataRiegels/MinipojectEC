@@ -132,33 +132,28 @@ public class Output {
       return "";
    }
 
+
    private String contractions(String input) {
       for (int i = 0; i < words.length; i++)
          if (input.contains(words[i]))
             input = input.replace(words[i], contractioned[i]);
-
       return input;
    }
 
+   // method that determines the next output of the current output, based on the player's input
    public Output getNext(String input){
          if (errOutput == null) {
-            errOutput = new Output("I'm confused. Please clarify");
+            errOutput = new Output("I'm confused. Please clarify");  // error output in case of no keywords found or no possible outputs
          }
          errOutput.setPossibleOutputs(errOutput);
          Output next = errOutput;
          next.setPossibleOutputs(errOutput);
-
-         // convert input sentence to String[]
-
          input.toLowerCase();
          contractions(input);
-         String[] splitInput = split(input);
+         String[] splitInput = split(input);       // convert input sentence to String[]
       if (possibleOutputs != null){
          for (Output r : possibleOutputs) {
             if (r.dummy) return r;
-            //System.out.println(Arrays.deepToString(r.getKeywords()));
-            //if (r.getKeyword(0,0).equals("dummy")) return r;
-            //if (r.keywords == null) return r;
             if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) ) {
                return r;
             }
@@ -170,7 +165,7 @@ public class Output {
    // contains method: checks if at least one of the trigger options is contained
    private boolean containsTrigger(String[][] triggers, String... input) {
       if (triggers == null) return false;
-      List<String> list = Arrays.asList(input);
+      List<String> list = Arrays.asList(input);          // converting input to a list to use list.contains method
       //System.out.println("triggers: "+Arrays.toString(triggers));
       //System.out.println(Arrays.toString(list.toArray()));
       for (String[] i : triggers) {
@@ -179,7 +174,7 @@ public class Output {
             String [] k = checkJ(j);
             for (String l : k){              // checks if there is a synonym of the current keyword
                if (list.contains(l)) {
-                  counter++;
+                  counter++;                 // counts how many of the words within a trigger are contained in input
                }
             }
             if (list.contains(j)) {
@@ -187,7 +182,7 @@ public class Output {
             }
             if (j.equals("dummy")) return true;
          }
-         if (i.length == counter) {  // if all of the keywords were contained
+         if (i.length == counter) {          // if all of the keywords in a trigger are contained return true
             return true;
          }
       }
@@ -201,11 +196,11 @@ public class Output {
       Output newOutput = new Output(reply);
       newOutput.setKeywords(getKeywords());
       if (possibleOutputs == null) newOutput.setPossibleOutputs(errOutput);
-         newOutput.setPossibleOutputs(possibleOutputs);
-      //}
+      newOutput.setPossibleOutputs(possibleOutputs);
       return newOutput;
    }
 
+   // method that prints the reply and additional replies of an output
    public void print() {
       printWait(1);
       System.out.println(reply);
@@ -238,7 +233,8 @@ public class Output {
          System.out.print(delete);
       }
       waitingMilSec(500);
-   } // Print the dots while Liza is writing
+   }
+   // Print the dots while Liza is writing
    private void waitingMilSec(long seconds){
       try {
          Thread.sleep(seconds);
