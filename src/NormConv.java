@@ -33,26 +33,31 @@ public class NormConv {
 
       // first question: ask for name
       wyn = new Output("What's your first name?");
-      wyn.setKeywords(null);
+      wyn.setDummy(true);
+      //wyn.setKeywords(null);
 
       // reaction: ask if name correct
       yni = new Output("Your name is " + userName + "?");
-      yni.setKeywords(a("dummy"));
-      yni.setNotKeywords(a("i'm"), a("my"), a("name"), a("is"), a("I"));
+      yni.setDummy(true);
+      yni.setIgnore("i'm", "my", "name", "is", "im", "it", "it's", "its");
+
 
       // reaction if name incorrect
       yniN = new Output("I am not good with names.. Write *nothing* but your name.");
       yniN.setKeywords(a("no"), a("it's", "not"));
+      yniN.setIgnore("my");
+
 
       // reaction if name correct: Liza introduces herself
       intro = new Output("Nice to meet you, " + userName + "!");
+      intro.setDummy(true);
       intro.setKeywords(a("yes"), a("it's"));
       intro.setNotKeywords(a("it's", "not"));
       intro.setAdditionalDisplay("My name is Liza.");
 
       // next question: ask how player is feeling
       hyd = new Output("How are you, " + userName + "?");
-      hyd.setKeywords(null);
+      hyd.setDummy(true);
 
       // reaction if player feels good: ask about card games
       nth = new Output("Good to hear.");
@@ -80,7 +85,7 @@ public class NormConv {
 
       // next question: ask to play 31
       lp = new Output("That sounds rough.");
-      lp.setKeywords(a("dummy"));
+      lp.setDummy(true);
       lp.setAdditionalDisplay("Maybe a game of 31 would cheer you up?");
 
       // reaction if player likes card games: ask about favorite card game
@@ -91,7 +96,7 @@ public class NormConv {
 
       // reaction to player's favorite card game: ask about 31
       fav = new Output( "That sounds cool!");
-      fav.setKeywords(null);
+      fav.setDummy(true);
       fav.setAdditionalDisplay("Have you heard of the card game 31?");
 
       // reaction if player doesn't like card games: ask about 31
@@ -117,7 +122,8 @@ public class NormConv {
       convincePlay.setAdditionalDisplay("Do you know the rules or would you like me to explain them?");
 
       // reaction if player wants to play: ask about explaining the rules
-      askIfExplain = new Output("Do you know the rules or would you like me to explain them?");
+      askIfExplain = new Output("Well.. Let's play ;-) Do you know the rules or would you like me to explain them?");
+      askIfExplain.setDummy(true);
       askIfExplain.setKeywords(a("yes"), a("ok"), a("sure"), a("let's", "do", "it"));
 
       // explain the rules
@@ -183,7 +189,7 @@ public class NormConv {
       ihcg.setPossibleOutputs( startGame, ywp, wsp);
       wsp.setPossibleOutputs(  startGame, askIfExplain);
       fav.setPossibleOutputs(  startGame, ywp, wsp);
-      ywp.setPossibleOutputs(  startGame, askIfExplain, convincePlay);
+      ywp.setPossibleOutputs(  startGame, convincePlay, askIfExplain);
       askIfExplain.setPossibleOutputs(startGame, explain, symbolCheck);
       explain.setPossibleOutputs(     startGame, symbolCheck, ygt);
       ygt.setPossibleOutputs(         startGame, symbolCheck);
@@ -211,13 +217,10 @@ public class NormConv {
             String input = readString();
             prevOutput = output.copy();
             output = output.getNext(input);
-
-            normSpecialOutput(output, input);
-
+            normSpecialOutput(output, prevOutput ,input);
             updateReplies();
-
             output.print();
-            normSpecialOutput(output, input);
+            normSpecialOutput(output, prevOutput, input);
          } while (!output.equals(prevOutput.getErrOutput()) && !firstOut.isInPossibleOutputs(output));
          counter++;
       }
@@ -229,21 +232,21 @@ public class NormConv {
    }
 
    // method that determines special Outputs for some Outputs
-   public void normSpecialOutput(Output output, String input){
+   public void normSpecialOutput(Output output, Output prev , String input){
       if (output == symbolCheckN) {
          uni = false;
          output.print();
-         this.output = startGame;
+         startGameT = true;
          return;
       }
       if (output == symbolCheckY) {
          output.print();
          uni = true;
-         this.output = startGame;
+         startGameT = true;
          return;
       }
       if (output == yni)         {
-         userName = wyn.getPart(input);
+         userName = prev.getPart(input);
          userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
       }
       if (output == startGame){

@@ -29,10 +29,10 @@ public class Player{
       lastTurn    = new Output("This is your last turn. Choose wisely");
       errPile     = new Output("You need to tell whether you want to draw from the discard pile or the stock pile.");
       errCard     = new Output("You need to tell me which card you want to play. So if you want to play the card most to the left, you write \"1\"");
-      card1       = new Output();
-      card2       = new Output();
-      card3       = new Output();
-      card4       = new Output();
+      card1       = new Output("");
+      card2       = new Output("");
+      card3       = new Output("");
+      card4       = new Output("");
    }
    public void setOutputs(){                          // Sets the keywords and possible outputs for each Output.
      discard.setKeywords(a("discard"), a("open"), a("disc"));

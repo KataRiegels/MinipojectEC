@@ -11,15 +11,28 @@ public class Output {
    private String[] words         = a("do not", "can not", "will not", "are not", "is not", "you are", "i am", "it is");
    private String[] contractioned = a("don't",  "can't",   "won't",    "aren't",  "isn't",  "you're",  "i'm",  "it's");
    private ArrayList<Output> previous;
+   boolean dummy;
+   String[] ignore;
 
    public Output(String reply){
       this.reply = reply;
       uni = true;             // This is whether we use cool symbols or not
       notKeywords = null;
-
+      dummy = false;
    }
 
-   // getters
+
+
+
+   // getters and setters
+   public void setIgnore(String... words){
+      ignore = words;
+   }
+
+   public void setDummy(boolean b){
+      dummy = b;
+   }
+
    public String[][] getKeywords() {
       return keywords;
    }
@@ -44,7 +57,6 @@ public class Output {
       return reply;
    }
 
-   // setters
    public void       setReply(String string){
       reply = string;
    }
@@ -64,20 +76,6 @@ public class Output {
             temp[i] = possibleOutputs[i];
          this.possibleOutputs = temp;
       }
-   }
-
-   public void       setPossibleOutputs(Output[] output, Output... outputs){
-      Output[] temp = new Output[output.length+outputs.length];
-      int k = 0;
-      for (int i = 0; i < output.length; i++){
-         temp[i] = output[i];
-      }
-
-      for (int j = output.length; j < temp.length; j++){
-         temp[j] = outputs[k];
-         k++;
-      }
-      possibleOutputs = temp;
    }
 
    public void       setErrOutput(Output output){
@@ -112,20 +110,25 @@ public class Output {
    }
 
    public String getPart(String input) {
-      String[] syn;
+      String[] syn = null;
       contractions(input);
       String[] splitInput = split(input);
+      String ig = "";
       if (possibleOutputs != null) {
-         for (Output o : possibleOutputs)
-            for (String i : splitInput)
-               for (String[] notK : o.notKeywords)
-                  for (String word : notK) {
-                     syn = checkJ(word);
-                     for (String synword : syn)
-                        if (!i.equals(word) && !i.equals(synword))
+         for (Output o : possibleOutputs){
+            for (String igno : o.ignore){
+               ig += igno;
+            }
+            for (String i : splitInput){
+               for (String ign : o.ignore){
+                     syn = checkJ(ign);
+                     for (String synword : syn){
+
+                        if (!(ig.contains(i) && i.contains(synword))) {
                            return i;
+                        }
                   }
-      }
+      }}}}
       return "";
    }
 
@@ -146,13 +149,16 @@ public class Output {
          next.setPossibleOutputs(errOutput);
 
          // convert input sentence to String[]
-         input.toLowerCase();
 
+         input.toLowerCase();
+         contractions(input);
          String[] splitInput = split(input);
       if (possibleOutputs != null){
          for (Output r : possibleOutputs) {
-            System.out.println(Arrays.deepToString(r.getKeywords()));
-            if (r.keywords == null) return r;
+            if (r.dummy) return r;
+            //System.out.println(Arrays.deepToString(r.getKeywords()));
+            //if (r.getKeyword(0,0).equals("dummy")) return r;
+            //if (r.keywords == null) return r;
             if (containsTrigger(r.getKeywords(), splitInput) && !containsTrigger(r.getNotKeywords(), splitInput) ) {
                return r;
             }
