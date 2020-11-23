@@ -24,26 +24,36 @@ public class Output {
    public String[][] getKeywords() {
       return keywords;
    }
+
    public String     getKeyword(int i, int j){
       return keywords[i][j];
    }
+
    public String[][] getNotKeywords() {
       return notKeywords;
    }
+
    public Output[]   getPossibleOutputs() {
       return possibleOutputs;
    }
+
    public Output     getErrOutput(){
       return errOutput;
+   }
+
+   public String getReply(){
+      return reply;
    }
 
    // setters
    public void       setReply(String string){
       reply = string;
    }
+
    public void       setKeywords(String[]... keywords) {
       this.keywords = keywords;
    }
+
    public void       setNotKeywords(String[]... notKeywords){
       this.notKeywords = notKeywords;
    }
@@ -56,6 +66,7 @@ public class Output {
          this.possibleOutputs = temp;
       }
    }
+
    public void       setPossibleOutputs(Output[] output, Output... outputs){
       Output[] temp = new Output[output.length+outputs.length];
       int k = 0;
@@ -69,8 +80,16 @@ public class Output {
       }
       possibleOutputs = temp;
    }
+
    public void       setErrOutput(Output output){
       errOutput = output;
+   }
+
+   public void setAdditionalDisplay(String ... strings){
+      additionalDisplay = new ArrayList<String>();
+      for (String s : strings) {
+         additionalDisplay.add(s);
+      }
    }
 
    public void addPossibleOutput(Output possibleOutput){
@@ -84,10 +103,6 @@ public class Output {
 
 
 
-   public String getReply(){
-      return reply;
-   }
-
 
    public boolean isInPossibleOutputs(Output output){
       for (Output o : possibleOutputs){
@@ -95,28 +110,6 @@ public class Output {
       }
       return false;
    }
-
-
-   // set possible outputs (method) - Output[] as input for this method
-   // define the default Output, then the other possible Outputs
-   // in getNext() check for default Output first, then the other Outputs
-   //public void setPossibleOutputs(Output[] possibleOutputs) {
-      /*public void setPossibleOutputs(Output... possibleOutputs) {
-      defaultOutput = new Output("starting the game");
-      this.possibleOutputs = possibleOutputs;
-   }*/
-
-   // setPossibleOutputs method with undefined number of Outputs as input
-
-/*
-   public Output setReply(String triggers, Output reply){
-      // if keyword.... choose output
-      return null;
-   }
-*/
-
-
-
 
    public boolean equals(Output output){
       return (this == output);
@@ -148,7 +141,6 @@ public class Output {
       return input;
    }
 
-
    public Output getNext(String input){
          if (errOutput == null) {
             errOutput = new Output("I'm confused. Please clarify");
@@ -160,16 +152,7 @@ public class Output {
          // convert input sentence to String[]
          input.toLowerCase();
 
-
-
-
-         String[] splitInput = split(input); // maybe we can split it in Main instead or move the method to this class
-         //System.out.println(Arrays.toString(splitInput));
-
-         // check first if player wants to start game (default Output)
-
-
-
+         String[] splitInput = split(input);
       if (possibleOutputs != null){
          for (Output r : possibleOutputs) {
             //System.out.println(Arrays.deepToString(r.getKeywords()));
@@ -211,19 +194,6 @@ public class Output {
       return false;
    }
 
-   //public void print() {
-     // System.out.println(this.reply);
-   //}
-
-   // method that adds/performs any actions specific to the output
-   // define actions
-
-   public void setAdditionalDisplay(String ... strings){
-      additionalDisplay = new ArrayList<String>();
-      for (String s : strings) {
-         additionalDisplay.add(s);
-      }
-   }
 
    // copy method that copies Output object with all its attributes etc.
    public Output copy() {
@@ -267,7 +237,7 @@ public class Output {
          System.out.print(delete);
       }
       waitingMilSec(500);
-   } // Print the bubbles while Liza is writing
+   } // Print the dots while Liza is writing
    private void waitingMilSec(long seconds){
       try {
          Thread.sleep(seconds);
