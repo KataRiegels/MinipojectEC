@@ -131,9 +131,6 @@ public class Game{
    public void setUni(boolean uni){
       this.uni = uni;
    }
-   public boolean stoppedGame(){
-      return endGame;
-   }
 
    public Player whoStarts(Player p1, Player p2){                 // Rolls a die for each player and prints result.
       Player p; Player startingPlayer;
