@@ -1,5 +1,5 @@
 import java.util.*;
-
+// this is a test
 public class NormConv {
    private Game game;
    private Output welcome,  wyn, yni, yniN, hyd, nth, ohno, igt, iag, intro, ilcg, ihcg, fav,
